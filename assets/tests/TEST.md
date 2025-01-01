@@ -1,5 +1,8 @@
 from: [https://github.com/mxstbr/markdown-test-file/blob/master/TEST.md](https://github.com/mxstbr/markdown-test-file/blob/master/TEST.md)
 
+![[img.png]]
+[[aa]]
+
 # Markdown: Syntax
 
 -   [Overview](#overview)

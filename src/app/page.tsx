@@ -6,7 +6,13 @@ import markdown from "remark-parse";
 import remark2rehype from "remark-rehype";
 import { unified } from "unified";
 
-const processor = unified().use(markdown).use(remark2rehype).use(html);
+import wikiLinkPlugin from "@/wikilink";
+
+const processor = unified()
+	.use(markdown)
+	.use(wikiLinkPlugin)
+	.use(remark2rehype)
+	.use(html);
 
 const getFileContent = async (): Promise<string> => {
 	const fPath = path.join(path.resolve(), "assets/tests", "TEST.md");
