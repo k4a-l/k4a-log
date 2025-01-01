@@ -8,7 +8,8 @@
 		"start": "next start",
 		"lint": "biome lint --write ./src",
 		"format": "biome format --write ./src",
-		"check": "biome check --write ./src"
+		"check": "biome check --write ./src",
+		"tsc": "tsc"
 	},
 	"dependencies": {
 		"mdast-util-wiki-link": "^0.1.2",

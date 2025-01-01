@@ -1,21 +1,16 @@
 // https://github.com/datopian/remark-wiki-link-plus/blob/main/src/syntax.js
 
 import type {
+	Code,
+	Effects,
 	Extension as MicromarkExtension,
 	State,
+	TokenizeContext,
 	Tokenizer,
 } from "micromark-util-types";
-import type { Opt } from ".";
+import type { WikiLinkOption } from "./type";
 
-type Code = {
-	horizontalTab: number;
-	virtualSpace: number;
-	nul: number;
-	eof: null;
-	space: number;
-};
-
-const codes: Code = {
+const codes = {
 	horizontalTab: -2,
 	virtualSpace: -1,
 	nul: 0,
@@ -23,15 +18,17 @@ const codes: Code = {
 	space: 32,
 };
 
-function markdownLineEndingOrSpace(code: number) {
+function markdownLineEndingOrSpace(code: Code): boolean {
+	if (code == null) return false;
 	return code < codes.nul || code === codes.space;
 }
 
-function markdownLineEnding(code: number) {
+function markdownLineEnding(code: Code): boolean {
+	if (code == null) return false;
 	return code < codes.horizontalTab;
 }
 
-function wikiLink(opts: Opt = {}): MicromarkExtension {
+function wikiLink(opts: WikiLinkOption = {}): MicromarkExtension {
 	const aliasDivider = opts.aliasDivider || ":";
 
 	const aliasMarker = aliasDivider;
@@ -39,7 +36,12 @@ function wikiLink(opts: Opt = {}): MicromarkExtension {
 	const imageStartMarker = "![[";
 	const endMarker = "]]";
 
-	const tokenize: Tokenizer = function tokenize(this, effects, ok, nok): State {
+	const tokenize = function tokenize(
+		this: TokenizeContext,
+		effects: Effects,
+		ok: State,
+		nok: State,
+	) {
 		let data: string | boolean;
 		let alias: string | boolean;
 
@@ -49,7 +51,7 @@ function wikiLink(opts: Opt = {}): MicromarkExtension {
 
 		return start;
 
-		function start(code: number): State {
+		function start(code: Code) {
 			if (code === startMarker.charCodeAt(startMarkerCursor)) {
 				effects.enter("wikiLink");
 				effects.enter("wikiLinkMarker");
@@ -57,16 +59,16 @@ function wikiLink(opts: Opt = {}): MicromarkExtension {
 				return consumeStart(code);
 			}
 			if (code === imageStartMarker.charCodeAt(startMarkerCursor)) {
-				effects.enter("wikiLink", { isType: "transclusions" });
-				effects.enter("wikiLinkMarker", { isType: "transclusions" });
+				effects.enter("wikiLink", { embed: true });
+				effects.enter("wikiLinkMarker", { embed: true });
 
 				return consumeStart(code);
 			}
 
-			return nok(code);
+			return nok;
 		}
 
-		function consumeStart(code: number) {
+		function consumeStart(code: Code) {
 			if (startMarkerCursor === startMarker.length) {
 				effects.exit("wikiLinkMarker");
 				return consumeData(code);
@@ -85,7 +87,7 @@ function wikiLink(opts: Opt = {}): MicromarkExtension {
 			return nok(code);
 		}
 
-		function consumeData(code: number) {
+		function consumeData(code: Code) {
 			if (markdownLineEnding(code) || code === codes.eof) {
 				return nok(code);
 			}
@@ -95,7 +97,7 @@ function wikiLink(opts: Opt = {}): MicromarkExtension {
 			return consumeTarget(code);
 		}
 
-		function consumeTarget(code: number) {
+		function consumeTarget(code: Code) {
 			if (code === aliasMarker.charCodeAt(aliasCursor)) {
 				if (!data) return nok(code);
 				effects.exit("wikiLinkTarget");
@@ -124,7 +126,7 @@ function wikiLink(opts: Opt = {}): MicromarkExtension {
 			return consumeTarget;
 		}
 
-		function consumeAliasMarker(code: number) {
+		function consumeAliasMarker(code: Code) {
 			if (aliasCursor === aliasMarker.length) {
 				effects.exit("wikiLinkAliasMarker");
 				effects.enter("wikiLinkAlias");
@@ -141,7 +143,7 @@ function wikiLink(opts: Opt = {}): MicromarkExtension {
 			return consumeAliasMarker;
 		}
 
-		function consumeAlias(code: number) {
+		function consumeAlias(code: Code) {
 			if (code === endMarker.charCodeAt(endMarkerCursor)) {
 				if (!alias) return nok(code);
 				effects.exit("wikiLinkAlias");
@@ -163,7 +165,7 @@ function wikiLink(opts: Opt = {}): MicromarkExtension {
 			return consumeAlias;
 		}
 
-		function consumeEnd(code: number) {
+		function consumeEnd(code: Code) {
 			if (endMarkerCursor === endMarker.length) {
 				effects.exit("wikiLinkMarker");
 				effects.exit("wikiLink");

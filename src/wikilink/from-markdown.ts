@@ -3,9 +3,7 @@ import type {
 	Extension as FromMarkdownExtension,
 	Token,
 } from "mdast-util-from-markdown";
-import { HtmlProps } from "next/dist/shared/lib/html-context.shared-runtime";
-import type { HTMLProps } from "react";
-import type { Opt } from ".";
+import type { WikiLinkContentMap, WikiLinkOption } from "./type";
 
 function wikiLinkTransclusionFormat(
 	extension: string | undefined,
@@ -35,19 +33,7 @@ function wikiLinkTransclusionFormat(
 	return [true, supportedFormat.replace(".", "")];
 }
 
-type WikiLink = {
-	data: {
-		alias: string;
-		hName: string;
-		hChildren: { type: string; value: string }[];
-		permalink: string;
-		exists: boolean;
-		hProperties: HTMLProps<""> & { className: string };
-	};
-	value: string;
-};
-
-function fromMarkdown(opts: Opt): FromMarkdownExtension {
+function fromMarkdown(opts: WikiLinkOption): FromMarkdownExtension {
 	const permalinks = opts.permalinks || [];
 	const defaultPageResolver = (name: string) => [name.replace(/ /g, "-")];
 	const pageResolver = opts.pageResolver || defaultPageResolver;
@@ -63,40 +49,45 @@ function fromMarkdown(opts: Opt): FromMarkdownExtension {
 		this.enter(
 			{
 				type: "wikiLink",
-				isType: token.isType ? token.isType : null,
+				embed: token.embed ? token.embed : undefined,
 				value: "",
-				data: {
-					alias: null,
-					permalink: null,
-					exists: null,
-				},
+				data: {},
 			},
 			token,
 		);
 	}
 
-	function top(stack: string[]) {
+	function top<T>(stack: T[]) {
 		return stack[stack.length - 1];
 	}
 
 	function exitWikiLinkAlias(this: CompileContext, token: Token) {
 		const alias = this.sliceSerialize(token);
 		const current = top(this.stack);
-		current.data.alias = alias;
+		if (!current) return;
+		current.data = { ...current.data, alias };
 	}
 
 	function exitWikiLinkTarget(this: CompileContext, token: Token) {
 		const target = this.sliceSerialize(token);
 		const current = top(this.stack);
+		if (!current) return;
+		if (current.type !== "wikiLink") return;
 		current.value = target;
 	}
 
 	function exitWikiLink(this: CompileContext, token: Token) {
-		// return;
 		this.exit(token);
 
-		const wikiLink: WikiLink = this.stack.slice(-1)[0]?.children?.slice(-1)[0];
-		const wikiLinkTransclusion = token.isType === "transclusions";
+		const stack = top(this.stack);
+		if (!("children" in stack)) return;
+		const child = top(stack?.children);
+		if (child.type !== "wikiLink") return;
+
+		const wikiLink = child as WikiLinkContentMap;
+		if (!wikiLink.data) return;
+
+		const wikiLinkTransclusion = Boolean(token.embed);
 
 		const pagePermalinks = pageResolver(wikiLink.value);
 		let permalink = pagePermalinks.find((p) => {

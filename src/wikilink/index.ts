@@ -6,22 +6,11 @@ import { syntax } from "./syntax";
 import type { Extension as mDastExtension } from "mdast-util-from-markdown";
 import type { Extension as MicromarkExtension } from "micromark-util-types";
 import type { Plugin, Processor } from "unified";
-
-export type Opt = {
-	aliasDivider?: string;
-	pageResolver?: (str?: string) => string | string[];
-	permalinks?: string[];
-	markdownFolder?: string;
-	// permalinks?: string[];
-	// pageResolver?: (name: string) => string[];
-	newClassName?: string;
-	wikiLinkClassName?: string;
-	hrefTemplate?: (permalink: string) => string;
-};
+import type { WikiLinkOption } from "./type";
 
 const wikiLinkPlugin: Plugin = function wikiLinkPlugin(
 	this: Processor,
-	passedOpts: Opt = {},
+	passedOpts: WikiLinkOption = {},
 ) {
 	const data = this.data();
 
@@ -33,7 +22,7 @@ const wikiLinkPlugin: Plugin = function wikiLinkPlugin(
 		else data[field] = [value];
 	}
 
-	const opts: Opt = {
+	const opts: WikiLinkOption = {
 		...passedOpts,
 		aliasDivider: passedOpts.aliasDivider ? passedOpts.aliasDivider : "|",
 		pageResolver: passedOpts.pageResolver
