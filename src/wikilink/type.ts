@@ -1,8 +1,8 @@
-import type { HTMLProps } from "react";
+import type { WikiLink } from "@/types/mdast";
 
 export type WikiLinkOption = {
 	aliasDivider?: string;
-	pageResolver?: (str?: string) => string[];
+	pageResolver?: (str?: string) => string | undefined;
 	permalinks?: string[];
 	markdownFolder?: string;
 	newClassName?: string;
@@ -11,17 +11,8 @@ export type WikiLinkOption = {
 };
 
 export type WikiLinkContentMap = {
-	type: "wikiLink";
+	type: WikiLink["type"];
 	children: Array<unknown>;
-	data?:
-		| {
-				alias: string;
-				hName: string;
-				hChildren: { type: string; value: string }[];
-				permalink: string;
-				exists: boolean;
-				hProperties: HTMLProps<""> & { className?: string; style?: string };
-		  }
-		| undefined;
-	value: string;
+	data?: WikiLink["data"] | undefined;
+	value: WikiLink["value"];
 };

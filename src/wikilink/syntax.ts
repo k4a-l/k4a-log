@@ -6,7 +6,6 @@ import type {
 	Extension as MicromarkExtension,
 	State,
 	TokenizeContext,
-	Tokenizer,
 } from "micromark-util-types";
 import type { WikiLinkOption } from "./type";
 
@@ -28,7 +27,9 @@ function markdownLineEnding(code: Code): boolean {
 	return code < codes.horizontalTab;
 }
 
-function wikiLink(opts: WikiLinkOption = {}): MicromarkExtension {
+export function wikiLinkTokenize(
+	opts: WikiLinkOption = {},
+): MicromarkExtension {
 	const aliasDivider = opts.aliasDivider || ":";
 
 	const aliasMarker = aliasDivider;
@@ -187,5 +188,3 @@ function wikiLink(opts: WikiLinkOption = {}): MicromarkExtension {
 		text: { 91: { tokenize }, 33: { tokenize } }, // 91: left square bracket, 33: exclamation mark
 	};
 }
-
-export { wikiLink as syntax };

@@ -9,7 +9,8 @@
 		"lint": "biome lint --write ./src",
 		"format": "biome format --write ./src",
 		"check": "biome check --write ./src",
-		"tsc": "tsc"
+		"tsc": "tsc --watch",
+		"test": "vitest"
 	},
 	"dependencies": {
 		"mdast-util-wiki-link": "^0.1.2",
@@ -18,6 +19,7 @@
 		"react": "^19.0.0",
 		"react-dom": "^19.0.0",
 		"rehype-stringify": "^10.0.1",
+		"remark-breaks": "^4.0.0",
 		"remark-parse": "^11.0.0",
 		"remark-rehype": "^11.1.1",
 		"remark-wiki-link-plus": "^1.1.1",
@@ -25,9 +27,15 @@
 	},
 	"devDependencies": {
 		"@biomejs/biome": "1.9.4",
+		"@testing-library/dom": "^10.4.0",
+		"@testing-library/react": "^16.1.0",
 		"@types/node": "^20",
 		"@types/react": "^19",
 		"@types/react-dom": "^19",
-		"typescript": "^5"
+		"@vitejs/plugin-react": "^4.3.4",
+		"jsdom": "^25.0.1",
+		"typescript": "^5",
+		"vite-tsconfig-paths": "^5.1.4",
+		"vitest": "^2.1.8"
 	}
 }

@@ -1,18 +1,20 @@
 import type { Literal } from "mdast";
 
+interface WikiLinkData extends Data {
+	isEmbed: boolean;
+	type: "link" | "img" | "pdf" | "unknown";
+	exists: boolean;
+	displayName: string;
+	link: string;
+	hChildren: { type: string; value: string }[];
+	hName: "span" | "a";
+	hProperties: HTMLProps<""> & { className?: string; style?: string };
+}
+
 interface WikiLink extends Literal {
 	type: "wikiLink";
 	embed?: boolean;
-	data?:
-		| Partial<{
-				alias: string;
-				hName: string;
-				hChildren: { type: string; value: string }[];
-				permalink: string;
-				exists: boolean;
-				hProperties: HTMLProps<""> & { className?: string; style?: string };
-		  }>
-		| undefined;
+	data?: WikiLinkData;
 	value: string;
 }
 

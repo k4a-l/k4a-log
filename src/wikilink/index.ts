@@ -1,7 +1,6 @@
-import { toMarkdown } from "mdast-util-wiki-link";
-import { fromMarkdown, wikiLinkTransclusionFormat } from "./from-markdown";
+import { fromMarkdown } from "./from-markdown";
 
-import { syntax } from "./syntax";
+import { wikiLinkTokenize } from "./syntax";
 
 import type { Extension as mDastExtension } from "mdast-util-from-markdown";
 import type { Extension as MicromarkExtension } from "micromark-util-types";
@@ -25,35 +24,7 @@ const wikiLinkPlugin: Plugin = function wikiLinkPlugin(
 	const opts: WikiLinkOption = {
 		...passedOpts,
 		aliasDivider: passedOpts.aliasDivider ? passedOpts.aliasDivider : "|",
-		pageResolver: passedOpts.pageResolver
-			? passedOpts.pageResolver
-			: (_name) => {
-					if (!_name) return [""];
-					let name = _name;
-
-					const image = wikiLinkTransclusionFormat(name)[1];
-					let heading = "";
-					if (!image && !name.startsWith("#") && name.match(/#/)) {
-						[, heading] = name.split("#");
-						name = name.replace(`#${heading}`, "");
-					} else if (name.startsWith("#")) {
-						name = name.toLowerCase();
-					}
-					if (passedOpts.permalinks || passedOpts.markdownFolder) {
-						const url = passedOpts?.permalinks?.find(
-							(p) =>
-								p === name ||
-								(p.split("/").pop() === name &&
-									!passedOpts?.permalinks?.includes(p.split("/").pop() ?? "")),
-						);
-						if (url) {
-							if (heading)
-								return [`${url}#${heading.toLowerCase()}`.replace(/ /g, "-")];
-							return image ? [url] : [url.replace(/ /g, "-")];
-						}
-					}
-					return image ? [name] : [name.replace(/ /g, "-")];
-				},
+		pageResolver: passedOpts.pageResolver,
 		// permalinks: passedOpts.markdownFolder
 		// 	? getFiles(passedOpts.markdownFolder).map((file) =>
 		// 			file.replace(/\.mdx?$/, ""),
@@ -63,7 +34,7 @@ const wikiLinkPlugin: Plugin = function wikiLinkPlugin(
 
 	data.fromMarkdownExtensions;
 
-	add("micromarkExtensions", syntax(opts));
+	add("micromarkExtensions", wikiLinkTokenize(opts));
 	add("fromMarkdownExtensions", fromMarkdown(opts));
 };
 

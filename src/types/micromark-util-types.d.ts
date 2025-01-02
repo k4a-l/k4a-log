@@ -1,3 +1,4 @@
+// biome-ignore lint/correctness/noUnusedImports: <explanation>
 import { RootContentMap, Token, TokenTypeMap } from "micromark-util-types";
 
 declare module "micromark-util-types" {
