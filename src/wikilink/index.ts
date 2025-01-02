@@ -7,9 +7,27 @@ import type { Extension as MicromarkExtension } from "micromark-util-types";
 import type { Plugin, Processor } from "unified";
 import type { WikiLinkOption } from "./type";
 
-const wikiLinkPlugin: Plugin = function wikiLinkPlugin(
+/**
+ *
+ * @overload
+ * @param {Processor} processor
+ * @param {Readonly<Options> | null | undefined} [options]
+ * @returns {TransformBridge}
+ *
+ * @overload
+ * @param {Readonly<Options> | null | undefined} [options]
+ * @returns {TransformMutate}
+ *
+ * @param {Readonly<Options> | Processor | null | undefined} [destination]
+ *   Processor or configuration (optional).
+ * @param {Readonly<Options> | null | undefined} [options]
+ *   When a processor was given, configuration (optional).
+ * @returns {TransformBridge | TransformMutate}
+ *   Transform.
+ */
+const wikiLinkPlugin = function wikiLinkPlugin(
 	this: Processor,
-	passedOpts: WikiLinkOption = {},
+	options: WikiLinkOption = {},
 ) {
 	const data = this.data();
 
@@ -21,21 +39,28 @@ const wikiLinkPlugin: Plugin = function wikiLinkPlugin(
 		else data[field] = [value];
 	}
 
-	const opts: WikiLinkOption = {
-		...passedOpts,
-		aliasDivider: passedOpts.aliasDivider ? passedOpts.aliasDivider : "|",
-		pageResolver: passedOpts.pageResolver,
-		// permalinks: passedOpts.markdownFolder
-		// 	? getFiles(passedOpts.markdownFolder).map((file) =>
-		// 			file.replace(/\.mdx?$/, ""),
-		// 		)
-		// 	: passedOpts.permalinks,
+	if (!options.currentPaths) {
+		throw new Error("currentPathsを設定してください");
+	}
+	if (!options.fileTrees) {
+		throw new Error("fileTreesを設定してください");
+	}
+
+	const opts: Required<WikiLinkOption> = {
+		classNames: {
+			deadLink: "dead",
+			wikiLink: "wikiLink",
+			...options.classNames,
+		},
+		currentPaths: [],
+		fileTrees: [],
+		...options,
 	};
 
 	data.fromMarkdownExtensions;
 
 	add("micromarkExtensions", wikiLinkTokenize(opts));
 	add("fromMarkdownExtensions", fromMarkdown(opts));
-};
+} satisfies Plugin;
 
 export default wikiLinkPlugin;

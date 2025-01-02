@@ -7,7 +7,9 @@ import type {
 import type { WikiLinkContentMap, WikiLinkOption } from "./type";
 import { getWikiLinkExtension, lastOfArr, pathResolver } from "./util";
 
-export function fromMarkdown(opts: WikiLinkOption): FromMarkdownExtension {
+export function fromMarkdown(
+	opts: Required<WikiLinkOption>,
+): FromMarkdownExtension {
 	function enterWikiLink(this: CompileContext, token: Token) {
 		this.enter({ type: "wikiLink", embed: token.embed, value: "" }, token);
 	}
@@ -56,29 +58,23 @@ const createWikiLinkData = (
 	token: Token,
 	pathValue: string,
 	wikiLink: WikiLinkContentMap,
-	opts: WikiLinkOption,
+	opts: Required<WikiLinkOption>,
 ): WikiLinkData => {
-	const permalinks = opts.permalinks || [];
-	const pageResolver =
-		opts.pageResolver ||
-		((name: string) =>
-			pathResolver(name, {
-				permalinks: opts.permalinks ?? [],
-				markdownFolder: opts.markdownFolder,
-			}));
-	const newClassName = opts.newClassName || "new";
-	const wikiLinkClassName = opts.wikiLinkClassName || "internal";
 	const defaultHrefTemplate = (permalink: string) => {
 		if (permalink.startsWith("#")) return permalink;
 		return `/${permalink}`;
 	};
-	const hrefTemplate = opts.hrefTemplate || defaultHrefTemplate;
+	const hrefTemplate = defaultHrefTemplate;
 
 	const isEmbed = Boolean(token.embed);
-	const link = pageResolver(pathValue);
+	const link = pathResolver({
+		linkName: pathValue,
+		currentPathList: opts.currentPaths,
+		fileTrees: opts.fileTrees,
+	});
 
 	const extensionInfo = getWikiLinkExtension(wikiLink.value);
-	const classNames = `${wikiLinkClassName} ${link === undefined ? `${newClassName}` : ""}`;
+	const classNames = `${opts.classNames.wikiLink} ${link === undefined ? `${opts.classNames.deadLink}` : ""}`;
 
 	const displayName: string = (() => {
 		if (wikiLink.data?.displayName) {
@@ -116,7 +112,7 @@ const createWikiLinkData = (
 		type,
 		link: link ?? "",
 		exists: link !== undefined,
-		displayName,
+		displayName: `${displayName} : ${link}`,
 		hName,
 		isEmbed,
 		hProperties,

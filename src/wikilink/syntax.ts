@@ -30,7 +30,7 @@ function markdownLineEnding(code: Code): boolean {
 export function wikiLinkTokenize(
 	opts: WikiLinkOption = {},
 ): MicromarkExtension {
-	const aliasDivider = opts.aliasDivider || ":";
+	const aliasDivider = "|";
 
 	const aliasMarker = aliasDivider;
 	const startMarker = "[[";

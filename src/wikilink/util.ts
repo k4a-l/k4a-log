@@ -1,52 +1,126 @@
 import * as fs from "node:fs";
 import * as path from "node:path";
-import type { WikiLinkOption } from "./type";
 
-export const pathResolver = (
-	_name: string,
-	{
-		permalinks,
-		markdownFolder,
-	}: { permalinks: string[]; markdownFolder?: string },
-): ReturnType<Required<WikiLinkOption>["pageResolver"]> => {
-	if (!_name || _name === "") return undefined;
+type FileNode = { absPaths: string[]; file: FileTree };
+export function findClosest(
+	fileTrees: FileTree[],
+	startPath: string[],
+	targetName: string,
+): FileNode | undefined {
+	// ツリー全体を探索し、すべてのパスを記録する
+	const allPaths: FileNode[] = [];
 
-	const extensionInfo = getWikiLinkExtension(_name);
-	let name = _name;
-	let heading = "";
+	function traverse(tree: FileTree[], currentPath: string[] = []) {
+		for (const file of tree) {
+			const newPath = [...currentPath, file.name];
+			allPaths.push({ absPaths: newPath, file });
 
-	// 同一ページ内のアンカーリンク
-	if (name.startsWith("#")) {
-	}
-
-	// HEADINGリンク
-	if (!extensionInfo.extension && !name.startsWith("#") && name.match(/#/)) {
-		[, heading] = name.split("#");
-		name = name.replace(`#${heading}`, "");
-	} else if (name.startsWith("#")) {
-		name = name.toLowerCase();
-	}
-
-	if (permalinks || markdownFolder) {
-		const link = permalinks?.find(
-			(p) =>
-				p === name ||
-				(p.split("/").pop() === name &&
-					permalinks?.includes(p.split("/").pop() ?? "")),
-		);
-		if (link) {
-			if (heading) return `${link}#${heading.toLowerCase()}`.replace(/ /g, "-");
-			return extensionInfo.extension ? link : link.replace(/ /g, "-");
+			if (file.type === "dir" && file.children) {
+				traverse(file.children, newPath);
+			}
 		}
 	}
-	return extensionInfo.extension ? name : name.replace(/ /g, "-");
+
+	traverse(fileTrees);
+
+	// 起点と対象を検索
+	const start = allPaths.find(
+		(item) => JSON.stringify(item.absPaths) === JSON.stringify(startPath),
+	);
+	if (!start) return undefined; // 起点が見つからなければ終了
+
+	// パス指定の場合
+	const targetNameSplit = targetName.split("/");
+	if (targetNameSplit.length > 1) {
+		const targetPathList = path
+			.join(...startPath.slice(0, -1), ...targetNameSplit)
+			.split("\\");
+
+		const target = allPaths.find(
+			(item) =>
+				JSON.stringify(item.absPaths.map((p) => p.replace(/\.md$/, ""))) ===
+				JSON.stringify(targetPathList),
+		);
+		return target;
+	}
+
+	const targetCandidates = allPaths.filter(
+		(item) => item.file.name.replace(/\.md$/, "") === targetName,
+	);
+	if (targetCandidates.length === 0) return undefined; // 対象が見つからなければ終了
+
+	// 距離を計算して最も近い対象を見つける
+	let closest: ({ distance: number } & FileNode) | null = null;
+
+	for (const candidate of targetCandidates) {
+		const targetPath = candidate.absPaths;
+
+		// 共通部分を求める（距離計算のため）
+		let commonLength = 0;
+		for (let i = 0; i < Math.min(startPath.length, targetPath.length); i++) {
+			if (startPath[i] === targetPath[i]) {
+				commonLength++;
+			} else {
+				break;
+			}
+		}
+
+		// 距離 = 上方向の移動回数 + 下方向の移動回数
+		const distance =
+			startPath.length - commonLength + (targetPath.length - commonLength);
+		if (!closest || distance < closest.distance) {
+			closest = {
+				distance,
+				file: candidate.file,
+				absPaths: candidate.absPaths,
+			};
+		}
+	}
+
+	return closest ? closest : undefined;
+}
+
+export const pathResolver = ({
+	linkName: _linkName,
+	currentPathList,
+	fileTrees,
+}: {
+	linkName: string;
+	currentPathList: string[];
+	fileTrees: FileTree[];
+}): string | undefined => {
+	if (!_linkName) return undefined;
+
+	const extensionInfo = getWikiLinkExtension(_linkName);
+
+	// 同一ページ内のアンカーリンク
+	if (_linkName.startsWith("#")) {
+		return _linkName;
+	}
+
+	let link = _linkName;
+	let heading = "";
+	// HEADINGリンク
+	if (!extensionInfo.extension && link.match(/#/)) {
+		[, heading] = link.split("#");
+		link = link.replace(`#${heading}`, "");
+	}
+
+	const path = findClosest(fileTrees, currentPathList, link);
+
+	if (path) {
+		if (heading) return `${link}#${heading.toLowerCase()}`.replace(/ /g, "-");
+		return extensionInfo.extension ? link : link.replace(/ /g, "-");
+	}
+
+	return undefined;
 };
 
 export type FileTree =
 	| { type: "file"; name: string }
 	| { type: "dir"; name: string; children: FileTree[] };
 
-export const getFileTree = (dirPath: string): FileTree[] => {
+export const createFileTrees = (dirPath: string): FileTree[] => {
 	const tree: FileTree[] = [];
 	const entries = fs.readdirSync(dirPath, { withFileTypes: true });
 
@@ -59,7 +133,7 @@ export const getFileTree = (dirPath: string): FileTree[] => {
 			tree.push({
 				type: "dir",
 				name: entry.name,
-				children: getFileTree(fullPath),
+				children: createFileTrees(fullPath),
 			});
 		} else {
 			tree.push({ type: "file", name: entry.name });
