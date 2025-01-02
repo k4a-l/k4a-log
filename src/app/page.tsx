@@ -15,7 +15,7 @@ const processor = unified()
 	.use(html);
 
 const getFileContent = async (): Promise<string> => {
-	const fPath = path.join(path.resolve(), "assets/tests", "TEST.md");
+	const fPath = path.join(path.resolve(), "assets/tests/posts", "INDEX.md");
 	const fileContent = await readFile(fPath, { encoding: "utf-8" });
 
 	const compiled = await processor.process(fileContent);
