@@ -8,7 +8,12 @@ interface WikiLinkData extends Data {
 	link: string;
 	hChildren: { type: string; value: string }[];
 	hName: "span" | "a";
-	hProperties: HTMLProps<""> & { className?: string; style?: string };
+	hProperties: {
+		className?: string;
+		style?: string;
+		href: string;
+		isEmbed?: "true";
+	};
 }
 
 interface WikiLink extends Literal {

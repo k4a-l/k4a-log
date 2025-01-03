@@ -98,13 +98,15 @@ const createWikiLinkData = (
 		return wikiLink.value;
 	})();
 
-	const hName = isEmbed ? "span" : "a";
+	const hName = "a";
 	const hChildren: WikiLinkData["hChildren"] = [
 		{ type: "text", value: displayName },
 	];
-	const hProperties: WikiLinkData["hProperties"] = isEmbed
-		? { className: classNames, src: link ? hrefTemplate(link) : "" }
-		: { className: classNames, href: link ? hrefTemplate(link) : "" };
+	const hProperties: WikiLinkData["hProperties"] = {
+		className: classNames,
+		href: link ? hrefTemplate(link) : "",
+		isEmbed: isEmbed ? "true" : undefined,
+	};
 
 	const type: WikiLinkData["type"] = extensionInfo.type;
 
