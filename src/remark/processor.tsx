@@ -2,10 +2,10 @@ import remarkParse from "remark-parse";
 
 import { Hashtag } from "@/components/Hashtag";
 import { MarkdownLink } from "@/components/Link";
-import { hashTagHandler, remarkHashtagPlugin } from "@/hashtag";
-import wikiLinkPlugin from "@/wikilink";
-import type { WikiLinkOption } from "@/wikilink/type";
-import type { FileTree } from "@/wikilink/util";
+import { hashTagHandler, remarkHashtagPlugin } from "@/remark/hashtag";
+import wikiLinkPlugin from "@/remark/wikilink";
+import type { WikiLinkOption } from "@/remark/wikilink/type";
+import type { FileTree } from "@/remark/wikilink/util";
 import type { ReactElement } from "react";
 import { Fragment, jsx, jsxs } from "react/jsx-runtime";
 import rehypeRaw from "rehype-raw";

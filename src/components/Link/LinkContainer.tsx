@@ -1,9 +1,9 @@
 import type { WikiLinkData } from "@/types/mdast";
 import type { AnchorHTMLAttributes, FC, PropsWithChildren } from "react";
 
-import { getFileContent } from "@/wikilink/file";
-import { createProcessor } from "@/wikilink/processor";
-import { createFileTrees } from "@/wikilink/util";
+import { createProcessor } from "@/remark/processor";
+import { getFileContent } from "@/remark/wikilink/file";
+import { createFileTrees } from "@/remark/wikilink/util";
 import path from "path-browserify";
 import { css } from "styled-system/css";
 import {

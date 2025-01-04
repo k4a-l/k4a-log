@@ -27,5 +27,6 @@
 	"typescript.referencesCodeLens.enabled": true,
 	"[ignore]": {
 		"editor.defaultFormatter": "foxundermoon.shell-format"
-	}
+	},
+	"cSpell.words": ["wikilink"]
 }

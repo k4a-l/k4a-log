@@ -1,7 +1,7 @@
 import path from "node:path";
-import { getFileContent } from "@/wikilink/file";
-import { createProcessor } from "@/wikilink/processor";
-import { createFileTrees } from "@/wikilink/util";
+import { createProcessor } from "@/remark/processor";
+import { getFileContent } from "@/remark/wikilink/file";
+import { createFileTrees } from "@/remark/wikilink/util";
 import {} from "react/jsx-runtime";
 import { css } from "styled-system/css";
 import { Center, Stack } from "styled-system/jsx";
