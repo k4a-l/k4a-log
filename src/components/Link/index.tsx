@@ -1,1 +1,1 @@
-export { LinkContainer as Link } from "./LinkContainer";
+export { LinkContainer as MarkdownLink } from "./LinkContainer";

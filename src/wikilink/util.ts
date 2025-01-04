@@ -1,6 +1,11 @@
 import * as fs from "node:fs";
 import * as path from "node:path";
 import type { WikiLinkData } from "@/types/mdast";
+import type { ReactElement } from "react";
+import type { Processor } from "unified";
+
+import { readFile } from "node:fs/promises";
+import {} from "react/jsx-runtime";
 
 // _startPathの最後の要素に拡張子が含まれていない場合は、最後の要素に.mdを結合したあたらしい配列を作る
 // 拡張子が含まれている場合は、そのままの配列を使う
@@ -222,3 +227,31 @@ export function getWikiLinkExtension(value: string | undefined): {
 export function lastOfArr<T>(stack: T[]) {
 	return stack[stack.length - 1];
 }
+
+export const directoryPath = "./assets/posts";
+
+export const getFileContent = async (
+	paths: string[],
+	directoryPath: string,
+	processor: Processor<
+		undefined,
+		undefined,
+		undefined,
+		undefined,
+		ReactElement
+	>,
+): Promise<ReactElement | string> => {
+	const fPath = path.join(
+		path.resolve(),
+		directoryPath,
+		...convertNoExtensionPathToMD(paths),
+	);
+	try {
+		const fileContent = await readFile(fPath, { encoding: "utf-8" });
+		const compiled = await processor.processSync(fileContent);
+		return compiled.result;
+	} catch (error) {
+		console.error(error);
+		return `${path.join(...paths)}}: ファイルが存在しません`;
+	}
+};

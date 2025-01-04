@@ -1,5 +1,26 @@
 @layer base {
-	* {
+	h1,
+	h2,
+	h3,
+	h4,
+	h5,
+	h6,
+	ol,
+	ul,
+	pre,
+	code,
+	table,
+	td,
+	th,
+	tbody,
+	thead,
+	tr,
+	p,
+	a {
 		all: revert; /* スタイルをデフォルトに戻す */
+	}
+
+	* {
+		font-family: sans-serif;
 	}
 }

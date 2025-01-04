@@ -10,28 +10,27 @@ import {
 	useState,
 } from "react";
 import { css } from "styled-system/css";
-import { TodoComponent } from "../Todo";
+import { HStack, Stack } from "styled-system/jsx";
 
-export const LinkPresentation: FC<
+import { Link as LinkIcons } from "lucide-react";
+
+export const TransitionLinkDead: FC<
 	PropsWithChildren<WikiLinkData["hProperties"]>
-> = ({ href, children, "is-embed": isEmbed, ...others }) => {
-	if (!href) {
-		return (
-			<NextLink
-				{...others}
-				href={":"}
-				scroll={false}
-				style={{ color: "gray", cursor: "pointer" }}
-				onClick={(e) => {
-					e.preventDefault();
-				}}
-			>
-				{children}
-			</NextLink>
-		);
-	}
-
-	return <NextLink href={href}>{children}</NextLink>;
+> = ({ href, children, ...others }) => {
+	return (
+		<NextLink
+			{...others}
+			href={":"}
+			scroll={false}
+			// todo: デッドリンクでも遷移して言及しているページ一覧表示にしたほうが良さそう
+			style={{ color: "gray", cursor: "text" }}
+			onClick={(e) => {
+				e.preventDefault();
+			}}
+		>
+			{children}
+		</NextLink>
+	);
 };
 
 const EmbedLinkNotFound = ({ title }: { title: string }) => {
@@ -52,13 +51,9 @@ const EmbedLinkNotFound = ({ title }: { title: string }) => {
 	);
 };
 
-const EmbedLinkImage: FC<PropsWithChildren<WikiLinkData["hProperties"]>> = ({
-	href,
-	title,
-	alias,
-	children,
-	...others
-}) => {
+export const EmbedLinkImage: FC<
+	PropsWithChildren<WikiLinkData["hProperties"]>
+> = ({ href, title, alias, children, ...others }) => {
 	if (!href) {
 		return <EmbedLinkNotFound title={title} />;
 	}
@@ -79,13 +74,9 @@ const EmbedLinkImage: FC<PropsWithChildren<WikiLinkData["hProperties"]>> = ({
 	);
 };
 
-const EmbedLinkVideo: FC<PropsWithChildren<WikiLinkData["hProperties"]>> = ({
-	href,
-	title,
-	alias,
-	children,
-	...others
-}) => {
+export const EmbedLinkVideo: FC<
+	PropsWithChildren<WikiLinkData["hProperties"]>
+> = ({ href, title, alias, children, ...others }) => {
 	if (!href) {
 		return <EmbedLinkNotFound title={title} />;
 	}
@@ -103,13 +94,9 @@ const EmbedLinkVideo: FC<PropsWithChildren<WikiLinkData["hProperties"]>> = ({
 	);
 };
 
-const EmbedLinkPdf: FC<PropsWithChildren<WikiLinkData["hProperties"]>> = ({
-	href,
-	title,
-	alias,
-	children,
-	...others
-}) => {
+export const EmbedLinkPdf: FC<
+	PropsWithChildren<WikiLinkData["hProperties"]>
+> = ({ href, title, alias, children, ...others }) => {
 	if (!href) {
 		return <EmbedLinkNotFound title={title} />;
 	}
@@ -150,49 +137,43 @@ const EmbedLinkPdf: FC<PropsWithChildren<WikiLinkData["hProperties"]>> = ({
 	);
 };
 
-const EmbedLinkMarkdown: FC<PropsWithChildren<WikiLinkData["hProperties"]>> = ({
-	href,
-	title,
-	alias,
-	children,
-	...others
-}) => {
+export const EmbedLinkMarkdown: FC<
+	PropsWithChildren<WikiLinkData["hProperties"]>
+> = ({ href, title, alias, children }) => {
 	if (!href) {
 		return <EmbedLinkNotFound title={title} />;
 	}
 
-	return <TodoComponent>MARKDOWNの埋め込み</TodoComponent>;
+	return (
+		<Stack
+			className={css({
+				px: 2,
+				py: 1,
+				shadow: "sm",
+				borderLeftWidth: 4,
+				borderStyle: "solid",
+				borderLeftColor: "gray.8",
+			})}
+		>
+			<HStack
+				justifyContent={"space-between"}
+				className={css({ borderBottomWidth: "1", borderBottomColor: "gray.3" })}
+			>
+				<span
+					className={css({
+						fontWeight: "bold",
+						fontSize: "lg",
+					})}
+				>
+					{alias ?? title}
+				</span>
+				<NextLink href={href}>
+					<LinkIcons size={"1em"} />
+				</NextLink>
+			</HStack>
+			<span>{children}</span>
+		</Stack>
+	);
 
 	// return <NextLink href={href}>{children}</NextLink>;
-};
-
-export const EmbedLinkPresentation: FC<
-	PropsWithChildren<WikiLinkData["hProperties"] & { title: string }>
-> = (props) => {
-	const { href, children, type, "is-embed": isEmbed, title, ...others } = props;
-
-	if (type === "img") {
-		return <EmbedLinkImage {...props} />;
-	}
-
-	if (type === "video") {
-		return <EmbedLinkVideo {...props} />;
-	}
-
-	if (type === "pdf") {
-		return <EmbedLinkPdf {...props} />;
-	}
-
-	if (type === "link") {
-		return <EmbedLinkMarkdown {...props} />;
-	}
-
-	return (
-		<span
-			{...others}
-			className={css({ bg: "black.a2", px: 2, py: 1, rounded: "md" })}
-		>
-			⚠️{title}: を埋め込み表示できません
-		</span>
-	);
 };
