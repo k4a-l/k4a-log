@@ -24,5 +24,8 @@
 		"source.organizeImports.biome": "explicit"
 	},
 	"editor.codeLens": true,
-	"typescript.referencesCodeLens.enabled": true
+	"typescript.referencesCodeLens.enabled": true,
+	"[ignore]": {
+		"editor.defaultFormatter": "foxundermoon.shell-format"
+	}
 }

@@ -4,9 +4,8 @@
 
 ### MARKDOWN
 
-![[埋め込み用]]
-
 # その他通常Markdown
+
 これ以下は基本の機能なので、軽く見て崩れてなければOK
 
 -   [Overview](#overview)

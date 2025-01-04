@@ -41,11 +41,7 @@ const TEST_FILE_TREE: FileTree[] = [
 
 describe("直近パス検索", () => {
 	test("ルートから下方向のみ", () => {
-		const result = findClosest(
-			TEST_FILE_TREE,
-			["INDEX.md"],
-			"ディレクトリ配下",
-		);
+		const result = findClosest(TEST_FILE_TREE, ["INDEX"], "ディレクトリ配下");
 		expect(result?.absPaths).toStrictEqual([
 			"directory",
 			"ディレクトリ配下.md",
@@ -55,7 +51,7 @@ describe("直近パス検索", () => {
 	test("ルートから遠いパス形式", () => {
 		const result = findClosest(
 			TEST_FILE_TREE,
-			["INDEX.md"],
+			["INDEX"],
 			"directory/directory2/ディレクトリ配下",
 		);
 		expect(result?.absPaths).toStrictEqual([
@@ -68,7 +64,7 @@ describe("直近パス検索", () => {
 	test("上方向も含めた直近検索", () => {
 		const result = findClosest(
 			TEST_FILE_TREE,
-			["SYNTAX TEST", "COMMON.md"],
+			["SYNTAX TEST", "COMMON"],
 			"ディレクトリ配下",
 		);
 		expect(result?.absPaths).toStrictEqual([
@@ -80,7 +76,7 @@ describe("直近パス検索", () => {
 	test("上方向も含めた遠いパス形式", () => {
 		const result = findClosest(
 			TEST_FILE_TREE,
-			["SYNTAX TEST", "COMMON.md"],
+			["SYNTAX TEST", "COMMON"],
 			"../directory/directory2/ディレクトリ配下",
 		);
 		expect(result?.absPaths).toStrictEqual([
@@ -89,10 +85,19 @@ describe("直近パス検索", () => {
 			"ディレクトリ配下.md",
 		]);
 	});
+
+	test("エンコード", () => {
+		const result = findClosest(
+			TEST_FILE_TREE,
+			["SYNTAX TEST", "COMMON"],
+			encodeURIComponent("スペース「 」「　」・記号込"),
+		);
+		expect(result?.absPaths).toStrictEqual(["スペース「 」「　」・記号込.md"]);
+	});
 });
 
 test("ファイル一覧取得", () => {
-	const directoryPath = "./assets/tests/posts";
+	const directoryPath = "./assets/posts/tests";
 	const fileTree = createFileTrees(directoryPath);
 	expect(fileTree).toStrictEqual(TEST_FILE_TREE);
 });

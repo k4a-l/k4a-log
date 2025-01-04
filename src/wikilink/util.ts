@@ -1,14 +1,36 @@
 import * as fs from "node:fs";
 import * as path from "node:path";
+import type { WikiLinkData } from "@/types/mdast";
+
+// _startPathの最後の要素に拡張子が含まれていない場合は、最後の要素に.mdを結合したあたらしい配列を作る
+// 拡張子が含まれている場合は、そのままの配列を使う
+export const convertNoExtensionPathToMD = (_path: string[]): string[] => {
+	const path = _path.slice(0, -1);
+	const last = lastOfArr(_path);
+
+	if (!last) return [];
+
+	if (last?.match(/.*\..*/)) {
+		path.push(last);
+	} else {
+		path.push(`${last}.md`);
+	}
+	return path.map((p) => {
+		return decodeURIComponent(p);
+	});
+};
 
 type FileNode = { absPaths: string[]; file: FileTree };
 export function findClosest(
 	fileTrees: FileTree[],
-	startPath: string[],
-	targetName: string,
+	_startPath: string[],
+	_targetName: string,
 ): FileNode | undefined {
 	// ツリー全体を探索し、すべてのパスを記録する
 	const allPaths: FileNode[] = [];
+
+	const targetName = decodeURIComponent(_targetName);
+	const startPath = convertNoExtensionPathToMD(_startPath);
 
 	function traverse(tree: FileTree[], currentPath: string[] = []) {
 		for (const file of tree) {
@@ -106,11 +128,14 @@ export const pathResolver = ({
 		link = link.replace(`#${heading}`, "");
 	}
 
-	const path = findClosest(fileTrees, currentPathList, link);
+	const file = findClosest(fileTrees, currentPathList, link);
 
-	if (path) {
-		if (heading) return `${link}#${heading.toLowerCase()}`.replace(/ /g, "-");
-		return extensionInfo.extension ? link : link.replace(/ /g, "-");
+	if (file) {
+		const absPath = path.join(...file.absPaths);
+		if (heading) {
+			return `${absPath}#${heading.toLowerCase()}`.replace(/ /g, "-");
+		}
+		return absPath;
 	}
 
 	return undefined;
@@ -144,7 +169,7 @@ export const createFileTrees = (dirPath: string): FileTree[] => {
 };
 
 export function getWikiLinkExtension(value: string | undefined): {
-	type: "img" | "pdf" | "unknown" | "link";
+	type: WikiLinkData["type"];
 	extension: string;
 } {
 	const imageExtensions = [
@@ -158,6 +183,8 @@ export function getWikiLinkExtension(value: string | undefined): {
 		/\.ico$/,
 	];
 	const pdfExtensions = [/\.pdf$/];
+
+	const videoExtensions = [/\.mp4$/, /\.avi$/, /\.mkv$/, /\.mov$/, /\.wmv$/];
 
 	if (!value) return { type: "link", extension: "" };
 	const strippedExtension =
@@ -177,7 +204,19 @@ export function getWikiLinkExtension(value: string | undefined): {
 		return { type: "pdf", extension: strippedExtension };
 	}
 
-	return { type: "unknown", extension: strippedExtension };
+	const isMatchVideo = value.match(
+		videoExtensions.filter((r) => value.match(r))[0],
+	)?.[0];
+	if (isMatchVideo) {
+		return { type: "video", extension: strippedExtension };
+	}
+
+	const isMatchAnyExtension = value.match(/\.([0-9a-z]{1,4})$/)?.[0];
+	if (isMatchAnyExtension) {
+		return { type: "unknown", extension: strippedExtension };
+	}
+
+	return { type: "link", extension: strippedExtension };
 }
 
 export function lastOfArr<T>(stack: T[]) {

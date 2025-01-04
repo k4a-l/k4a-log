@@ -2,6 +2,7 @@ import type { WikiLink } from "@/types/mdast";
 import type { FileTree } from "./util";
 
 export type WikiLinkOption = {
+	rootPath?: string;
 	fileTrees?: FileTree[];
 	currentPaths?: string[];
 	classNames?: {

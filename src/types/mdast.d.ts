@@ -2,17 +2,20 @@ import type { Literal } from "mdast";
 
 interface WikiLinkData extends Data {
 	isEmbed: boolean;
-	type: "link" | "img" | "pdf" | "unknown";
+	type: "link" | "img" | "pdf" | "video" | "unknown";
 	exists: boolean;
-	displayName: string;
+	alias: string;
 	link: string;
 	hChildren: { type: string; value: string }[];
 	hName: "span" | "a";
 	hProperties: {
 		className?: string;
-		style?: string;
 		href: string;
-		isEmbed?: "true";
+		title: string;
+		alias?: string;
+		type: WikiLinkData["type"];
+		"is-embed"?: "true";
+		size?: number;
 	};
 }
 

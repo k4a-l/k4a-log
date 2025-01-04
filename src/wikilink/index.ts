@@ -7,24 +7,6 @@ import type { Extension as MicromarkExtension } from "micromark-util-types";
 import type { Plugin, Processor } from "unified";
 import type { WikiLinkOption } from "./type";
 
-/**
- *
- * @overload
- * @param {Processor} processor
- * @param {Readonly<Options> | null | undefined} [options]
- * @returns {TransformBridge}
- *
- * @overload
- * @param {Readonly<Options> | null | undefined} [options]
- * @returns {TransformMutate}
- *
- * @param {Readonly<Options> | Processor | null | undefined} [destination]
- *   Processor or configuration (optional).
- * @param {Readonly<Options> | null | undefined} [options]
- *   When a processor was given, configuration (optional).
- * @returns {TransformBridge | TransformMutate}
- *   Transform.
- */
 const wikiLinkPlugin = function wikiLinkPlugin(
 	this: Processor,
 	options: WikiLinkOption = {},
@@ -47,6 +29,7 @@ const wikiLinkPlugin = function wikiLinkPlugin(
 	}
 
 	const opts: Required<WikiLinkOption> = {
+		rootPath: options.rootPath ?? "",
 		classNames: {
 			deadLink: "dead",
 			wikiLink: "wikiLink",
@@ -61,6 +44,6 @@ const wikiLinkPlugin = function wikiLinkPlugin(
 
 	add("micromarkExtensions", wikiLinkTokenize(opts));
 	add("fromMarkdownExtensions", fromMarkdown(opts));
-} satisfies Plugin;
+} satisfies Plugin<[WikiLinkOption]>;
 
 export default wikiLinkPlugin;

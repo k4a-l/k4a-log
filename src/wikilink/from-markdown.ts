@@ -1,3 +1,4 @@
+import path from "node:path";
 import type { WikiLink, WikiLinkData } from "@/types/mdast";
 import type {
 	CompileContext,
@@ -18,7 +19,7 @@ export function fromMarkdown(
 		const displayName = this.sliceSerialize(token);
 		const current = lastOfArr(this.stack);
 		if (!current) return;
-		current.data = { ...current.data, displayName } as WikiLink["data"];
+		current.data = { ...current.data, alias: displayName } as WikiLink["data"];
 	}
 
 	function exitWikiLinkTarget(this: CompileContext, token: Token) {
@@ -67,20 +68,21 @@ const createWikiLinkData = (
 	const hrefTemplate = defaultHrefTemplate;
 
 	const isEmbed = Boolean(token.embed);
-	const link = pathResolver({
+	const _link = pathResolver({
 		linkName: pathValue,
 		currentPathList: opts.currentPaths,
 		fileTrees: opts.fileTrees,
 	});
+	const link = _link
+		? wikiLink.value.startsWith("#")
+			? _link
+			: path.join(opts.rootPath, _link)
+		: undefined;
 
 	const extensionInfo = getWikiLinkExtension(wikiLink.value);
 	const classNames = `${opts.classNames.wikiLink} ${link === undefined ? `${opts.classNames.deadLink}` : ""}`;
 
 	const displayName: string = (() => {
-		if (wikiLink.data?.displayName) {
-			return wikiLink.data.displayName;
-		}
-
 		if (wikiLink.value.startsWith("#")) {
 			return wikiLink.value;
 		}
@@ -91,13 +93,17 @@ const createWikiLinkData = (
 				console.warn(warningMessage);
 				return warningMessage;
 			}
-			const regex = new RegExp(`${extensionInfo.extension}$`, "g");
-			return wikiLink.value.replace(regex, "");
+			if (extensionInfo.type === "link") {
+				const regex = new RegExp(`${extensionInfo.extension}$`, "g");
+				return wikiLink.value.replace(regex, "");
+			}
+			return wikiLink.value;
 		}
 
 		return wikiLink.value;
 	})();
 
+	const type: WikiLinkData["type"] = extensionInfo.type;
 	const hName = "a";
 	const hChildren: WikiLinkData["hChildren"] = [
 		{ type: "text", value: displayName },
@@ -105,16 +111,17 @@ const createWikiLinkData = (
 	const hProperties: WikiLinkData["hProperties"] = {
 		className: classNames,
 		href: link ? hrefTemplate(link) : "",
-		isEmbed: isEmbed ? "true" : undefined,
+		title: displayName,
+		alias: wikiLink.data?.alias,
+		type,
+		"is-embed": isEmbed ? "true" : undefined,
 	};
-
-	const type: WikiLinkData["type"] = extensionInfo.type;
 
 	return {
 		type,
 		link: link ?? "",
 		exists: link !== undefined,
-		displayName: `${displayName} : ${link}`,
+		alias: `${displayName}`,
 		hName,
 		isEmbed,
 		hProperties,
