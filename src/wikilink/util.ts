@@ -1,10 +1,6 @@
 import * as fs from "node:fs";
 import * as path from "node:path";
 import type { WikiLinkData } from "@/types/mdast";
-import type { ReactElement } from "react";
-import type { Processor } from "unified";
-
-import { readFile } from "node:fs/promises";
 import {} from "react/jsx-runtime";
 
 // _startPathの最後の要素に拡張子が含まれていない場合は、最後の要素に.mdを結合したあたらしい配列を作る
@@ -109,15 +105,16 @@ export function findClosest(
 
 export const pathResolver = ({
 	linkName: _linkName,
-	currentPathList,
+	currentPaths,
 	fileTrees,
 }: {
 	linkName: string;
-	currentPathList: string[];
+	currentPaths: string[];
 	fileTrees: FileTree[];
 }): string | undefined => {
 	if (!_linkName) return undefined;
 
+	// console.log(_linkName, currentPathList);
 	const extensionInfo = getWikiLinkExtension(_linkName);
 
 	// 同一ページ内のアンカーリンク
@@ -126,19 +123,19 @@ export const pathResolver = ({
 	}
 
 	let link = _linkName;
-	let heading = "";
+	let headingContent = "";
 	// HEADINGリンク
 	if (!extensionInfo.extension && link.match(/#/)) {
-		[, heading] = link.split("#");
-		link = link.replace(`#${heading}`, "");
+		headingContent = link.split("#")[1] ?? "";
+		link = link.replace(`#${headingContent}`, "");
 	}
 
-	const file = findClosest(fileTrees, currentPathList, link);
+	const file = findClosest(fileTrees, currentPaths, link);
 
 	if (file) {
 		const absPath = path.join(...file.absPaths);
-		if (heading) {
-			return `${absPath}#${heading.toLowerCase()}`.replace(/ /g, "-");
+		if (headingContent) {
+			return `${absPath}#${headingContent.toLowerCase()}`.replace(/ /g, "-");
 		}
 		return absPath;
 	}
@@ -195,23 +192,17 @@ export function getWikiLinkExtension(value: string | undefined): {
 	const strippedExtension =
 		value.match(/\.[0-9a-z]{1,4}$/gi)?.[0].replace(".", "") ?? "";
 
-	const isMatchImg = value.match(
-		imageExtensions.filter((r) => value.match(r))[0],
-	)?.[0];
+	const isMatchImg = imageExtensions.some((r) => value.match(r));
 	if (isMatchImg) {
 		return { type: "img", extension: strippedExtension };
 	}
 
-	const isMatchPdf = value.match(
-		pdfExtensions.filter((r) => value.match(r))[0],
-	)?.[0];
+	const isMatchPdf = pdfExtensions.some((r) => value.match(r));
 	if (isMatchPdf) {
 		return { type: "pdf", extension: strippedExtension };
 	}
 
-	const isMatchVideo = value.match(
-		videoExtensions.filter((r) => value.match(r))[0],
-	)?.[0];
+	const isMatchVideo = videoExtensions.some((r) => value.match(r));
 	if (isMatchVideo) {
 		return { type: "video", extension: strippedExtension };
 	}
@@ -227,31 +218,3 @@ export function getWikiLinkExtension(value: string | undefined): {
 export function lastOfArr<T>(stack: T[]) {
 	return stack[stack.length - 1];
 }
-
-export const directoryPath = "./assets/posts";
-
-export const getFileContent = async (
-	paths: string[],
-	directoryPath: string,
-	processor: Processor<
-		undefined,
-		undefined,
-		undefined,
-		undefined,
-		ReactElement
-	>,
-): Promise<ReactElement | string> => {
-	const fPath = path.join(
-		path.resolve(),
-		directoryPath,
-		...convertNoExtensionPathToMD(paths),
-	);
-	try {
-		const fileContent = await readFile(fPath, { encoding: "utf-8" });
-		const compiled = await processor.processSync(fileContent);
-		return compiled.result;
-	} catch (error) {
-		console.error(error);
-		return `${path.join(...paths)}}: ファイルが存在しません`;
-	}
-};

@@ -12,24 +12,43 @@ import {
 import { css } from "styled-system/css";
 import { HStack, Stack } from "styled-system/jsx";
 
+import { IconButton } from "@/park-ui/components/icon-button";
+import { Link } from "@/park-ui/components/link";
 import { Link as LinkIcons } from "lucide-react";
+import type { StrictOmit } from "ts-essentials";
 
+type LinkPresentationalType = StrictOmit<
+	WikiLinkData["hProperties"],
+	"rootDirPath" | "assetsDirPath" | "type" | "parentsLinks"
+>;
 export const TransitionLinkDead: FC<
-	PropsWithChildren<WikiLinkData["hProperties"]>
+	PropsWithChildren<LinkPresentationalType>
 > = ({ href, children, ...others }) => {
 	return (
-		<NextLink
-			{...others}
-			href={":"}
-			scroll={false}
-			// todo: デッドリンクでも遷移して言及しているページ一覧表示にしたほうが良さそう
-			style={{ color: "gray", cursor: "text" }}
-			onClick={(e) => {
-				e.preventDefault();
-			}}
-		>
-			{children}
-		</NextLink>
+		<Link asChild>
+			<NextLink
+				{...others}
+				href={":"}
+				scroll={false}
+				// todo: デッドリンクでも遷移して言及しているページ一覧表示にしたほうが良さそう
+				style={{ color: "gray", cursor: "text" }}
+				onClick={(e) => {
+					e.preventDefault();
+				}}
+			>
+				{children}
+			</NextLink>
+		</Link>
+	);
+};
+
+export const TransitionLinkExist: FC<
+	PropsWithChildren<LinkPresentationalType>
+> = ({ href, children, alias, title, ...others }) => {
+	return (
+		<Link asChild color={"blue.10"}>
+			<NextLink href={href}>{alias ?? title ?? children}</NextLink>
+		</Link>
 	);
 };
 
@@ -51,9 +70,13 @@ const EmbedLinkNotFound = ({ title }: { title: string }) => {
 	);
 };
 
-export const EmbedLinkImage: FC<
-	PropsWithChildren<WikiLinkData["hProperties"]>
-> = ({ href, title, alias, children, ...others }) => {
+export const EmbedLinkImage: FC<PropsWithChildren<LinkPresentationalType>> = ({
+	href,
+	title,
+	alias,
+	children,
+	...others
+}) => {
 	if (!href) {
 		return <EmbedLinkNotFound title={title} />;
 	}
@@ -64,6 +87,7 @@ export const EmbedLinkImage: FC<
 		<img
 			{...others}
 			src={href || ":"}
+			loading={"lazy"}
 			alt={title}
 			style={{ width: Number.isNaN(size) ? "auto" : size }}
 			className={css({
@@ -74,9 +98,13 @@ export const EmbedLinkImage: FC<
 	);
 };
 
-export const EmbedLinkVideo: FC<
-	PropsWithChildren<WikiLinkData["hProperties"]>
-> = ({ href, title, alias, children, ...others }) => {
+export const EmbedLinkVideo: FC<PropsWithChildren<LinkPresentationalType>> = ({
+	href,
+	title,
+	alias,
+	children,
+	...others
+}) => {
 	if (!href) {
 		return <EmbedLinkNotFound title={title} />;
 	}
@@ -85,6 +113,8 @@ export const EmbedLinkVideo: FC<
 		<video
 			{...others}
 			controls
+			preload="metadata"
+			poster=""
 			src={href || ":"}
 			className={css({
 				maxW: "100%",
@@ -94,9 +124,13 @@ export const EmbedLinkVideo: FC<
 	);
 };
 
-export const EmbedLinkPdf: FC<
-	PropsWithChildren<WikiLinkData["hProperties"]>
-> = ({ href, title, alias, children, ...others }) => {
+export const EmbedLinkPdf: FC<PropsWithChildren<LinkPresentationalType>> = ({
+	href,
+	title,
+	alias,
+	children,
+	...others
+}) => {
 	if (!href) {
 		return <EmbedLinkNotFound title={title} />;
 	}
@@ -130,6 +164,7 @@ export const EmbedLinkPdf: FC<
 		<iframe
 			{...others}
 			src={href || ":"}
+			loading="lazy"
 			className={css({ w: "100%", maxH: "1000px" })}
 			ref={iframeRef}
 			style={{ height: `${iframeHeight}px` }}
@@ -138,7 +173,7 @@ export const EmbedLinkPdf: FC<
 };
 
 export const EmbedLinkMarkdown: FC<
-	PropsWithChildren<WikiLinkData["hProperties"]>
+	PropsWithChildren<LinkPresentationalType>
 > = ({ href, title, alias, children }) => {
 	if (!href) {
 		return <EmbedLinkNotFound title={title} />;
@@ -147,17 +182,21 @@ export const EmbedLinkMarkdown: FC<
 	return (
 		<Stack
 			className={css({
-				px: 2,
-				py: 1,
 				shadow: "sm",
 				borderLeftWidth: 4,
 				borderStyle: "solid",
 				borderLeftColor: "gray.8",
+				my: 2,
 			})}
 		>
 			<HStack
 				justifyContent={"space-between"}
-				className={css({ borderBottomWidth: "1", borderBottomColor: "gray.3" })}
+				className={css({
+					borderBottomWidth: "1",
+					borderBottomColor: "gray.3",
+					px: 2,
+					py: 1,
+				})}
 			>
 				<span
 					className={css({
@@ -167,13 +206,23 @@ export const EmbedLinkMarkdown: FC<
 				>
 					{alias ?? title}
 				</span>
-				<NextLink href={href}>
-					<LinkIcons size={"1em"} />
-				</NextLink>
+				<IconButton asChild color="blue.10" variant={"ghost"} size="sm">
+					<NextLink href={href}>
+						<LinkIcons size={"1em"} />
+					</NextLink>
+				</IconButton>
 			</HStack>
-			<span>{children}</span>
+			<span
+				className={css({
+					maxH: "600px",
+					overflow: "auto",
+					scrollbarWidth: "thin",
+					px: 2,
+					pb: 1,
+				})}
+			>
+				{children}
+			</span>
 		</Stack>
 	);
-
-	// return <NextLink href={href}>{children}</NextLink>;
 };

@@ -1,8 +1,8 @@
-# 独自構文
+## 独自構文
 
 ![[ORIGINAL]]
 
-# その他通常Markdown
+## その他通常Markdown
 
 これ以下は基本の機能なので、軽く見て崩れてなければOK
 
@@ -31,9 +31,9 @@ can [see the source for it by adding '.text' to the URL](/projects/markdown/synt
 
 ---
 
-## Overview
+### Overview
 
-### Philosophy
+#### Philosophy
 
 Markdown is intended to be as easy-to-read and easy-to-write as is feasible.
 
@@ -45,9 +45,9 @@ filters -- including [Setext](http://docutils.sourceforge.net/mirror/setext.html
 [Grutatext](http://www.triptico.com/software/grutatxt.html), and [EtText](http://ettext.taint.org/doc/) -- the single biggest source of
 inspiration for Markdown's syntax is the format of plain text email.
 
-## Block Elements
+### Block Elements
 
-### Paragraphs and Line Breaks
+#### Paragraphs and Line Breaks
 
 A paragraph is simply one or more consecutive lines of text, separated
 by one or more blank lines. (A blank line is any line that looks like a
@@ -63,7 +63,7 @@ character in a paragraph into a `<br />` tag.
 When you _do_ want to insert a `<br />` break tag using Markdown, you
 end a line with two or more spaces, then type return.
 
-### Headers
+#### Headers
 
 Markdown supports two styles of headers, [Setext] [1] and [atx] [2].
 
@@ -73,7 +73,7 @@ closing hashes don't even need to match the number of hashes
 used to open the header. (The number of opening hashes
 determines the header level.)
 
-### Blockquotes
+#### Blockquotes
 
 Markdown uses email-style `>` characters for blockquoting. If you're
 familiar with quoting passages of text in an email message, then you
@@ -122,7 +122,7 @@ Any decent text editor should make email-style quoting easy. For
 example, with BBEdit, you can make a selection and choose Increase
 Quote Level from the Text menu.
 
-### Lists
+#### Lists
 
 Markdown supports ordered (numbered) and unordered (bulleted) lists.
 
@@ -230,7 +230,7 @@ to be indented _twice_ -- 8 spaces or two tabs:
 
         <code goes here>
 
-### Code Blocks
+#### Code Blocks
 
 Pre-formatted code blocks are used for writing about programming or
 markup source code. Rather than forming normal paragraphs, the lines
@@ -273,9 +273,9 @@ tell application "Foo"
 end tell
 ```
 
-## Span Elements
+### Span Elements
 
-### Links
+#### Links
 
 Markdown supports two style of links: _inline_ and _reference_.
 
@@ -290,7 +290,7 @@ This is [an example](http://example.com/) inline link.
 
 [This link](http://example.net/) has no title attribute.
 
-### Emphasis
+#### Emphasis
 
 Markdown treats asterisks (`*`) and underscores (`_`) as indicators of
 emphasis. Text wrapped with one `*` or `_` will be wrapped with an
@@ -305,7 +305,7 @@ _single underscores_
 
 **double underscores**
 
-### Code
+#### Code
 
 To indicate a span of code, wrap it with backtick quotes (`` ` ``).
 Unlike a pre-formatted code block, a code span indicates code within a

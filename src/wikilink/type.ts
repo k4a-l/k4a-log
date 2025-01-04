@@ -2,9 +2,12 @@ import type { WikiLink } from "@/types/mdast";
 import type { FileTree } from "./util";
 
 export type WikiLinkOption = {
-	rootPath?: string;
+	assetPath: string;
+	rootPath: string;
 	fileTrees?: FileTree[];
-	currentPaths?: string[];
+	// currentPaths?: string[];
+	/** 循環参照を防ぐためのもの */
+	parentsLinks: string[];
 	classNames?: {
 		deadLink?: string;
 		wikiLink?: string;

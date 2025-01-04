@@ -34,9 +34,10 @@ export function fromMarkdown(
 		this.exit(token);
 
 		const stack = lastOfArr(this.stack);
+		if (!stack) return;
 		if (!("children" in stack)) return;
 		const child = lastOfArr(stack?.children);
-		if (child.type !== "wikiLink") return;
+		if (child?.type !== "wikiLink") return;
 
 		const wikiLink = child as WikiLinkContentMap;
 
@@ -68,18 +69,23 @@ const createWikiLinkData = (
 	const hrefTemplate = defaultHrefTemplate;
 
 	const isEmbed = Boolean(token.embed);
+
+	const currentPaths: string[] = lastOfArr(opts.parentsLinks)?.split("/") ?? [];
+
 	const _link = pathResolver({
 		linkName: pathValue,
-		currentPathList: opts.currentPaths,
+		currentPaths: currentPaths,
 		fileTrees: opts.fileTrees,
 	});
+
+	const extensionInfo = getWikiLinkExtension(wikiLink.value);
+
 	const link = _link
 		? wikiLink.value.startsWith("#")
 			? _link
-			: path.join(opts.rootPath, _link)
+			: path.join(opts.rootPath, _link.replace(".md", ""))
 		: undefined;
 
-	const extensionInfo = getWikiLinkExtension(wikiLink.value);
 	const classNames = `${opts.classNames.wikiLink} ${link === undefined ? `${opts.classNames.deadLink}` : ""}`;
 
 	const displayName: string = (() => {
@@ -103,6 +109,14 @@ const createWikiLinkData = (
 		return wikiLink.value;
 	})();
 
+	const isCirclerReference = [...opts.parentsLinks].some((p) => {
+		return (
+			decodeURIComponent(
+				_link?.replace(/\.md$/, "").replace(/\\/g, "/") ?? "",
+			) === p
+		);
+	});
+
 	const type: WikiLinkData["type"] = extensionInfo.type;
 	const hName = "a";
 	const hChildren: WikiLinkData["hChildren"] = [
@@ -112,9 +126,26 @@ const createWikiLinkData = (
 		className: classNames,
 		href: link ? hrefTemplate(link) : "",
 		title: displayName,
-		alias: wikiLink.data?.alias,
-		type,
-		"is-embed": isEmbed ? "true" : undefined,
+		rootDirPath: opts.rootPath,
+		assetsDirPath: opts.assetPath,
+		"is-embed": isCirclerReference ? undefined : isEmbed ? "true" : undefined,
+		...(type === "unknown"
+			? {
+					type: "unknown",
+					alias: `⚠️「${displayName}」 を埋め込み表示できません`,
+				}
+			: isCirclerReference && isEmbed
+				? {
+						type: "unknown",
+						alias: `${displayName}：⚠️循環参照`,
+					}
+				: { type, alias: wikiLink.data?.alias }),
+		parentsLinks: [
+			...opts.parentsLinks,
+			...(_link ? [_link.replace(/\.md$/, "")] : []),
+		]
+			.map((p) => encodeURIComponent(p))
+			.join(" "),
 	};
 
 	return {

@@ -7,7 +7,6 @@ import type {
 	State,
 	TokenizeContext,
 } from "micromark-util-types";
-import type { WikiLinkOption } from "./type";
 
 const codes = {
 	horizontalTab: -2,
@@ -27,9 +26,7 @@ function markdownLineEnding(code: Code): boolean {
 	return code < codes.horizontalTab;
 }
 
-export function wikiLinkTokenize(
-	opts: WikiLinkOption = {},
-): MicromarkExtension {
+export function wikiLinkTokenize(): MicromarkExtension {
 	const aliasDivider = "|";
 
 	const aliasMarker = aliasDivider;

@@ -15,14 +15,20 @@ import type { Processor } from "unified";
 
 export const createProcessor = (
 	fileTrees: FileTree[],
-	currentPaths: string[],
+	_parentsLinks: string[],
 ): Processor<undefined, undefined, undefined, undefined, ReactElement> => {
+	const parentsLinks = _parentsLinks
+		.map((p) => decodeURIComponent(p))
+		.map((p) => p.replace(/\\+/g, "/").replace(/.md$/, ""));
+
 	const processor = remark()
 		.use(remarkParse)
 		.use(wikiLinkPlugin, {
 			fileTrees,
-			currentPaths,
+			// currentPaths,
+			assetPath: "assets",
 			rootPath: "posts",
+			parentsLinks,
 		} satisfies WikiLinkOption)
 		.use(remarkBreaks)
 		.use(remarkRehype, {

@@ -9,7 +9,7 @@ import type { WikiLinkOption } from "./type";
 
 const wikiLinkPlugin = function wikiLinkPlugin(
 	this: Processor,
-	options: WikiLinkOption = {},
+	options: WikiLinkOption,
 ) {
 	const data = this.data();
 
@@ -21,28 +21,23 @@ const wikiLinkPlugin = function wikiLinkPlugin(
 		else data[field] = [value];
 	}
 
-	if (!options.currentPaths) {
-		throw new Error("currentPathsを設定してください");
-	}
 	if (!options.fileTrees) {
 		throw new Error("fileTreesを設定してください");
 	}
 
 	const opts: Required<WikiLinkOption> = {
-		rootPath: options.rootPath ?? "",
+		fileTrees: [],
 		classNames: {
 			deadLink: "dead",
 			wikiLink: "wikiLink",
 			...options.classNames,
 		},
-		currentPaths: [],
-		fileTrees: [],
 		...options,
 	};
 
 	data.fromMarkdownExtensions;
 
-	add("micromarkExtensions", wikiLinkTokenize(opts));
+	add("micromarkExtensions", wikiLinkTokenize());
 	add("fromMarkdownExtensions", fromMarkdown(opts));
 } satisfies Plugin<[WikiLinkOption]>;
 

@@ -1,13 +1,10 @@
 import type { WikiLinkData } from "@/types/mdast";
 import type { AnchorHTMLAttributes, FC, PropsWithChildren } from "react";
 
+import { getFileContent } from "@/wikilink/file";
 import { createProcessor } from "@/wikilink/processor";
-import {
-	createFileTrees,
-	directoryPath,
-	getFileContent,
-} from "@/wikilink/util";
-import NextLink from "next/link";
+import { createFileTrees } from "@/wikilink/util";
+import path from "path-browserify";
 import { css } from "styled-system/css";
 import {
 	EmbedLinkImage,
@@ -15,7 +12,8 @@ import {
 	EmbedLinkPdf,
 	EmbedLinkVideo,
 	TransitionLinkDead,
-} from "./LinkPrentational";
+	TransitionLinkExist,
+} from "./LinkPresentational";
 
 export const LinkContainer: FC<
 	AnchorHTMLAttributes<HTMLAnchorElement> & WikiLinkData["hProperties"]
@@ -23,27 +21,27 @@ export const LinkContainer: FC<
 	const { href, children, "is-embed": isEmbed, ...others } = props;
 
 	if (isEmbed) {
-		return <EmbedLinkPresentation {...props} />;
+		return <EmbedLinkContainer {...props} />;
 	}
 
-	return <LinkPresentation {...props} />;
+	return <TransitionLinkContainer {...props} />;
 };
 
-export const LinkPresentation: FC<
+export const TransitionLinkContainer: FC<
 	PropsWithChildren<WikiLinkData["hProperties"]>
-> = (props) => {
-	const { href, children, alias, title } = props;
+> = ({ rootDirPath, assetsDirPath, parentsLinks, ...props }) => {
+	const { href } = props;
 	if (!href) {
 		return <TransitionLinkDead {...props} />;
 	}
 
-	return <NextLink href={href}>{alias ?? title ?? children}</NextLink>;
+	return <TransitionLinkExist {...props} />;
 };
 
-export const EmbedLinkPresentation: FC<
-	PropsWithChildren<WikiLinkData["hProperties"] & { title: string }>
-> = async (props) => {
-	const { href, children, type, title, ...others } = props;
+export const EmbedLinkContainer: FC<
+	PropsWithChildren<WikiLinkData["hProperties"]>
+> = async ({ rootDirPath, assetsDirPath, parentsLinks, type, ...props }) => {
+	const { href, children, title, alias, ...others } = props;
 
 	if (type === "img") {
 		return <EmbedLinkImage {...props} />;
@@ -59,13 +57,17 @@ export const EmbedLinkPresentation: FC<
 
 	if (type === "link") {
 		const paths = href.split("\\").slice(1);
-		console.log(paths);
-		const fileTrees = createFileTrees(directoryPath);
-		const currentPaths = ["SYNTAX TEST", "COMMON"];
-		const processor = createProcessor(fileTrees, currentPaths);
-		const data = await getFileContent(paths, directoryPath, processor);
+		const rootPath = path.join(assetsDirPath, rootDirPath);
+		const fileTrees = createFileTrees(rootPath);
 
-		return <EmbedLinkMarkdown {...props}>{data}</EmbedLinkMarkdown>;
+		const parentLinksArr = parentsLinks
+			.split(" ")
+			.map((p) => decodeURIComponent(p));
+
+		const processor = createProcessor(fileTrees, parentLinksArr);
+		const data = await getFileContent(paths, rootPath, processor);
+
+		return <EmbedLinkMarkdown {...props}>{data.content}</EmbedLinkMarkdown>;
 	}
 
 	return (
@@ -73,7 +75,7 @@ export const EmbedLinkPresentation: FC<
 			{...others}
 			className={css({ bg: "black.a2", px: 2, py: 1, rounded: "md" })}
 		>
-			⚠️{title}: を埋め込み表示できません
+			{alias ?? `⚠️${title}: を埋め込み表示できません`}
 		</span>
 	);
 };
