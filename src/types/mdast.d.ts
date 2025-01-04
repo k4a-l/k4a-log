@@ -30,8 +30,13 @@ interface WikiLink extends Literal {
 	value: string;
 }
 
+interface Hashtag extends Literal {
+	type: "hashtag";
+}
+
 declare module "mdast" {
 	interface RootContentMap {
 		wikiLink: WikiLink;
+		hashtag: Hashtag;
 	}
 }

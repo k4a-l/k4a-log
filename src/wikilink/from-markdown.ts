@@ -70,7 +70,8 @@ const createWikiLinkData = (
 
 	const isEmbed = Boolean(token.embed);
 
-	const currentPaths: string[] = lastOfArr(opts.parentsLinks)?.split("/") ?? [];
+	const parentsLinks = opts.parentsLinks.map((p) => decodeURIComponent(p));
+	const currentPaths: string[] = lastOfArr(parentsLinks)?.split("/") ?? [];
 
 	const _link = pathResolver({
 		linkName: pathValue,
@@ -109,7 +110,7 @@ const createWikiLinkData = (
 		return wikiLink.value;
 	})();
 
-	const isCirclerReference = [...opts.parentsLinks].some((p) => {
+	const isCirclerReference = [...parentsLinks].some((p) => {
 		return (
 			decodeURIComponent(
 				_link?.replace(/\.md$/, "").replace(/\\/g, "/") ?? "",
@@ -141,7 +142,7 @@ const createWikiLinkData = (
 					}
 				: { type, alias: wikiLink.data?.alias }),
 		parentsLinks: [
-			...opts.parentsLinks,
+			...parentsLinks,
 			...(_link ? [_link.replace(/\.md$/, "")] : []),
 		]
 			.map((p) => encodeURIComponent(p))

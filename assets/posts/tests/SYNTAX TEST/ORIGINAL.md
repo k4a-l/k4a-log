@@ -22,8 +22,8 @@
 
 ※マークダウンの埋め込みは[[COMMON]]側で[[ORIGINAL]]の埋め込みを確認すること
 
-![[ORIGINAL]]→自己リンク
-![[COMMON]]→循環自己リンク
+<!-- ![[ORIGINAL]]→自己リンク
+![[COMMON]]→循環自己リンク -->
 
 #### PNG
 
@@ -74,3 +74,8 @@
 
 > [!WARNING]
 > WARNING 表示
+
+## Tag
+
+#tag
+文章中の#tag

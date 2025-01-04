@@ -21,7 +21,9 @@ export const getFileContent = async (
 		...convertNoExtensionPathToMD(paths),
 	);
 
-	const title = lastOfArr(paths)?.replace(/\.(md)/, "") ?? "";
+	const title = decodeURIComponent(
+		lastOfArr(paths)?.replace(/\.(md)/, "") ?? "",
+	);
 
 	try {
 		const fileContent = await readFile(fPath, { encoding: "utf-8" });
