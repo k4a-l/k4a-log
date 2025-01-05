@@ -73,11 +73,60 @@
 
 ## CALLOUT
 
-> [!INFO]
-> INFO（デフォルト）表示
+> 通常のblockquote
+> Callout指定なし
+
+> [!NOTE]
+> リンク:[[COMMON]]
+> 埋込![[JPG.jpg]]
+
+> [!NOTE]- 開閉
+> コンテンツ
+
+> [!abstract]
+> Lorem ipsum dolor sit amet
 
 > [!WARNING]
 > WARNING 表示
+
+> [!info]
+> Lorem ipsum dolor sit amet
+
+> [!todo]
+> Lorem ipsum dolor sit amet
+
+> [!TIP]
+> Helpful advice for doing things better or more easily.
+
+> [!IMPORTANT]
+> Key information users need to know to achieve their goal.
+
+> [!success]
+> Lorem ipsum dolor sit amet
+
+> [!CAUTION]
+> Advises about risks or negative outcomes of certain actions.
+
+> [!question]
+> Lorem ipsum dolor sit amet
+
+> [!WARNING]
+> Urgent info that needs immediate user attention to avoid problems.
+
+> [!failure]
+> Lorem ipsum dolor sit amet
+
+> [!danger]
+> Lorem ipsum dolor sit amet
+
+> [!bug]
+> Lorem ipsum dolor sit amet
+
+> [!example]
+> Lorem ipsum dolor sit amet
+
+> [!quote]
+> Lorem ipsum dolor sit amet
 
 ## Tag
 

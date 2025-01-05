@@ -18,6 +18,7 @@ import remarkRehype, {
 import { css } from "styled-system/css";
 import { Box } from "styled-system/jsx";
 import type { Processor } from "unified";
+import RemarkCalloutPlugin from "./callout";
 import {
 	paragraphWrapHandler,
 	remarkParagraphWrapPlugin,
@@ -33,15 +34,17 @@ export const createProcessor = (
 
 	const processor = remark()
 		.use(remarkParse)
+		.use(remarkHashtagPlugin)
+		.use(remarkBreaks)
 		.use(wikiLinkPlugin, {
 			fileTrees,
 			assetPath: "assets",
 			rootPath: "posts",
 			parentsLinks,
 		} satisfies WikiLinkOption)
-		.use(remarkHashtagPlugin)
+		.use(RemarkCalloutPlugin)
+		// paragraphWrapを後ろに持っていく都合上、Callout内で横並びが出来ない
 		.use(remarkParagraphWrapPlugin)
-		.use(remarkBreaks)
 		.use(remarkRehype, {
 			allowDangerousHtml: true,
 			handlers: {
@@ -71,8 +74,11 @@ export const createProcessor = (
 					<Box
 						className={css({
 							whiteSpace: "normal",
-							"& > *": {
+							display: "inline-block",
+							"& > img,video": {
 								display: "inline",
+								verticalAlign: "top",
+								gap: 0,
 							},
 						})}
 					>

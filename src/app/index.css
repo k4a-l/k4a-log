@@ -24,7 +24,124 @@
 
 	* {
 		/* 少し柔らかい感じのフォント */
-
 		font-family: "Kosugi Maru", sans-serif;
+	}
+
+	.callout-title {
+		display: flex;
+		flex-direction: row;
+	}
+
+	[data-expanded="false"] .callout-content {
+		max-height: 0;
+		overflow: hidden;
+		transition: max-height 0.2s ease-out;
+	}
+
+	[data-expanded="true"] .callout-content {
+		max-height: 100px; /* or whatever height needed */
+	}
+
+	[data-expandable="true"] .callout-title {
+		cursor: pointer;
+	}
+
+	@media (prefers-color-scheme: dark) {
+		blockquote[data-callout] {
+			--color-border-default: #30363d;
+			--color-default-fg: #30363d;
+			--color-default-bg: whitesmoke;
+			--color-accent-fg: #1b78e2;
+			--color-accent-bg: #f8fbfe;
+			--color-danger-fg: #f85149;
+			--color-danger-bg: #fff0f0;
+			--color-attention-fg: #d29922;
+			--color-attention-bg: #fff7e8;
+			--color-done-fg: #a371f7;
+			--color-done-bg: #f7f2ff;
+			--color-tip-fg: #0cb9c5;
+			--color-tip-bg: #f0feff;
+			--color-success-fg: #3fb950;
+			--color-success-bg: #f0fff3;
+		}
+	}
+
+	blockquote {
+		margin: 1em 0;
+		padding: 0.5em 1em;
+	}
+
+	blockquote:not([data-callout]) {
+		background-color: var(--color-default-bg);
+	}
+
+	blockquote[data-callout] {
+		border-left: 0.25em solid
+			var(--borderColor-default, var(--color-border-default));
+		color: inherit;
+		padding: 0.8em 1em 1em 1em;
+
+		background-color: var(--color-callout-bg);
+		border-left-color: var(--color-callout-fg);
+	}
+
+	blockquote[data-callout] .callout-title {
+		align-items: center;
+		display: flex;
+		font-size: 14px;
+		line-height: 1;
+		gap: 0.3em;
+		font-weight: bold;
+
+		color: var(--color-callout-fg);
+	}
+
+	blockquote[data-callout] .callout-title-icon svg {
+		width: 1em;
+		height: 1em;
+	}
+
+	blockquote[data-callout="note"],
+	blockquote[data-callout="info"],
+	blockquote[data-callout="todo"] {
+		--color-callout-bg: var(--color-accent-bg);
+		--color-callout-fg: var(--color-accent-fg);
+	}
+
+	blockquote[data-callout="tip"],
+	blockquote[data-callout="abstract"],
+	blockquote[data-callout="abstract"] {
+		--color-callout-bg: var(--color-tip-bg);
+		--color-callout-fg: var(--color-tip-fg);
+	}
+
+	blockquote[data-callout="important"],
+	blockquote[data-callout="example"] {
+		--color-callout-bg: var(--color-done-bg);
+		--color-callout-fg: var(--color-done-fg);
+	}
+
+	blockquote[data-callout="warning"],
+	blockquote[data-callout="question"] {
+		--color-callout-bg: var(--color-attention-bg);
+		--color-callout-fg: var(--color-attention-fg);
+	}
+
+	blockquote[data-callout="caution"],
+	blockquote[data-callout="failure"],
+	blockquote[data-callout="danger"],
+	blockquote[data-callout="bug"] {
+		--color-callout-bg: var(--color-danger-bg);
+		--color-callout-fg: var(--color-danger-fg);
+	}
+
+	blockquote[data-callout="success"] {
+		--color-callout-bg: var(--color-success-bg);
+		--color-callout-fg: var(--color-success-fg);
+	}
+
+	blockquote[data-callout="quote"] {
+		--color-callout-bg: var(--color-default-bg);
+		--color-callout-fg: var(--color-default-fg);
 	}
 }

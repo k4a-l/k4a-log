@@ -45,6 +45,7 @@
 		"@types/react-dom": "^19",
 		"@vitejs/plugin-react": "^4.3.4",
 		"jsdom": "^25.0.1",
+		"remark-obsidian-callout": "^1.5.1",
 		"ts-essentials": "^10.0.4",
 		"typescript": "^5",
 		"vite-tsconfig-paths": "^5.1.4",
