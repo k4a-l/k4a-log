@@ -1,6 +1,7 @@
 import remarkParse from "remark-parse";
 
 import { Callout } from "@/components/Callout";
+import { CodeBlock } from "@/components/CodeBlock";
 import { Hashtag } from "@/components/Hashtag";
 import { MarkdownLink } from "@/components/Link";
 import { hashTagHandler, remarkHashtagPlugin } from "@/remark/hashtag";
@@ -44,7 +45,6 @@ export const createProcessor = (
 			parentsLinks,
 		} satisfies WikiLinkOption)
 		.use(RemarkCalloutPlugin)
-		// paragraphWrapを後ろに持っていく都合上、Callout内で横並びが出来ない
 		.use(remarkParagraphWrapPlugin)
 		.use(remarkRehype, {
 			allowDangerousHtml: true,
@@ -87,6 +87,8 @@ export const createProcessor = (
 					</Box>
 				),
 				blockquote: Callout,
+				pre: ({ children }) => <>{children}</>,
+				code: CodeBlock,
 			},
 		} satisfies RehypeReactOptions);
 

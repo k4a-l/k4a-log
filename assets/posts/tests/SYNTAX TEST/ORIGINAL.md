@@ -132,3 +132,47 @@
 
 #tag
 文章中の#tag
+
+## Code
+
+### Typescript（デフォ）
+
+```ts
+type WikiLinkData = {};
+
+interface WikiLink extends Literal {
+	type: "wikiLink";
+	embed?: boolean;
+	data?: WikiLinkData;
+	value: string;
+}
+```
+
+### React
+
+```react
+() => {
+	const [isClicked, setIsClicked] = useState(false);
+
+	return (
+		<div
+			style={{
+				color: isClicked ? "red" : "black",
+				cursor: 'pointer',
+			}}
+			onClick={() => setIsClicked(true)}
+		>
+			Hello!!
+		</div>
+	);
+};
+```
+
+### k4aDataView
+
+```k4aDataView
+() => {
+    return <TaskTemplate/>
+}
+
+```
