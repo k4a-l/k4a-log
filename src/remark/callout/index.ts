@@ -1,7 +1,7 @@
 // ref: https://github.com/escwxyz/remark-obsidian-callout
 
 import type { Plugin } from "unified";
-import type { Data, Node } from "unist";
+import type {} from "unist";
 import { visit } from "unist-util-visit";
 import {
 	alertTriangleIcon,
@@ -9,6 +9,7 @@ import {
 	checkCircleIcon,
 	checkIcon,
 	clipboardListIcon,
+	expandIcon,
 	flameIcon,
 	helpCircleIcon,
 	infoIcon,
@@ -23,84 +24,45 @@ import type { BlockContent, Root } from "mdast";
 
 type Callout = Record<string, unknown>;
 
-interface ExtendedNode extends Node {
-	data?: {
-		hProperties?: Record<string, unknown>;
-	};
-}
-interface HtmlNode extends Node {
-	type: "html";
-	data: Data;
-	value: string;
-}
-
 /**
  * Plugin configuration
- *
- * @export
- * @interface Config
  */
 export interface Config {
 	/**
 	 * the data attribute name to be added to the blockquote
-	 *
-	 * @type {string}
 	 */
 	dataAttribute: string;
 	/**
 	 * the custom class name to be added to the blockquote, by default it's `${dataAttribute}-${calloutType}` if not specified
-	 * @date 3/23/2023 - 5:16:26 PM
-	 *
-	 * @type {string | undefined}
 	 */
 	blockquoteClass: string | undefined;
 	/**
 	 * the custom class name to be added to the div, the parent element of icon & title text
-	 * @date 3/23/2023 - 5:16:26 PM
-	 *
-	 * @type {string}
 	 */
 	titleClass: string;
 	/**
 	 * the tag name for the title text element, default to `div`
-	 * @date 3/23/2023 - 5:16:26 PM
-	 *
-	 * @type {string}
 	 */
 	titleTextTagName: string;
 	/**
 	 * the custom class name to be added to the title text element
-	 * @date 3/23/2023 - 5:16:26 PM
-	 *
-	 * @type {string}
 	 */
 	titleTextClass: string;
 	/**
 	 * a function to transform the title text, you can use it to append custom strings
-	 * @date 3/23/2023 - 5:16:26 PM
-	 *
-	 * @type {(title: string) => string}
 	 */
 	titleTextTransform: (title: string) => string;
 	/**
 	 * the tag name for the title icon element, default to `div`
-	 * @date 3/23/2023 - 5:16:26 PM
-	 *
-	 * @type {string}
 	 */
 	iconTagName: string;
 	/**
 	 * the custom class name to be added to the title icon element
-	 * @date 3/23/2023 - 5:16:26 PM
-	 *
-	 * @type {string}
 	 */
 	iconClass: string;
 	/**
 	 * the custom class name to be added to the content element
-	 * @date 7/16/2024 - 7:20:26 PM
-	 *
-	 * @type {string}
+
 	 */
 	contentClass: string;
 	/**
@@ -109,18 +71,12 @@ export interface Config {
 	 * see https://help.obsidian.md/Editing+and+formatting/Callouts#Supported+types,
 	 *
 	 * you can customize it by overriding the same callout's icon or passing new callout with customized name and icon
-	 * @date 10/07/2024 - 8:16:26 PM
-	 *
-	 * @type {Record<string, string>}
 	 */
 	callouts: Record<string, string>;
 }
 
 /**
  * Default configuration
- * @date 3/23/2023 - 5:16:26 PM
- *
- * @type {Config}
  */
 const defaultConfig: Config = {
 	dataAttribute: "callout",
@@ -167,11 +123,6 @@ const REGEX = /^\[\!(\w+)\]([+-]?)/;
 
 /**
  * Check if the str is a valid callout type
- * @date 3/23/2023 - 5:16:26 PM
- *
- * @param {Callout} obj
- * @param {string} str
- * @returns {boolean}
  */
 const memoizedContainsKey = memoize((obj: Callout, str: string) =>
 	Object.keys(obj).includes(str.toLowerCase()),
@@ -193,9 +144,6 @@ function memoize<T extends (...args: Parameters<T>) => ReturnType<T>>(
 }
 /**
  * This is a remark plugin that parses Obsidian's callout syntax, and adds custom data attributes and classes to the HTML elements for further customizations.
- *
- * @param {?Partial<Config>} [customConfig]
- * @returns {(tree: Node) => void}
  */
 const RemarkCalloutPlugin: Plugin = (
 	customConfig?: Partial<Config>,
@@ -225,7 +173,6 @@ const RemarkCalloutPlugin: Plugin = (
 	return (tree: Root): void => {
 		visit(tree, "blockquote", (node) => {
 			if (!("children" in node) || node.children.length === 0) return;
-
 			const firstChild = node.children[0];
 
 			if (!firstChild) return;
@@ -242,6 +189,8 @@ const RemarkCalloutPlugin: Plugin = (
 
 				const calloutType = array?.at(1);
 				const expandCollapseSign = array?.at(2);
+				const dataExpandable = Boolean(expandCollapseSign);
+				const dataExpanded = expandCollapseSign === "+";
 
 				if (array && calloutType) {
 					let icon: string;
@@ -259,26 +208,23 @@ const RemarkCalloutPlugin: Plugin = (
 						array.input.slice(matched[0].length).trim() ||
 						calloutType.toUpperCase();
 
-					const titleHtmlNode: HtmlNode = {
+					const iconHTML = `<${iconTagName} class="${iconClass}">${icon}</${iconTagName}>`;
+					const titleTextHTML =
+						title &&
+						`<${titleTextTagName} class="${titleTextClass}">${titleTextTransform(
+							title,
+						)}</${titleTextTagName}>`;
+					const expandHTML = dataExpandable
+						? `<${iconTagName} class="${iconClass}">${expandIcon}</${iconTagName}>`
+						: "";
+
+					const titleHtmlNode: BlockContent = {
 						type: "html",
 						data: {},
-						value: `
-                <div class="${titleClass}">
-                  <${iconTagName} class="${iconClass}">${icon}</${iconTagName}>
-                  ${
-										title &&
-										`<${titleTextTagName} class="${titleTextClass}">${titleTextTransform(
-											title,
-										)}</${titleTextTagName}>`
-									}
-                </div>
-                `,
+						value: `<div class="${titleClass}">${iconHTML}${titleTextHTML}${expandHTML}</div>`,
 					};
 
 					node.children.splice(0, 1, titleHtmlNode);
-
-					const dataExpandable = Boolean(expandCollapseSign);
-					const dataExpanded = expandCollapseSign === "+";
 
 					node.data = {
 						hProperties: {
@@ -290,7 +236,14 @@ const RemarkCalloutPlugin: Plugin = (
 							"data-expanded": String(dataExpanded),
 						},
 					};
-					node.children.push(...(remainingLines as BlockContent[]));
+					node.children.push({
+						type: "paragraph",
+						data: {
+							hProperties: { className: contentClass },
+							hName: "div",
+						},
+						children: remainingLines,
+					});
 				}
 			}
 		});

@@ -32,22 +32,24 @@
 		flex-direction: row;
 	}
 
-	[data-expanded="false"] .callout-content {
-		max-height: 0;
-		overflow: hidden;
-		transition: max-height 0.2s ease-out;
+	/* 開閉 */
+	.callout-content {
+		display: grid;
+		grid-template-rows: 0fr;
+		transition: 250ms grid-template-rows ease;
 	}
-
 	[data-expanded="true"] .callout-content {
-		max-height: 100px; /* or whatever height needed */
+		grid-template-rows: 1fr;
 	}
-
+	.callout-content > div {
+		overflow: hidden;
+	}
 	[data-expandable="true"] .callout-title {
 		cursor: pointer;
 	}
 
 	@media (prefers-color-scheme: dark) {
-		blockquote[data-callout] {
+		blockquote {
 			--color-border-default: #30363d;
 			--color-default-fg: #30363d;
 			--color-default-bg: whitesmoke;
@@ -69,6 +71,9 @@
 	blockquote {
 		margin: 1em 0;
 		padding: 0.5em 1em;
+
+		display: grid;
+		grid-template-rows: 0fr;
 	}
 
 	blockquote:not([data-callout]) {

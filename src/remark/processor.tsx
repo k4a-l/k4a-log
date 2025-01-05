@@ -1,5 +1,6 @@
 import remarkParse from "remark-parse";
 
+import { Callout } from "@/components/Callout";
 import { Hashtag } from "@/components/Hashtag";
 import { MarkdownLink } from "@/components/Link";
 import { hashTagHandler, remarkHashtagPlugin } from "@/remark/hashtag";
@@ -85,6 +86,7 @@ export const createProcessor = (
 						{children}
 					</Box>
 				),
+				blockquote: Callout,
 			},
 		} satisfies RehypeReactOptions);
 
