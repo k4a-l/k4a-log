@@ -8,6 +8,7 @@ import { hashTagHandler, remarkHashtagPlugin } from "@/remark/hashtag";
 import wikiLinkPlugin from "@/remark/wikilink";
 import type { WikiLinkOption } from "@/remark/wikilink/type";
 import type { FileTree } from "@/remark/wikilink/util";
+import type { Root } from "mdast";
 import type { ReactElement } from "react";
 import { Fragment, jsx, jsxs } from "react/jsx-runtime";
 import rehypeRaw from "rehype-raw";
@@ -26,25 +27,42 @@ import {
 	remarkParagraphWrapPlugin,
 } from "./paragraph-wrap";
 
-export const createProcessor = (
+export type ReactProcessor = Processor<
+	undefined,
+	undefined,
+	undefined,
+	undefined,
+	ReactElement
+>;
+
+export const createParseProcessor = (
 	fileTrees: FileTree[],
 	_parentsLinks: string[],
-): Processor<undefined, undefined, undefined, undefined, ReactElement> => {
+): Processor<Root, undefined, undefined, Root, string> => {
 	const parentsLinks = _parentsLinks
 		.map((p) => decodeURIComponent(p))
 		.map((p) => p.replace(/\\+/g, "/").replace(/.md$/, ""));
 
 	const processor = remark()
 		.use(remarkParse)
-		.use(remarkHashtagPlugin)
-		.use(remarkBreaks)
 		.use(wikiLinkPlugin, {
 			fileTrees,
 			assetPath: "assets",
 			rootPath: "posts",
 			parentsLinks,
-		} satisfies WikiLinkOption)
+		} satisfies WikiLinkOption);
+
+	return processor;
+};
+
+export const createRunProcessor = (
+	fileTrees: FileTree[],
+	_parentsLinks: string[],
+): Processor => {
+	return remark()
+		.use(remarkBreaks)
 		.use(RemarkCalloutPlugin)
+		.use(remarkHashtagPlugin)
 		.use(remarkParagraphWrapPlugin)
 		.use(remarkRehype, {
 			allowDangerousHtml: true,
@@ -53,44 +71,45 @@ export const createProcessor = (
 				paragraphWrap: paragraphWrapHandler,
 			},
 		} satisfies remarkRehypeOptions)
-		.use(rehypeRaw)
-		.use(rehypeReact, {
-			Fragment,
-			jsx,
-			jsxs,
-			components: {
-				a: MarkdownLink,
-				p: ({ children }) => (
-					<span
-						style={{
-							padding: "0.2em 0",
-							display: "block",
-						}}
-					>
-						{children}
-					</span>
-				),
-				hashtag: Hashtag,
-				"paragraph-wrap": ({ children }) => (
-					<Box
-						className={css({
-							whiteSpace: "normal",
-							display: "inline-block",
-							"& > img,video": {
-								display: "inline",
-								verticalAlign: "top",
-								gap: 0,
-							},
-						})}
-					>
-						{children}
-					</Box>
-				),
-				blockquote: Callout,
-				pre: ({ children }) => <>{children}</>,
-				code: CodeBlock,
-			},
-		} satisfies RehypeReactOptions);
+		.use(rehypeRaw);
+};
 
-	return processor;
+export const createStringifyProcessor = (): ReactProcessor => {
+	return remark().use(rehypeReact, {
+		Fragment,
+		jsx,
+		jsxs,
+		components: {
+			a: MarkdownLink,
+			p: ({ children }) => (
+				<span
+					style={{
+						padding: "0.2em 0",
+						display: "block",
+					}}
+				>
+					{children}
+				</span>
+			),
+			hashtag: Hashtag,
+			"paragraph-wrap": ({ children }) => (
+				<Box
+					className={css({
+						whiteSpace: "normal",
+						display: "inline-block",
+						"& > img,video": {
+							display: "inline",
+							verticalAlign: "top",
+							gap: 0,
+						},
+					})}
+				>
+					{children}
+				</Box>
+			),
+			blockquote: Callout,
+			pre: ({ children }) => <>{children}</>,
+			code: CodeBlock,
+		},
+	} satisfies RehypeReactOptions);
 };

@@ -10,7 +10,7 @@ import { DynamicK4aReactCode, DynamicReactCode } from "./DynamicReactCode";
 export const CodeBlock = (props: PropsWithChildren<HTMLElement>) => {
 	const { children, className } = props;
 
-	const language = className.match(/language-(\w+)/)?.[1];
+	const language = className?.match(/language-(\w+)/)?.[1];
 
 	if (language === "react") {
 		const transpiledCode =
@@ -43,8 +43,6 @@ export const CodeBlock = (props: PropsWithChildren<HTMLElement>) => {
 			</div>
 		);
 	}
-
-	console.log(language);
 
 	if (language === "k4aDataView") {
 		const transpiledCode =

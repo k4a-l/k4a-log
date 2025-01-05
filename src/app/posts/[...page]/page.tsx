@@ -1,5 +1,9 @@
 import path from "node:path";
-import { createProcessor } from "@/remark/processor";
+import {
+	createParseProcessor,
+	createRunProcessor,
+	createStringifyProcessor,
+} from "@/remark/processor";
 import { getFileContent } from "@/remark/wikilink/file";
 import { createFileTrees } from "@/remark/wikilink/util";
 import {} from "react/jsx-runtime";
@@ -12,9 +16,18 @@ export default async function Home({ params }: { params: { page: string[] } }) {
 	const paths = (await params).page;
 
 	const fileTrees = createFileTrees(directoryPath);
-	const processor = createProcessor(fileTrees, [path.join(...paths)]);
 
-	const data = await getFileContent(paths, directoryPath, processor);
+	const parseProcessor = createParseProcessor(fileTrees, [path.join(...paths)]);
+	const runProcessor = createRunProcessor(fileTrees, [path.join(...paths)]);
+	const stringifyProcessor = createStringifyProcessor();
+
+	const data = await getFileContent(
+		paths,
+		directoryPath,
+		parseProcessor,
+		runProcessor,
+		stringifyProcessor,
+	);
 	return (
 		<Center className={css({ px: 10, py: 4 })}>
 			<Stack maxW={"1000px"}>

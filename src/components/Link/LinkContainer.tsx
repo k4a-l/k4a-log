@@ -1,7 +1,11 @@
 import type { WikiLinkData } from "@/types/mdast";
 import type { AnchorHTMLAttributes, FC, PropsWithChildren } from "react";
 
-import { createProcessor } from "@/remark/processor";
+import {
+	createParseProcessor,
+	createRunProcessor,
+	createStringifyProcessor,
+} from "@/remark/processor";
 import { getFileContent } from "@/remark/wikilink/file";
 import { createFileTrees } from "@/remark/wikilink/util";
 import path from "path-browserify";
@@ -64,8 +68,16 @@ export const EmbedLinkContainer: FC<
 			.split(" ")
 			.map((p) => decodeURIComponent(p));
 
-		const processor = createProcessor(fileTrees, parentLinksArr);
-		const data = await getFileContent(paths, rootPath, processor);
+		const remarkProcessor = createParseProcessor(fileTrees, parentLinksArr);
+		const rehypeProcessor = createRunProcessor(fileTrees, parentLinksArr);
+		const stringifyProcessor = createStringifyProcessor();
+		const data = await getFileContent(
+			paths,
+			rootPath,
+			remarkProcessor,
+			rehypeProcessor,
+			stringifyProcessor,
+		);
 
 		return <EmbedLinkMarkdown {...props}>{data.content}</EmbedLinkMarkdown>;
 	}

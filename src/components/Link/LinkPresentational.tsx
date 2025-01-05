@@ -186,6 +186,7 @@ export const EmbedLinkMarkdown: FC<
 				borderLeftWidth: 4,
 				borderStyle: "solid",
 				borderLeftColor: "gray.8",
+				w: "100%",
 				my: 2,
 			})}
 		>
