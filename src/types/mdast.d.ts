@@ -34,9 +34,14 @@ interface Hashtag extends Literal {
 	type: "hashtag";
 }
 
+interface ParagraphWrap extends Literal {
+	type: "paragraphWrap";
+}
+
 declare module "mdast" {
 	interface RootContentMap {
 		wikiLink: WikiLink;
 		hashtag: Hashtag;
+		paragraphWrap: ParagraphWrap;
 	}
 }

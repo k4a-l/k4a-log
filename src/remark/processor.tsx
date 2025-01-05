@@ -15,7 +15,13 @@ import remarkBreaks from "remark-breaks";
 import remarkRehype, {
 	type Options as remarkRehypeOptions,
 } from "remark-rehype";
+import { css } from "styled-system/css";
+import { Box } from "styled-system/jsx";
 import type { Processor } from "unified";
+import {
+	paragraphWrapHandler,
+	remarkParagraphWrapPlugin,
+} from "./paragraph-wrap";
 
 export const createProcessor = (
 	fileTrees: FileTree[],
@@ -34,10 +40,14 @@ export const createProcessor = (
 			parentsLinks,
 		} satisfies WikiLinkOption)
 		.use(remarkHashtagPlugin)
+		.use(remarkParagraphWrapPlugin)
 		.use(remarkBreaks)
 		.use(remarkRehype, {
 			allowDangerousHtml: true,
-			handlers: { hashtag: hashTagHandler },
+			handlers: {
+				hashtag: hashTagHandler,
+				paragraphWrap: paragraphWrapHandler,
+			},
 		} satisfies remarkRehypeOptions)
 		.use(rehypeRaw)
 		.use(rehypeReact, {
@@ -57,6 +67,18 @@ export const createProcessor = (
 					</span>
 				),
 				hashtag: Hashtag,
+				"paragraph-wrap": ({ children }) => (
+					<Box
+						className={css({
+							whiteSpace: "normal",
+							"& > *": {
+								display: "inline",
+							},
+						})}
+					>
+						{children}
+					</Box>
+				),
 			},
 		} satisfies RehypeReactOptions);
 

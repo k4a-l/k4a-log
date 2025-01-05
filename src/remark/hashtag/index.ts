@@ -56,8 +56,21 @@ export const remarkHashtagPlugin: Plugin = () => {
 
 			const texts = splitByHashtag(child?.value ?? "");
 			for (const text of texts) {
-				if (text.startsWith("#")) parent.children.unshift(u("hashtag", text));
-				else parent.children.unshift(u("text", text));
+				if (text.startsWith("#")) {
+					const hashTagValue = text.replace("#", "");
+					parent.children.unshift({
+						// TODO: fix
+						// @ts-expect-error
+						type: "element",
+						data: {
+							hName: "hashtag",
+							hChildren: [{ type: "text", value: hashTagValue }],
+							hProperties: {
+								href: hashTagValue,
+							},
+						},
+					});
+				} else parent.children.unshift(u("text", text));
 			}
 		});
 };

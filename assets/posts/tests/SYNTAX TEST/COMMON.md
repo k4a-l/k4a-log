@@ -290,6 +290,10 @@ This is [an example](http://example.com/) inline link.
 
 [This link](http://example.net/) has no title attribute.
 
+#### Embed Links
+
+![Image](https://picsum.photos/id/237/200/300)![Image](https://picsum.photos/id/237/200/300)
+
 #### Emphasis
 
 Markdown treats asterisks (`*`) and underscores (`_`) as indicators of
