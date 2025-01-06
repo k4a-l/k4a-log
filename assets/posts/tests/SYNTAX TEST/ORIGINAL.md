@@ -1,3 +1,5 @@
+## 目次
+
 ## WikiLink
 
 ### 通常
@@ -11,6 +13,7 @@
 [[PNG.png]]
 [[PDF.pdf]]
 [[#WikiLink]]
+[[COMMON#Lists]]
 [[ORIGINAL]]→自己リンク
 
 #### 存在しない
@@ -20,10 +23,9 @@
 
 ### 埋め込みリンク
 
-※マークダウンの埋め込みは[[COMMON]]側で[[ORIGINAL]]の埋め込みを確認すること
-
 ![[ORIGINAL]]→自己リンク
 ![[COMMON]]→循環自己リンク
+![[COMMON#Span Elements]]→ヘッダーリンク
 
 #### PNG
 

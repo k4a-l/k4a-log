@@ -10,6 +10,7 @@ import rehypeRaw from "rehype-raw";
 import rehypeReact, { type Options as RehypeReactOptions } from "rehype-react";
 import { remark } from "remark";
 import remarkBreaks from "remark-breaks";
+
 import remarkRehype, {
 	type Options as remarkRehypeOptions,
 } from "remark-rehype";
@@ -19,6 +20,9 @@ import {
 	paragraphWrapHandler,
 	remarkParagraphWrapPlugin,
 } from "../paragraph-wrap";
+
+import rehypeSlug from "rehype-slug";
+import remarkToc, { type RemarkTocOptions } from "../toc";
 
 export type ReactProcessor = Processor<
 	undefined,
@@ -30,6 +34,7 @@ export type ReactProcessor = Processor<
 
 export const createRunProcessor = (): Processor => {
 	return remark()
+		.use(remarkToc, { heading: "目次" } satisfies RemarkTocOptions)
 		.use(remarkBreaks)
 		.use(RemarkCalloutPlugin)
 		.use(remarkHashtagPlugin)
@@ -41,6 +46,7 @@ export const createRunProcessor = (): Processor => {
 				paragraphWrap: paragraphWrapHandler,
 			},
 		} satisfies remarkRehypeOptions)
+		.use(rehypeSlug)
 		.use(rehypeRaw);
 };
 

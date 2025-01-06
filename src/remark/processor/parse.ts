@@ -12,10 +12,16 @@ export const createParseProcessor = (
 ): Processor<Root, undefined, undefined, Root, string> => {
 	const parentsLinks = _parentsLinks
 		.map((p) => decodeURIComponent(p))
-		.map((p) => p.replace(/\\+/g, "/").replace(/.md$/, ""));
+		.map((p) =>
+			p
+				.replace(/\\+/g, "/")
+				.replace(/.md$/, "")
+				.replace(/#([^.]*)/, ""),
+		);
 
 	const processor = remark()
 		.use(remarkParse)
+
 		.use(wikiLinkPlugin, {
 			fileTrees,
 			assetPath: "assets",

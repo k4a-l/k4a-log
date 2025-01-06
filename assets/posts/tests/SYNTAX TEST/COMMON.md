@@ -6,25 +6,24 @@
 
 これ以下は基本の機能なので、軽く見て崩れてなければOK
 
+※以下の目次は自動生成ではない
+
 -   [Overview](#overview)
     -   [Philosophy](#philosophy)
-    -   [Inline HTML](#html)
-    -   [Automatic Escaping for Special Characters](#autoescape)
--   [Block Elements](#block)
-    -   [Paragraphs and Line Breaks](#p)
-    -   [Headers](#header)
+    -   [Inline HTML](#inline-html)
+    -   [Automatic Escaping for Special Characters](#automatic-escaping-for-special-characters)
+-   [Block Elements](#block-elements)
+    -   [Paragraphs and Line Breaks](#paragraphs-and-line-breaks)
+    -   [Headers](#headers)
     -   [Blockquotes](#blockquote)
-    -   [Lists](#list)
-    -   [Code Blocks](#precode)
-    -   [Horizontal Rules](#hr)
--   [Span Elements](#span)
-    -   [Links](#link)
-    -   [Emphasis](#em)
+    -   [Lists](#lists)
+    -   [Code Blocks](#code-blocks)
+    -   [Horizontal Rules](#horizontal-rules)
+-   [Span Elements](#span-elements)
+    -   [Links](#links)
+    -   [Emphasis](#emphasis)
     -   [Code](#code)
-    -   [Images](#img)
--   [Miscellaneous](#misc)
-    -   [Backslash Escapes](#backslash)
-    -   [Automatic Links](#autolink)
+    -   [Images](#images)
 
 **Note:** This document is itself written using Markdown; you
 can [see the source for it by adding '.text' to the URL](/projects/markdown/syntax.text).

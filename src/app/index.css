@@ -28,11 +28,27 @@
 		font-family: "Kosugi Maru", sans-serif;
 	}
 
+	/********** TOC **********/
+	.toc {
+		padding: 1em 2em;
+		border-radius: 0.5em;
+		background-color: whitesmoke;
+		font-size: 0.8em;
+		ul,
+		ol {
+			padding: 0.2em 0px 0.2em 20px;
+		}
+		li {
+			line-height: 1;
+		}
+	}
+
 	.callout-title {
 		display: flex;
 		flex-direction: row;
 	}
 
+	/********** COLL OUT **********/
 	/* 開閉 */
 	.callout-content {
 		display: grid;

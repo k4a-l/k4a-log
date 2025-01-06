@@ -12,7 +12,9 @@ import { Center, Stack } from "styled-system/jsx";
 
 const directoryPath = "./assets/posts";
 
-export default async function Home({ params }: { params: { page: string[] } }) {
+type Params = Promise<{ page: string[] }>;
+
+export default async function Home({ params }: { params: Params }) {
 	const paths = (await params).page;
 
 	const fileTrees = createFileTrees(directoryPath);
@@ -28,6 +30,7 @@ export default async function Home({ params }: { params: { page: string[] } }) {
 		runProcessor,
 		stringifyProcessor,
 	);
+
 	return (
 		<Center className={css({ px: 10, py: 4 })}>
 			<Stack maxW={"1000px"}>

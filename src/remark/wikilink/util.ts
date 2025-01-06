@@ -119,7 +119,7 @@ export const pathResolver = ({
 
 	// 同一ページ内のアンカーリンク
 	if (_linkName.startsWith("#")) {
-		return _linkName;
+		return `#${toHeadingSlug(_linkName.replace("#", ""))}`;
 	}
 
 	let link = _linkName;
@@ -135,7 +135,7 @@ export const pathResolver = ({
 	if (file) {
 		const absPath = path.join(...file.absPaths);
 		if (headingContent) {
-			return `${absPath}#${headingContent.toLowerCase()}`.replace(/ /g, "-");
+			return `${absPath}#${toHeadingSlug(headingContent)}`;
 		}
 		return absPath;
 	}
@@ -218,3 +218,10 @@ export function getWikiLinkExtension(value: string | undefined): {
 export function lastOfArr<T>(stack: T[]) {
 	return stack[stack.length - 1];
 }
+
+import GithubSlugger from "github-slugger";
+
+export const toHeadingSlug = (str: string) => {
+	const slugs = new GithubSlugger();
+	return slugs.slug(str);
+};

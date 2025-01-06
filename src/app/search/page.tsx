@@ -1,6 +1,8 @@
+type SearchParams = Promise<{ query: string }>;
+
 export default async function Page({
 	searchParams,
-}: { searchParams: { query: string } }) {
+}: { searchParams: SearchParams }) {
 	const { query } = await searchParams;
 	const queryDecoded = decodeURIComponent(query ?? "");
 
