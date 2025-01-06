@@ -74,3 +74,7 @@ export const CodeBlock = (props: PropsWithChildren<HTMLElement>) => {
 		</SyntaxHighlighter>
 	);
 };
+
+export const Pre = ({ children }: PropsWithChildren) => {
+	return <>{children}</>;
+};

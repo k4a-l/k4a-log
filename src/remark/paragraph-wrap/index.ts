@@ -2,9 +2,8 @@ import { visit } from "unist-util-visit";
 
 import type { PhrasingContent, Root } from "mdast";
 import type { Handler } from "mdast-util-to-hast";
-import { u } from "unist-builder";
-
 import type { Plugin } from "unified";
+import { u } from "unist-builder";
 
 export const paragraphWrapHandler: Handler = (_h: unknown, node) => {
 	return {
@@ -51,6 +50,14 @@ export const remarkParagraphWrapPlugin: Plugin = () => {
 			// 最後のバッファをフラッシュ
 			flushBuffer();
 
+			// pだとdom違反なので変換
+			node.data = {
+				...node.data,
+				hName: "span",
+				hProperties: {
+					style: "display: block; padding: 0.2em 0;",
+				},
+			};
 			node.children = newChildren;
 		});
 };

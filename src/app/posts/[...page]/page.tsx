@@ -1,9 +1,9 @@
 import path from "node:path";
 import {
-	createParseProcessor,
 	createRunProcessor,
 	createStringifyProcessor,
 } from "@/remark/processor";
+import { createParseProcessor } from "@/remark/processor/parse";
 import { getFileContent } from "@/remark/wikilink/file";
 import { createFileTrees } from "@/remark/wikilink/util";
 import {} from "react/jsx-runtime";
@@ -18,7 +18,7 @@ export default async function Home({ params }: { params: { page: string[] } }) {
 	const fileTrees = createFileTrees(directoryPath);
 
 	const parseProcessor = createParseProcessor(fileTrees, [path.join(...paths)]);
-	const runProcessor = createRunProcessor(fileTrees, [path.join(...paths)]);
+	const runProcessor = createRunProcessor();
 	const stringifyProcessor = createStringifyProcessor();
 
 	const data = await getFileContent(
