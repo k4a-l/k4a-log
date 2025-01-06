@@ -4,7 +4,9 @@ import type { Heading, Root } from "mdast";
 import { toString as mdastToString } from "mdast-util-to-string";
 import type { ReactElement } from "react";
 import type { Processor } from "unified";
+import { VFile } from "vfile";
 import type { ReactProcessor } from "../processor";
+
 import { convertNoExtensionPathToMD, lastOfArr, toHeadingSlug } from "./util";
 
 export const getFileContent = async (
@@ -13,7 +15,11 @@ export const getFileContent = async (
 	parseProcessor: Processor<Root, undefined, undefined, Root, string>,
 	runProcessor: Processor,
 	stringifyProcessor: ReactProcessor,
-): Promise<{ content: ReactElement | string; title: string }> => {
+): Promise<{
+	content: ReactElement | string;
+	title: string;
+	data: { frontMatter?: Record<string, unknown> };
+}> => {
 	let header: string | undefined;
 
 	const fPath = path.join(
@@ -38,7 +44,13 @@ export const getFileContent = async (
 
 	try {
 		const fileContent = await readFile(fPath, { encoding: "utf-8" });
-		const parseResult = await parseProcessor.parse(fileContent);
+
+		const file = new VFile({
+			path: fPath,
+			value: fileContent,
+		});
+
+		const parseResult = await parseProcessor.parse(file);
 
 		if (header) {
 			const targetHeaderIndex = parseResult.children.findIndex(
@@ -60,14 +72,22 @@ export const getFileContent = async (
 			);
 			parseResult.children = headerChildren;
 		}
-		const rehypeResult = await runProcessor.runSync(parseResult);
+
+		const rehypeResult = await runProcessor.runSync(parseResult, file);
+
 		const stringifyResult = await stringifyProcessor.stringify(rehypeResult);
-		return { title, content: stringifyResult };
+
+		return {
+			title,
+			content: stringifyResult,
+			data: file.data as { frontMatter?: Record<string, unknown> },
+		};
 	} catch (error) {
 		console.error(error);
 		return {
 			title,
 			content: `${title}: ファイルが存在しません`,
+			data: {},
 		};
 	}
 };

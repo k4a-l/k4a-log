@@ -28,5 +28,5 @@
 	"[ignore]": {
 		"editor.defaultFormatter": "foxundermoon.shell-format"
 	},
-	"cSpell.words": ["wikilink"]
+	"cSpell.words": ["frontmatter", "wikilink"]
 }

@@ -24,6 +24,10 @@ import {
 import rehypeSlug from "rehype-slug";
 import remarkToc, { type RemarkTocOptions } from "../toc";
 
+import remarkExtractFrontmatter from "remark-extract-frontmatter";
+
+import yaml from "yaml";
+
 export type ReactProcessor = Processor<
 	undefined,
 	undefined,
@@ -34,6 +38,7 @@ export type ReactProcessor = Processor<
 
 export const createRunProcessor = (): Processor => {
 	return remark()
+		.use(remarkExtractFrontmatter, { yaml: yaml.parse, name: "frontMatter" })
 		.use(remarkToc, { heading: "目次" } satisfies RemarkTocOptions)
 		.use(remarkBreaks)
 		.use(RemarkCalloutPlugin)

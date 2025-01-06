@@ -6,6 +6,12 @@ import { remark } from "remark";
 import remarkParse from "remark-parse";
 import type { Processor } from "unified";
 
+import remarkFrontmatter, {
+	type Options as RemarkFrontmatterOptions,
+} from "remark-frontmatter";
+
+import {} from "remark-extract-frontmatter";
+
 export const createParseProcessor = (
 	fileTrees: FileTree[],
 	_parentsLinks: string[],
@@ -21,13 +27,18 @@ export const createParseProcessor = (
 
 	const processor = remark()
 		.use(remarkParse)
-
 		.use(wikiLinkPlugin, {
 			fileTrees,
 			assetPath: "assets",
 			rootPath: "posts",
 			parentsLinks,
-		} satisfies WikiLinkOption);
+		} satisfies WikiLinkOption)
+		.use(remarkFrontmatter, [
+			{
+				type: "yaml",
+				marker: "-",
+			},
+		] satisfies RemarkFrontmatterOptions);
 
 	return processor;
 };

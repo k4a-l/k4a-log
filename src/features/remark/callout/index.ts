@@ -227,6 +227,7 @@ const RemarkCalloutPlugin: Plugin = (
 					node.children.splice(0, 1, titleHtmlNode);
 
 					node.data = {
+						...node.data,
 						hProperties: {
 							...(node.data?.hProperties || {}),
 							className:

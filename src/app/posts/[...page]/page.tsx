@@ -1,10 +1,11 @@
 import path from "node:path";
+import { FrontMatter } from "@/components/FrontMatter";
 import {
 	createRunProcessor,
 	createStringifyProcessor,
 } from "@/features/remark/processor";
 import { createParseProcessor } from "@/features/remark/processor/parse";
-import { getFileContent } from "@/features/remark/wikilink/file";
+import { getFileContent as getFileData } from "@/features/remark/wikilink/file";
 import { createFileTrees } from "@/features/remark/wikilink/util";
 import {} from "react/jsx-runtime";
 import { css } from "styled-system/css";
@@ -19,17 +20,22 @@ export default async function Home({ params }: { params: Params }) {
 
 	const fileTrees = createFileTrees(directoryPath);
 
+	// 事前準備
 	const parseProcessor = createParseProcessor(fileTrees, [path.join(...paths)]);
 	const runProcessor = createRunProcessor();
 	const stringifyProcessor = createStringifyProcessor();
 
-	const data = await getFileContent(
+	// 実行
+	const fileData = await getFileData(
 		paths,
 		directoryPath,
 		parseProcessor,
 		runProcessor,
 		stringifyProcessor,
 	);
+
+	// データ加工
+	const { frontMatter } = fileData.data;
 
 	return (
 		<Center className={css({ px: 10, py: 4 })}>
@@ -42,9 +48,10 @@ export default async function Home({ params }: { params: Params }) {
 						borderBottomColor: "gray.3",
 					})}
 				>
-					{data.title}
+					{fileData.title}
 				</div>
-				<div>{data.content}</div>
+				{frontMatter ? <FrontMatter frontMatter={frontMatter} /> : null}
+				<div>{fileData.content}</div>
 			</Stack>
 		</Center>
 	);

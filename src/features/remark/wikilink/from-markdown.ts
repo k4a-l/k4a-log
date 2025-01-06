@@ -41,7 +41,10 @@ export function fromMarkdown(
 
 		const wikiLink = child as WikiLinkContentMap;
 
-		wikiLink.data = createWikiLinkData(token, wikiLink.value, wikiLink, opts);
+		wikiLink.data = {
+			...wikiLink.data,
+			...createWikiLinkData(token, wikiLink.value, wikiLink, opts),
+		};
 	}
 
 	return {
