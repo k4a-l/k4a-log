@@ -38,31 +38,35 @@ export default async function Home({ params }: { params: Params }) {
 	const { frontMatter } = fileData.data;
 
 	return (
-		<Center
-			className={css({
-				px: { md: 10, base: 2 },
-				py: 4,
-				fontSize: { sm: "1em", base: "0.8em" },
-				"& > *": {
-					wordBreak: "break-all",
-					minW: 0,
-				},
-			})}
-		>
-			<Stack maxW={"1000px"}>
-				<div
-					className={css({
-						fontSize: "1.5em",
-						fontWeight: "bold",
-						borderBottomWidth: "6",
-						borderBottomColor: "gray.3",
-					})}
-				>
-					{fileData.title}
-				</div>
-				{frontMatter ? <FrontMatter frontMatter={frontMatter} /> : null}
-				<div>{fileData.content}</div>
-			</Stack>
-		</Center>
+		<>
+			<title>{fileData.title}</title>
+			<meta property="og:title" content={fileData.title} key="title" />
+			<Center
+				className={css({
+					px: { md: 10, base: 2 },
+					py: 4,
+					fontSize: { sm: "1em", base: "0.8em" },
+					"& > *": {
+						wordBreak: "break-all",
+						minW: 0,
+					},
+				})}
+			>
+				<Stack maxW={"1000px"}>
+					<div
+						className={css({
+							fontSize: "1.5em",
+							fontWeight: "bold",
+							borderBottomWidth: "6",
+							borderBottomColor: "gray.3",
+						})}
+					>
+						{fileData.title}
+					</div>
+					{frontMatter ? <FrontMatter frontMatter={frontMatter} /> : null}
+					<div>{fileData.content}</div>
+				</Stack>
+			</Center>
+		</>
 	);
 }
