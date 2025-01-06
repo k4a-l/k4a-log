@@ -8,6 +8,7 @@ export const ParagraphWrap = ({ children }: PropsWithChildren) => {
 			className={css({
 				whiteSpace: "normal",
 				display: "inline-block",
+				minW: 0,
 				"& > img,video": {
 					display: "inline",
 					verticalAlign: "top",

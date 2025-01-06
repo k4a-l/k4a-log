@@ -38,7 +38,17 @@ export default async function Home({ params }: { params: Params }) {
 	const { frontMatter } = fileData.data;
 
 	return (
-		<Center className={css({ px: 10, py: 4 })}>
+		<Center
+			className={css({
+				px: { md: 10, base: 2 },
+				py: 4,
+				fontSize: { sm: "1em", base: "0.8em" },
+				"& > *": {
+					wordBreak: "break-all",
+					minW: 0,
+				},
+			})}
+		>
 			<Stack maxW={"1000px"}>
 				<div
 					className={css({
