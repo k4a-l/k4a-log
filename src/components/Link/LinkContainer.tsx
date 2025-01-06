@@ -4,10 +4,10 @@ import type { AnchorHTMLAttributes, FC, PropsWithChildren } from "react";
 import {
 	createRunProcessor,
 	createStringifyProcessor,
-} from "@/remark/processor";
-import { createParseProcessor } from "@/remark/processor/parse";
-import { getFileContent } from "@/remark/wikilink/file";
-import { createFileTrees } from "@/remark/wikilink/util";
+} from "@/features/remark/processor";
+import { createParseProcessor } from "@/features/remark/processor/parse";
+import { getFileContent } from "@/features/remark/wikilink/file";
+import { createFileTrees } from "@/features/remark/wikilink/util";
 import path from "path-browserify";
 import { css } from "styled-system/css";
 import {

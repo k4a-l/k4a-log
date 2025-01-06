@@ -1,6 +1,6 @@
-import wikiLinkPlugin from "@/remark/wikilink";
-import type { WikiLinkOption } from "@/remark/wikilink/type";
-import type { FileTree } from "@/remark/wikilink/util";
+import wikiLinkPlugin from "@/features/remark/wikilink";
+import type { WikiLinkOption } from "@/features/remark/wikilink/type";
+import type { FileTree } from "@/features/remark/wikilink/util";
 import type { Root } from "mdast";
 import { remark } from "remark";
 import remarkParse from "remark-parse";

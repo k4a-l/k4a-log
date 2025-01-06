@@ -3,7 +3,7 @@ import { CodeBlock, Pre } from "@/components/CodeBlock";
 import { Hashtag } from "@/components/Hashtag";
 import { MarkdownLink } from "@/components/Link";
 import { ParagraphWrap } from "@/components/ParagraphWrap";
-import { hashTagHandler, remarkHashtagPlugin } from "@/remark/hashtag";
+import { hashTagHandler, remarkHashtagPlugin } from "@/features/remark/hashtag";
 import type { ReactElement } from "react";
 import { Fragment, jsx, jsxs } from "react/jsx-runtime";
 import rehypeRaw from "rehype-raw";
