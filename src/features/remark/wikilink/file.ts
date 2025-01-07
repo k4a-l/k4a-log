@@ -7,7 +7,7 @@ import type { Processor } from "unified";
 import { VFile } from "vfile";
 import type { ReactProcessor } from "../processor";
 
-import type { FileMetaData } from "../frontmatter";
+import type { VFileData } from "../frontmatter";
 import { convertNoExtensionPathToMD, lastOfArr, toHeadingSlug } from "./util";
 
 export const getFileContent = async (
@@ -81,7 +81,7 @@ export const getFileContent = async (
 		return {
 			title,
 			content: stringifyResult,
-			data: file.data as FileMetaData,
+			data: file.data as VFileData,
 		};
 	} catch (error) {
 		console.error(error);

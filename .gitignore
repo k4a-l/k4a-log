@@ -47,3 +47,6 @@ styled-system-studio
 public/posts
 # ignore '.obsidian'
 **/.obsidian/**
+
+assets/metadata/*
+scripts/**/*.json

@@ -59,6 +59,7 @@ export const remarkHashtagPlugin: Plugin = () => {
 				if (text.startsWith("#")) {
 					const hashTagValue = text.replace("#", "");
 					parent.children.unshift({
+						...child,
 						// TODO: fix
 						// @ts-expect-error
 						type: "element",

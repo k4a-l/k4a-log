@@ -21,6 +21,15 @@ export const remarkParagraphWrapPlugin: Plugin = () => {
 			const newChildren: PhrasingContent[] = [];
 			let buffer: PhrasingContent[] = [];
 
+			// listItemとかを囲むとおかしなことになるのでspanにするだけ
+			if (node.children.some((c) => c.type === "break")) {
+				node.data = {
+					hName: "span",
+					...node.data,
+				};
+				return;
+			}
+
 			const flushBuffer = () => {
 				if (buffer.length > 1) {
 					newChildren.push({

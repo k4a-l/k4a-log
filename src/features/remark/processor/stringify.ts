@@ -24,7 +24,7 @@ export const createStringifyProcessor = (): ReactProcessor => {
 		jsx,
 		jsxs,
 		components: {
-			a: MarkdownLink,
+			wikilink: MarkdownLink,
 			hashtag: Hashtag,
 			"paragraph-wrap": ParagraphWrap,
 			blockquote: Callout,

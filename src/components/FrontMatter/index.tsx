@@ -1,6 +1,6 @@
 import { Box, HStack } from "styled-system/jsx";
 
-import type { FileMetaData } from "@/features/remark/frontmatter";
+import type { VFileData } from "@/features/remark/frontmatter";
 import { Link } from "@/park-ui/components/link";
 import { stringToDate, toYYYYMMDD } from "@/utils/date";
 import NextLink from "next/link";
@@ -14,7 +14,7 @@ const frontMatterKeys = {
 	// title: "string",
 };
 
-export const FrontMatter = ({ frontMatter }: FileMetaData) => {
+export const FrontMatter = ({ frontmatter: frontMatter }: VFileData) => {
 	const createdString = String(frontMatter?.[frontMatterKeys.created]);
 	const createdDateMaybe = stringToDate(createdString);
 	const updatedString = String(frontMatter?.[frontMatterKeys.updated]);

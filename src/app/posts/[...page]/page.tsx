@@ -52,7 +52,7 @@ export default async function Home({ params }: { params: Params }) {
 					},
 				})}
 			>
-				<Stack maxW={"1000px"}>
+				<Stack maxW={"max(1000px,100%)"} w={"1000px"}>
 					<div
 						className={css({
 							fontSize: "1.5em",
@@ -63,7 +63,7 @@ export default async function Home({ params }: { params: Params }) {
 					>
 						{fileData.title}
 					</div>
-					{frontMatter ? <FrontMatter frontMatter={frontMatter} /> : null}
+					{frontMatter ? <FrontMatter frontmatter={frontMatter} /> : null}
 					<div>{fileData.content}</div>
 				</Stack>
 			</Center>

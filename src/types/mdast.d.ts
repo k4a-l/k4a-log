@@ -7,7 +7,7 @@ interface WikiLinkData extends Data {
 	alias: string;
 	link: string;
 	hChildren: { type: string; value: string }[];
-	hName: "span" | "a";
+	hName: "span" | "wikilink";
 	hProperties: {
 		className?: string;
 		href: string;

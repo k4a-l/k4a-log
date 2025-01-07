@@ -23,10 +23,15 @@ import remarkExtractFrontmatter from "remark-extract-frontmatter";
 
 import yaml from "yaml";
 
-export const createRunProcessor = (): Processor => {
+export const createRunProcessor = (options?: {
+	excludeToc?: boolean;
+}): Processor => {
+	const { excludeToc } = options ?? {};
 	return remark()
 		.use(remarkExtractFrontmatter, { yaml: yaml.parse, name: "frontMatter" })
-		.use(remarkToc, { heading: "目次" } satisfies RemarkTocOptions)
+		.use(excludeToc ? () => {} : remarkToc, {
+			heading: "目次",
+		} satisfies RemarkTocOptions)
 		.use(remarkBreaks)
 		.use(RemarkCalloutPlugin)
 		.use(remarkHashtagPlugin)

@@ -1,3 +1,3 @@
-export type FileMetaData = {
-	frontMatter: Record<string, unknown>;
+export type VFileData = {
+	frontmatter: Record<string, unknown>;
 };
