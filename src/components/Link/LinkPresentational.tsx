@@ -15,6 +15,7 @@ import { HStack, Stack } from "styled-system/jsx";
 import { IconButton } from "@/park-ui/components/icon-button";
 import { Link } from "@/park-ui/components/link";
 import { Link as LinkIcons } from "lucide-react";
+import path from "path-browserify";
 import type { StrictOmit } from "ts-essentials";
 
 type LinkPresentationalType = StrictOmit<
@@ -25,16 +26,12 @@ export const TransitionLinkDead: FC<
 	PropsWithChildren<LinkPresentationalType>
 > = ({ href, children, ...others }) => {
 	return (
-		<Link asChild>
+		<Link asChild color="blue.9">
 			<NextLink
 				{...others}
-				href={":"}
+				href={path.join("/search", `?query=hasLink:${href}`)}
 				scroll={false}
-				// todo: デッドリンクでも遷移して言及しているページ一覧表示にしたほうが良さそう
-				style={{ color: "gray", cursor: "text" }}
-				onClick={(e) => {
-					e.preventDefault();
-				}}
+				style={{ cursor: "help" }}
 			>
 				{children}
 			</NextLink>

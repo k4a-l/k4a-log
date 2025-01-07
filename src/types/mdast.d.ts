@@ -20,6 +20,7 @@ interface WikiLinkData extends Data {
 		assetsDirPath: string;
 		// Array-like
 		parentsLinks: string;
+		isDeadLink?: "true";
 	};
 }
 

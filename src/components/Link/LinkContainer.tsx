@@ -33,9 +33,8 @@ export const LinkContainer: FC<
 
 export const TransitionLinkContainer: FC<
 	PropsWithChildren<WikiLinkData["hProperties"]>
-> = ({ rootDirPath, assetsDirPath, parentsLinks, ...props }) => {
-	const { href } = props;
-	if (!href) {
+> = ({ rootDirPath, assetsDirPath, parentsLinks, isDeadLink, ...props }) => {
+	if (isDeadLink === "true") {
 		return <TransitionLinkDead {...props} />;
 	}
 
@@ -44,7 +43,14 @@ export const TransitionLinkContainer: FC<
 
 export const EmbedLinkContainer: FC<
 	PropsWithChildren<WikiLinkData["hProperties"]>
-> = async ({ rootDirPath, assetsDirPath, parentsLinks, type, ...props }) => {
+> = async ({
+	rootDirPath,
+	assetsDirPath,
+	parentsLinks,
+	isDeadLink,
+	type,
+	...props
+}) => {
 	const { href, children, title, alias, ...others } = props;
 
 	if (type === "img") {

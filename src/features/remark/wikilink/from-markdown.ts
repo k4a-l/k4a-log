@@ -67,7 +67,7 @@ const createWikiLinkData = (
 ): WikiLinkData => {
 	const defaultHrefTemplate = (permalink: string) => {
 		if (permalink.startsWith("#")) return permalink;
-		return `/${permalink}`;
+		return `${permalink}`;
 	};
 	const hrefTemplate = defaultHrefTemplate;
 
@@ -88,7 +88,7 @@ const createWikiLinkData = (
 		? wikiLink.value.startsWith("#")
 			? _link
 			: path.join(opts.rootPath, _link.replace(".md", ""))
-		: undefined;
+		: pathValue;
 
 	const classNames = `${opts.classNames.wikiLink} ${link === undefined ? `${opts.classNames.deadLink}` : ""}`;
 
@@ -150,6 +150,7 @@ const createWikiLinkData = (
 		]
 			.map((p) => encodeURIComponent(p))
 			.join(" "),
+		isDeadLink: _link ? undefined : "true",
 	};
 
 	return {
