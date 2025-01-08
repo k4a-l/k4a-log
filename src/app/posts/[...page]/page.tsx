@@ -1,5 +1,11 @@
+import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { FrontMatter } from "@/components/FrontMatter";
+import {
+	assetsDirPath,
+	vaultMetadataFilePath,
+} from "@/features/metadata/constant";
+import type { TPost } from "@/features/metadata/type";
 import {
 	createRunProcessor,
 	createStringifyProcessor,
@@ -7,11 +13,16 @@ import {
 import { createParseProcessor } from "@/features/remark/processor/parse";
 import { getFileContent as getFileData } from "@/features/remark/wikilink/file";
 import { createFileTrees } from "@/features/remark/wikilink/util";
+import { isSamePath } from "@/utils/path";
 import {} from "react/jsx-runtime";
 import { css } from "styled-system/css";
-import { Center, Stack } from "styled-system/jsx";
+import { Center, Spacer, Stack } from "styled-system/jsx";
 
-const directoryPath = "./assets/posts";
+import { Button } from "@/park-ui/components/button";
+import { FileIcon, Link2Icon } from "lucide-react";
+import NextLink from "next/link";
+
+const directoryPath = path.join(assetsDirPath, "/posts");
 
 type Params = Promise<{ page: string[] }>;
 
@@ -36,6 +47,15 @@ export default async function Home({ params }: { params: Params }) {
 
 	// データ加工
 	const { frontMatter } = fileData.data;
+
+	const vaultFileContent = await readFile(vaultMetadataFilePath, {
+		encoding: "utf-8",
+	});
+	// TODO: エラーハンドリンク
+	const vaultObject: TPost[] = JSON.parse(vaultFileContent);
+	const tPost = vaultObject.find((p) =>
+		isSamePath(p.path, path.join("/posts", ...paths)),
+	);
 
 	return (
 		<>
@@ -65,6 +85,114 @@ export default async function Home({ params }: { params: Params }) {
 					</div>
 					{frontMatter ? <FrontMatter frontmatter={frontMatter} /> : null}
 					<div>{fileData.content}</div>
+					<Spacer h={4} />
+					{tPost?.backLinks.length ? (
+						<Stack
+							className={css({
+								bg: "whitesmoke",
+								borderWidth: 1,
+								py: 2,
+								px: 2,
+								rounded: "md",
+								gap: 2,
+							})}
+						>
+							<p
+								className={css({
+									fontSize: "0.8em",
+									fontWeight: "bold",
+									lineHeight: 0,
+									px: 2,
+								})}
+							>
+								関連
+							</p>
+							<Stack
+								className={css({
+									gap: 0,
+								})}
+							>
+								{tPost?.backLinks.map((bl) => (
+									<Button
+										asChild
+										key={bl.path}
+										variant={"ghost"}
+										size={{ md: "md", base: "sm" }}
+										fontWeight={"normal"}
+										justifyContent={"start"}
+										rounded={"sm"}
+										height={"auto"}
+										p={{ md: 2, base: 1 }}
+										textDecoration={"none"}
+									>
+										<NextLink href={path.join("/", bl.path)}>
+											<FileIcon />
+											{bl.title}
+										</NextLink>
+									</Button>
+								))}
+							</Stack>
+						</Stack>
+					) : null}
+
+					{tPost?.twoHopLinks.length ? (
+						<Stack
+							className={css({
+								bg: "whitesmoke",
+								borderWidth: 1,
+								py: 2,
+								px: 2,
+								rounded: "md",
+								gap: 2,
+							})}
+						>
+							{tPost?.twoHopLinks.map((thl) => (
+								<Stack
+									key={thl.path}
+									className={css({
+										gap: 0,
+									})}
+								>
+									<Button
+										asChild
+										key={thl.path}
+										variant={"ghost"}
+										size={{ md: "md", base: "sm" }}
+										justifyContent={"start"}
+										rounded={"sm"}
+										height={"auto"}
+										p={{ md: 2, base: 1 }}
+										textDecoration={"none"}
+									>
+										<NextLink href={path.join("/", thl.path)}>
+											<FileIcon />
+											{thl.title}
+										</NextLink>
+									</Button>
+									{thl.links.map((l) => (
+										<Button
+											asChild
+											key={l.path}
+											variant={"ghost"}
+											size={{ md: "md", base: "sm" }}
+											fontWeight={"normal"}
+											justifyContent={"start"}
+											rounded={"sm"}
+											height={"auto"}
+											p={{ md: 2, base: 1 }}
+											ml={"2em"}
+											textDecoration={"none"}
+										>
+											<NextLink href={path.join("/", l.path)}>
+												<Link2Icon />
+												{l.title}
+											</NextLink>
+										</Button>
+									))}
+								</Stack>
+							))}
+						</Stack>
+					) : null}
 				</Stack>
 			</Center>
 		</>

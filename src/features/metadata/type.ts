@@ -1,9 +1,9 @@
 import type { VFileData } from "@/features/remark/frontmatter";
 
-type TLinkMetaData = {
+export type TLinkMetaData = {
 	aliasTitle?: string;
 	title: string;
-	linkPath: string;
+	path: string;
 };
 
 type TEmbedMetaData = TLinkMetaData;
@@ -32,9 +32,12 @@ export type TPostMetaData = {
 	tags: TTagMetaData[];
 };
 
-// 参考: https://docs.obsidian.md/Reference/TypeScript+API/CachedMetadata
-// obsidianではfileからCachedMetadataを取得するので分離されているがここでは一緒にしてしまう
-export type TPost = {
+/**
+ * ファイル単体で解決できる内容
+ * 参考: https://docs.obsidian.md/Reference/TypeScript+API/CachedMetadata
+ * obsidianではfileからCachedMetadataを取得するので分離されているがここでは一緒にしてしまう
+ */
+export type TPostIndependence = {
 	/** 公式では他にnameがあるが、basename+extensionなので不要  */
 	basename: string;
 	extension: string;
@@ -47,4 +50,12 @@ export type TPost = {
 	// 	byteSize: number;
 	// };
 	metadata: TPostMetaData;
+	thumbnailPath?: string;
+};
+
+type TPostLink = { path: string; title: string; thumbnailPath?: string };
+export type TPost = TPostIndependence & {
+	/** pathをキーにvaultObjectからtitleなどは取得できるが、使用時に楽なのでまとめちゃう */
+	backLinks: TPostLink[];
+	twoHopLinks: (TPostLink & { links: TPostLink[] })[];
 };

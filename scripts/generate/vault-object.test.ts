@@ -2,10 +2,14 @@ import type {} from "hast";
 import type { RootContent } from "mdast";
 
 import fs from "node:fs";
+import { readFile } from "node:fs/promises";
 import path from "node:path";
 import type { TPostMetaData } from "@/features/metadata/type";
 import { expect, test } from "vitest";
-import { convertRootContentsToFileMetadata } from "./vault-object";
+import {
+	convertRootContentsToFileMetadata,
+	createVaultFile,
+} from "./vault-object";
 
 const json = fs.readFileSync(
 	path.join(__dirname, "root-contents.json"),
@@ -14,13 +18,16 @@ const json = fs.readFileSync(
 const parsedJson = JSON.parse(json) as RootContent[];
 
 test("1", () => {
-	const result = convertRootContentsToFileMetadata(parsedJson);
+	const result = convertRootContentsToFileMetadata(
+		parsedJson,
+		"/posts/tests/SOME.md",
+	);
 	const expected: TPostMetaData = {
 		embeds: [
 			{
 				title: "COMMON",
 				aliasTitle: "Embed link",
-				linkPath: String.raw`/posts\tests\SYNTAX TEST\COMMON`,
+				path: String.raw`/posts\tests\SYNTAX TEST\COMMON`,
 			},
 		],
 		headings: [
@@ -29,7 +36,7 @@ test("1", () => {
 		],
 		links: [
 			{
-				linkPath: String.raw`/posts\tests\SYNTAX TEST\COMMON`,
+				path: String.raw`/posts\tests\SYNTAX TEST\COMMON`,
 				title: "COMMON",
 				aliasTitle: "link",
 			},
@@ -61,4 +68,16 @@ test("1", () => {
 	};
 
 	expect(result).toStrictEqual(expected);
+});
+
+test("ゴールデンマスターテスト", async () => {
+	const masterData = JSON.parse(
+		await readFile(path.join(__dirname, "vault.json"), {
+			encoding: "utf-8",
+		}),
+	);
+	// stringifyするとundefinedプロパティがなくなるので同条件にする
+	const createdData = JSON.parse(JSON.stringify(await createVaultFile()));
+
+	expect(createdData).toStrictEqual(masterData);
 });

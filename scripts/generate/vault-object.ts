@@ -6,13 +6,18 @@ import { readFile } from "node:fs/promises";
 import { createParseProcessor } from "@/features/remark/processor/parse";
 
 import type {
+	TLinkMetaData,
 	TListItemMetaData,
 	TPost,
+	TPostIndependence,
 	TPostMetaData,
 } from "@/features/metadata/type";
 import type { VFileData } from "@/features/remark/frontmatter";
 import { createRunProcessor } from "@/features/remark/processor/run";
-import { createFileTrees } from "@/features/remark/wikilink/util";
+import {
+	createFileTrees,
+	imageExtensions,
+} from "@/features/remark/wikilink/util";
 import type { FindFromUnion } from "@/utils/type";
 import type { Root, RootContent } from "mdast";
 import type { StrictOmit } from "ts-essentials";
@@ -21,11 +26,19 @@ import { VFile } from "vfile";
 
 import type { Element, ElementContent } from "hast";
 
+import {
+	assetsDirPath,
+	vaultMetadataFilePath,
+} from "@/features/metadata/constant";
 import type { WikiLinkData } from "@/types/mdast";
 import { writeFileRecursive } from "@/utils/file";
+import {
+	dividePathAndExtension,
+	hasExtensionButNotMD,
+	isSamePath,
+} from "@/utils/path";
 import { toString as mdastToString } from "mdast-util-to-string";
 
-const assetsDirPath = "./assets";
 const postsDirPath = "posts";
 const rootDirectoryPath = path.join(assetsDirPath, postsDirPath);
 
@@ -101,6 +114,7 @@ const flattenParsedTree = (tree: FileOrDirEntity[]): FileEntity[] => {
 export const convertNodeToFileMetadata = (
 	node: Element | ElementContent | RootContent,
 	parentPosition: Position | undefined,
+	currentPath: string,
 ): StrictOmit<TPostMetaData, "frontmatter"> => {
 	const r: StrictOmit<TPostMetaData, "frontmatter"> = {
 		listItems: [],
@@ -125,37 +139,61 @@ export const convertNodeToFileMetadata = (
 		if (node.tagName === "wikilink") {
 			const properties =
 				node.properties as unknown as WikiLinkData["hProperties"];
-			if (properties["is-embed"]) {
-				r.embeds.push({
-					title: properties.title,
-					linkPath: properties.href,
-					aliasTitle: properties.alias,
-				});
-			} else {
-				r.links.push({
-					title: properties.title,
-					linkPath: properties.href,
-					aliasTitle: properties.alias,
-				});
+			const isOwnLink = isSamePath(properties.href, currentPath);
+
+			if (!properties.href.startsWith("#") && !isOwnLink) {
+				const path = properties.href.split("#")[0] ?? properties.href;
+				const title = properties.title.split("#")[0] ?? properties.title;
+				if (properties["is-embed"]) {
+					r.embeds.push({
+						title: title,
+						path: path,
+						aliasTitle: properties.alias,
+					});
+				} else {
+					r.links.push({
+						title: title,
+						path: path,
+						aliasTitle: properties.alias,
+					});
+				}
 			}
 		}
 
 		// LIST
 		if (node.tagName === "li") {
-			const text = mdastToString(
-				node.children.find((c) => c.type === "element"),
-			);
-			const regExp = /^\[(.*)\] /;
-			const taskStr = text.match(regExp)?.[1];
-			const task: TListItemMetaData["task"] =
-				taskStr === undefined ? undefined : taskStr.match(/\s/) ? " " : "x";
+			const className = Array.isArray(node.properties.className)
+				? node.properties.className
+				: [node.properties.className];
+			if (className?.includes("task-list-item")) {
+				const text = mdastToString(node.children).replace(/\n/g, "");
+				const task: TListItemMetaData["task"] = node.children.some(
+					(c) =>
+						c.type === "element" &&
+						c.tagName === "input" &&
+						c.properties.checked,
+				)
+					? "x"
+					: " ";
 
-			r.listItems.push({
-				parentLineNumber: parentPosition?.start.line ?? -1,
-				text: text.replace(regExp, ""),
-				lineNumber: node.position?.start.line ?? -1,
-				...(task ? { task } : {}),
-			});
+				r.listItems.push({
+					parentLineNumber: parentPosition?.start.line ?? -1,
+					text: text,
+					lineNumber: node.position?.start.line ?? -1,
+					task,
+				});
+			} else {
+				const text = mdastToString(
+					node.children.find((c) => c.type === "element"),
+				);
+
+				r.listItems.push({
+					parentLineNumber: parentPosition?.start.line ?? -1,
+					text: text,
+					lineNumber: node.position?.start.line ?? -1,
+				});
+			}
+
 			parentPositionNext = node.position;
 		}
 
@@ -164,8 +202,31 @@ export const convertNodeToFileMetadata = (
 			r.tags.push({ tag: mdastToString(node) });
 		}
 
+		// if (node.tagName === "input") {
+		// 	console.log(node);
+		// 	const text = mdastToString(
+		// 		node.children.find((c) => c.type === "element"),
+		// 	);
+		// 	const regExp = /^\[(.*)\] /;
+		// 	const task: TListItemMetaData["task"] = node.properties.checked
+		// 		? "x"
+		// 		: " ";
+
+		// 	r.listItems.push({
+		// 		parentLineNumber: parentPosition?.start.line ?? -1,
+		// 		text: text.replace(regExp, ""),
+		// 		lineNumber: node.position?.start.line ?? -1,
+		// 		...(task ? { task } : {}),
+		// 	});
+		// 	parentPositionNext = node.position;
+		// }
+
 		const children = node.children.map((c) =>
-			convertNodeToFileMetadata(c, parentPositionNext ?? parentPosition),
+			convertNodeToFileMetadata(
+				c,
+				parentPositionNext ?? parentPosition,
+				currentPath,
+			),
 		);
 
 		r.headings.push(...children.flatMap((c) => c.headings));
@@ -182,35 +243,149 @@ export const convertNodeToFileMetadata = (
 
 export const convertRootContentsToFileMetadata = (
 	contents: RootContent[],
+	currentPath: string,
 ): TPostMetaData => {
 	const children = contents.flatMap((c) =>
-		convertNodeToFileMetadata(c, undefined),
+		convertNodeToFileMetadata(c, undefined, currentPath),
 	);
 	return {
 		embeds: children.flatMap((c) => c.embeds),
 		headings: children.flatMap((c) => c.headings),
-		links: children.flatMap((c) => c.links),
+		// 同じpathを持っているものは正規化する
+		links: children
+			.flatMap((c) => c.links)
+			.reduce((acc, l) => {
+				const found = acc.find((a) => a.path === l.path);
+				if (found) return acc;
+				acc.push(l);
+				return acc;
+			}, [] as TLinkMetaData[]),
 		listItems: children.flatMap((c) => c.listItems),
 		tags: children.flatMap((c) => c.tags),
 		frontmatter: {},
 	};
 };
 
-export const convertFileEntityToTPost = (fileEntity: FileEntity): TPost => {
+export const convertFileEntityToTPostIndependence = (
+	fileEntity: FileEntity,
+): TPostIndependence => {
+	const currentPath = path.join(postsDirPath, fileEntity.path);
 	const [basename, extension] = fileEntity.name.split(".");
-	const data: TPost = {
+	const metadata = convertRootContentsToFileMetadata(
+		fileEntity.root.children,
+		currentPath,
+	);
+	const thumbnailPath = metadata.embeds.find((e) =>
+		imageExtensions.some((r) => e.path.match(r)),
+	)?.path;
+
+	const data: TPostIndependence = {
 		basename: basename ?? fileEntity.name,
 		extension: extension ?? "",
-		path: fileEntity.path,
+		path: currentPath,
 		metadata: {
-			...convertRootContentsToFileMetadata(fileEntity.root.children),
+			...metadata,
 			frontmatter: fileEntity.fileData.frontmatter,
 		},
+		thumbnailPath,
 	};
 	return data;
 };
 
-const main = async () => {
+export const injectAllLinksToTPostIndependence = (
+	iPosts: TPostIndependence[],
+): TPost[] => {
+	const posts = iPosts.map((p): TPost => {
+		return { ...p, backLinks: [], twoHopLinks: [] };
+	});
+
+	// inject backLink
+	for (const post of iPosts) {
+		for (const link of [...post.metadata.links, ...post.metadata.embeds]) {
+			// .md以外の.**の場合は何もしない
+			if (hasExtensionButNotMD(link.path)) continue;
+
+			const targetIndex = posts.findIndex((p) => {
+				return isSamePath(dividePathAndExtension(p.path)[0], link.path);
+			});
+			const target = posts[targetIndex];
+			if (target?.backLinks.find((t) => t.path === post.path)) continue;
+			posts[targetIndex]?.backLinks.push({
+				path: post.path,
+				title: post.basename,
+				thumbnailPath: post.thumbnailPath,
+			});
+		}
+	}
+
+	/** inject twoHopLink
+	 * https://help.masui.org/2%E3%83%9B%E3%83%83%E3%83%97%E3%83%AA%E3%83%B3%E3%82%AF%E3%81%AE%E8%80%83%E5%AF%9F-5b6f9e74b1b77e00148f8c42 より
+	 * `A→C, B→Cというリンクが存在するとき、AとBの間にはなんらかの関連があると考えてよい。`
+	 * `「和歌山」→「みかん」、「愛媛県」→「みかん」 ならば「和歌山県」と「愛媛県」はみかんつながりがある`
+	 * これは納得できる。①
+	 *
+	 * だた、ScrapBoxでは「A→B、A->C」では、BとCにはlinkは関係性は作られない。これについて考える。
+	 * 「和歌山→みかん」、「和歌山→白浜温泉」のとき、「みかん」と「白浜温泉」にも和歌山つながりがあるといえないだろうか？②
+	 *
+	 * 「A->B、C->A」の場合はどうか
+	 * 「和歌山→みかん」、「白浜温泉→和歌山」、同じ例を使っちゃうとこれも関連があるように見えてしまう...③
+	 *
+	 * 書き方の表記ゆれなだけか？
+	 * ①: 和歌山の名産はみかん、愛媛の名産はみかん → 「和歌山」と「愛媛」の名産繋がりなので確かに関連は強い
+	 * ②: 和歌山の名産はみかん、和歌山の観光地は白浜温泉 → 和歌山という共通点はあるが、みかんと白浜温泉に関係があるかというとやや弱い
+	 * ③: 和歌山の名産はみかん、白浜温泉は和歌山の観光地 → 関係性②と同じで、さらに主語述語が逆なので更に弱い
+	 * こう整理すると、どれを選ぶかというと①が最有力になる
+	 *
+	 * 日本語で表すと、「同じfrontLinkを持つものを関連づけ、frontLink経由のtwoHopLinkとする」という感じ
+	 */
+
+	for (const post of posts) {
+		for (const link of [...post.metadata.links, ...post.metadata.embeds]) {
+			if (post.twoHopLinks?.find((thl) => thl.path === link.path)) continue;
+			// .md以外の.**の場合は何もしない
+			if (hasExtensionButNotMD(link.path)) continue;
+
+			// 同じlinkを持つpostをまとめる
+			const targets = posts.filter((p) => {
+				// おおもとのファイルと同じ場合は除外
+				if (isSamePath(post.path, p.path)) {
+					return false;
+				}
+				return [...p.metadata.links, ...p.metadata.embeds].find((l) => {
+					// おおもとのファイルと同じ場合は除外
+					if (isSamePath(post.path, l.path)) {
+						return false;
+					}
+					// backLinkに含まれていたら除外
+					if (post.backLinks.some((bl) => isSamePath(bl.path, l.path))) {
+						return false;
+					}
+					// 画像なども除外
+					if (hasExtensionButNotMD(link.path)) {
+						return false;
+					}
+					return isSamePath(l.path, link.path);
+				});
+			});
+
+			// twoHopLinksが空ならそもそも追加しない
+			if (!targets.length) continue;
+
+			post.twoHopLinks.push({
+				links: targets.map((t) => ({
+					path: t.path,
+					title: t.basename,
+					thumbnailPath: t.thumbnailPath,
+				})),
+				path: link.path,
+				title: link.title,
+			});
+		}
+	}
+	return posts;
+};
+
+export const createVaultFile = async () => {
 	const parsed = await createParsedTree(rootDirectoryPath, "");
 	const flattened = flattenParsedTree(parsed);
 
@@ -220,9 +395,17 @@ const main = async () => {
 	// 	JSON.stringify(flattened[0]?.root.children),
 	// );
 
-	const vaultMetadata = flattened.map((f) => convertFileEntityToTPost(f));
-	const filePath = path.join(assetsDirPath, "metadata", "vault.json");
-	writeFileRecursive(filePath, JSON.stringify(vaultMetadata));
-	console.log(`COMPLETED!! >> ${filePath}`);
+	const tIPost = flattened.map((f) => convertFileEntityToTPostIndependence(f));
+	const tPosts = injectAllLinksToTPostIndependence(tIPost);
+
+	return tPosts;
 };
-main();
+
+export const main = async () => {
+	const vaultFile = await createVaultFile();
+	writeFileRecursive(vaultMetadataFilePath, JSON.stringify(vaultFile));
+	console.log(`COMPLETED!! >> ${vaultMetadataFilePath}`);
+};
+
+const [funcName] = process.argv.slice(2);
+if (funcName === "main") main();

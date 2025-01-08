@@ -170,20 +170,20 @@ export const createFileTrees = (dirPath: string): FileTree[] => {
 	return tree;
 };
 
+export const imageExtensions = [
+	/\.jpe?g$/,
+	/\.a?png$/,
+	/\.webp$/,
+	/\.avif$/,
+	/\.gif$/,
+	/\.svg$/,
+	/\.bmp$/,
+	/\.ico$/,
+];
 export function getWikiLinkExtension(value: string | undefined): {
 	type: WikiLinkData["type"];
 	extension: string;
 } {
-	const imageExtensions = [
-		/\.jpe?g$/,
-		/\.a?png$/,
-		/\.webp$/,
-		/\.avif$/,
-		/\.gif$/,
-		/\.svg$/,
-		/\.bmp$/,
-		/\.ico$/,
-	];
 	const pdfExtensions = [/\.pdf$/];
 
 	const videoExtensions = [/\.mp4$/, /\.avi$/, /\.mkv$/, /\.mov$/, /\.wmv$/];

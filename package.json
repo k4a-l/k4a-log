@@ -12,7 +12,7 @@
 		"tsc": "tsc --watch ./src",
 		"test": "vitest",
 		"prepare": "panda codegen",
-		"generate": "tsx --tsconfig tsconfig.json  scripts/generate/vault-object.ts"
+		"generate": "tsx --tsconfig tsconfig.json  scripts/generate/vault-object.ts main"
 	},
 	"dependencies": {
 		"@ark-ui/react": "^4.6.0",
@@ -37,6 +37,7 @@
 		"remark-breaks": "^4.0.0",
 		"remark-extract-frontmatter": "^3.2.0",
 		"remark-frontmatter": "^5.0.0",
+		"remark-gfm": "^4.0.0",
 		"remark-parse": "^11.0.0",
 		"remark-rehype": "^11.1.1",
 		"remark-wiki-link-plus": "^1.1.1",

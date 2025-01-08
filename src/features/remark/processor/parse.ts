@@ -12,6 +12,8 @@ import remarkFrontmatter, {
 
 import {} from "remark-extract-frontmatter";
 
+import remarkGfm from "remark-gfm";
+
 export const createParseProcessor = (
 	fileTrees: FileTree[],
 	_parentsLinks: string[],
@@ -27,6 +29,7 @@ export const createParseProcessor = (
 
 	const processor = remark()
 		.use(remarkParse)
+		.use(remarkGfm)
 		.use(wikiLinkPlugin, {
 			fileTrees,
 			assetPath: "assets",
