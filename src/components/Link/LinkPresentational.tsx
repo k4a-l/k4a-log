@@ -12,6 +12,7 @@ import {
 import { css } from "styled-system/css";
 import { HStack, Stack } from "styled-system/jsx";
 
+import { embedMarkdownClass } from "@/components/Toc";
 import { IconButton } from "@/park-ui/components/icon-button";
 import { Link } from "@/park-ui/components/link";
 import { Link as LinkIcons } from "lucide-react";
@@ -178,14 +179,11 @@ export const EmbedLinkMarkdown: FC<
 
 	return (
 		<Stack
-			className={css({
-				shadow: "sm",
-				borderLeftWidth: 4,
-				borderStyle: "solid",
-				borderLeftColor: "gray.8",
+			className={`${css({
+				shadow: "xs",
 				w: "100%",
-				my: 2,
-			})}
+			})}, ${embedMarkdownClass}`}
+			my={4}
 		>
 			<HStack
 				justifyContent={"space-between"}

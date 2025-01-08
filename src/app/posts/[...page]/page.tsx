@@ -16,11 +16,11 @@ import { createFileTrees } from "@/features/remark/wikilink/util";
 import { isSamePath } from "@/utils/path";
 import {} from "react/jsx-runtime";
 import { css } from "styled-system/css";
-import { Center, Spacer, Stack } from "styled-system/jsx";
+import { Center, HStack, Spacer, Stack } from "styled-system/jsx";
 
-import { Button } from "@/park-ui/components/button";
-import { FileIcon, Link2Icon } from "lucide-react";
-import NextLink from "next/link";
+import { BackLinks, TwoHopLinks } from "@/components/PostLink";
+import { SideTableOfContents } from "@/components/Toc";
+import {} from "lucide-react";
 
 const directoryPath = path.join(assetsDirPath, "/posts");
 
@@ -46,7 +46,7 @@ export default async function Home({ params }: { params: Params }) {
 	);
 
 	// データ加工
-	const { frontMatter } = fileData.data;
+	const { frontmatter } = fileData.data;
 
 	const vaultFileContent = await readFile(vaultMetadataFilePath, {
 		encoding: "utf-8",
@@ -62,7 +62,7 @@ export default async function Home({ params }: { params: Params }) {
 			<title>{fileData.title}</title>
 			<meta property="og:title" content={fileData.title} key="title" />
 			<Center
-				className={css({
+				className={`${css({
 					px: { md: 10, base: 2 },
 					py: 4,
 					fontSize: { sm: "1em", base: "0.8em" },
@@ -70,130 +70,57 @@ export default async function Home({ params }: { params: Params }) {
 						wordBreak: "break-all",
 						minW: 0,
 					},
-				})}
+				})}, `}
+				bg="blue.2"
 			>
-				<Stack maxW={"max(1000px,100%)"} w={"1000px"}>
-					<div
-						className={css({
-							fontSize: "1.5em",
-							fontWeight: "bold",
-							borderBottomWidth: "6",
-							borderBottomColor: "gray.3",
-						})}
-					>
-						{fileData.title}
-					</div>
-					{frontMatter ? <FrontMatter frontmatter={frontMatter} /> : null}
-					<div>{fileData.content}</div>
-					<Spacer h={4} />
-					{tPost?.backLinks.length ? (
-						<Stack
-							className={css({
-								bg: "whitesmoke",
-								borderWidth: 1,
-								py: 2,
-								px: 2,
-								rounded: "md",
-								gap: 2,
-							})}
-						>
-							<p
+				<HStack alignItems={"start"} pb={100} w="100%">
+					<Stack maxW={"max(1000px,100%)"} w={"1000px"}>
+						<Stack bg="white" p={4} rounded={"md"}>
+							<div
 								className={css({
-									fontSize: "0.8em",
+									fontSize: "1.5em",
 									fontWeight: "bold",
-									lineHeight: 0,
-									px: 2,
+									borderBottomWidth: "6",
+									borderBottomColor: "gray.3",
 								})}
 							>
-								関連
-							</p>
+								{fileData.title}
+							</div>
+							{frontmatter ? <FrontMatter frontmatter={frontmatter} /> : null}
+							<div className="md-post-container">{fileData.content}</div>
+						</Stack>
+						<Spacer h={4} />
+						{tPost?.backLinks.length ? (
 							<Stack
 								className={css({
-									gap: 0,
+									bg: "white",
+									// borderWidth: 1,
+									p: 2,
+									rounded: "md",
+									gap: 2,
 								})}
 							>
-								{tPost?.backLinks.map((bl) => (
-									<Button
-										asChild
-										key={bl.path}
-										variant={"ghost"}
-										size={{ md: "md", base: "sm" }}
-										fontWeight={"normal"}
-										justifyContent={"start"}
-										rounded={"sm"}
-										height={"auto"}
-										p={{ md: 2, base: 1 }}
-										textDecoration={"none"}
-									>
-										<NextLink href={path.join("/", bl.path)}>
-											<FileIcon />
-											{bl.title}
-										</NextLink>
-									</Button>
-								))}
+								<BackLinks tPost={tPost} />
 							</Stack>
-						</Stack>
+						) : null}
+						{tPost?.twoHopLinks.length ? (
+							<Stack
+								className={css({
+									bg: "white",
+									// borderWidth: 1,
+									p: 2,
+									rounded: "md",
+									gap: 2,
+								})}
+							>
+								<TwoHopLinks tPost={tPost} />
+							</Stack>
+						) : null}
+					</Stack>
+					{fileData.data.toc ? (
+						<SideTableOfContents toc={fileData.data.toc} />
 					) : null}
-
-					{tPost?.twoHopLinks.length ? (
-						<Stack
-							className={css({
-								bg: "whitesmoke",
-								borderWidth: 1,
-								py: 2,
-								px: 2,
-								rounded: "md",
-								gap: 2,
-							})}
-						>
-							{tPost?.twoHopLinks.map((thl) => (
-								<Stack
-									key={thl.path}
-									className={css({
-										gap: 0,
-									})}
-								>
-									<Button
-										asChild
-										key={thl.path}
-										variant={"ghost"}
-										size={{ md: "md", base: "sm" }}
-										justifyContent={"start"}
-										rounded={"sm"}
-										height={"auto"}
-										p={{ md: 2, base: 1 }}
-										textDecoration={"none"}
-									>
-										<NextLink href={path.join("/", thl.path)}>
-											<FileIcon />
-											{thl.title}
-										</NextLink>
-									</Button>
-									{thl.links.map((l) => (
-										<Button
-											asChild
-											key={l.path}
-											variant={"ghost"}
-											size={{ md: "md", base: "sm" }}
-											fontWeight={"normal"}
-											justifyContent={"start"}
-											rounded={"sm"}
-											height={"auto"}
-											p={{ md: 2, base: 1 }}
-											ml={"2em"}
-											textDecoration={"none"}
-										>
-											<NextLink href={path.join("/", l.path)}>
-												<Link2Icon />
-												{l.title}
-											</NextLink>
-										</Button>
-									))}
-								</Stack>
-							))}
-						</Stack>
-					) : null}
-				</Stack>
+				</HStack>
 			</Center>
 		</>
 	);

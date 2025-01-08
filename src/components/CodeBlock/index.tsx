@@ -22,7 +22,7 @@ export const CodeBlock = (props: PropsWithChildren<HTMLElement>) => {
 			<div
 				className={css({
 					bg: "white",
-					boxShadow: "md",
+					boxShadow: "xs",
 					borderRadius: "sm",
 				})}
 			>
@@ -54,7 +54,7 @@ export const CodeBlock = (props: PropsWithChildren<HTMLElement>) => {
 			<div
 				className={css({
 					bg: "white",
-					boxShadow: "md",
+					boxShadow: "xs",
 					borderRadius: "sm",
 					p: 2,
 				})}

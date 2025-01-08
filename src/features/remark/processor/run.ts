@@ -22,13 +22,17 @@ import remarkToc, { type RemarkTocOptions } from "../toc";
 import remarkExtractFrontmatter from "remark-extract-frontmatter";
 
 import yaml from "yaml";
+import type { VFileData } from "../frontmatter";
 
 export const createRunProcessor = (options?: {
 	excludeToc?: boolean;
 }): Processor => {
 	const { excludeToc } = options ?? {};
 	return remark()
-		.use(remarkExtractFrontmatter, { yaml: yaml.parse, name: "frontMatter" })
+		.use(remarkExtractFrontmatter, {
+			yaml: yaml.parse,
+			name: "frontmatter" satisfies keyof VFileData,
+		})
 		.use(excludeToc ? () => {} : remarkToc, {
 			heading: "目次",
 		} satisfies RemarkTocOptions)

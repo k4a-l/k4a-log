@@ -22,24 +22,48 @@
 		all: revert; /* スタイルをデフォルトに戻す */
 	}
 
+	ol,
+	ul {
+		padding-left: 2em;
+	}
+
 	html,
 	body {
 		/* 少し柔らかい感じのフォント */
 		font-family: "Kosugi Maru", sans-serif;
 	}
 
+	/********** CHECKBOX **********/
+	.task-list-item {
+		display: flex;
+		align-items: center;
+		gap: 4;
+	}
+
 	/********** TOC **********/
 	.toc {
 		padding: 1em 2em;
 		border-radius: 0.5em;
-		background-color: whitesmoke;
+		border: 1px solid #eee;
 		font-size: 0.8em;
 		ul,
 		ol {
-			padding: 0.2em 0px 0.2em 20px;
+			padding: 0.2em 0px 0em 20px;
 		}
 		li {
-			line-height: 1;
+			list-style: circle;
+			list-style: none;
+			color: navy;
+		}
+		a {
+			display: inline-block;
+			width: 100%;
+			padding: 0.1em 0.5em;
+			color: inherit;
+			text-decoration: none;
+			&:hover {
+				background-color: #eeeeee;
+			}
 		}
 	}
 

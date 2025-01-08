@@ -9,7 +9,7 @@
 		"lint": "biome lint --write ./src",
 		"format": "biome format --write ./src",
 		"check": "biome check --write ./src",
-		"tsc": "tsc --watch ./src",
+		"tsc": "tsc --watch",
 		"test": "vitest",
 		"prepare": "panda codegen",
 		"generate": "tsx --tsconfig tsconfig.json  scripts/generate/vault-object.ts main"
@@ -41,6 +41,7 @@
 		"remark-parse": "^11.0.0",
 		"remark-rehype": "^11.1.1",
 		"remark-wiki-link-plus": "^1.1.1",
+		"tocbot": "^4.32.3-0",
 		"unified": "^11.0.5",
 		"unist-builder": "^4.0.0",
 		"vfile-matter": "^5.0.0",

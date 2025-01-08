@@ -28,5 +28,8 @@
 	"[ignore]": {
 		"editor.defaultFormatter": "foxundermoon.shell-format"
 	},
-	"cSpell.words": ["frontmatter", "wikilink"]
+	"cSpell.words": ["frontmatter", "wikilink"],
+	"[css]": {
+		"editor.defaultFormatter": "biomejs.biome"
+	}
 }

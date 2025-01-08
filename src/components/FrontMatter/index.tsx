@@ -3,6 +3,7 @@ import { Box, HStack } from "styled-system/jsx";
 import type { VFileData } from "@/features/remark/frontmatter";
 import { Link } from "@/park-ui/components/link";
 import { stringToDate, toYYYYMMDD } from "@/utils/date";
+import { PenIcon, RotateCwIcon } from "lucide-react";
 import NextLink from "next/link";
 
 const frontMatterKeys = {
@@ -14,10 +15,12 @@ const frontMatterKeys = {
 	// title: "string",
 };
 
-export const FrontMatter = ({ frontmatter: frontMatter }: VFileData) => {
-	const createdString = String(frontMatter?.[frontMatterKeys.created]);
+export const FrontMatter = ({
+	frontmatter,
+}: Pick<VFileData, "frontmatter">) => {
+	const createdString = String(frontmatter?.[frontMatterKeys.created]);
 	const createdDateMaybe = stringToDate(createdString);
-	const updatedString = String(frontMatter?.[frontMatterKeys.updated]);
+	const updatedString = String(frontmatter?.[frontMatterKeys.updated]);
 	const updatedDateMaybe = stringToDate(updatedString);
 	const createdDateYMD =
 		createdDateMaybe || updatedDateMaybe
@@ -29,12 +32,12 @@ export const FrontMatter = ({ frontmatter: frontMatter }: VFileData) => {
 			: undefined;
 
 	return (
-		<HStack justifyContent={"end"} fontSize={"sm"}>
+		<HStack justifyContent={"end"} fontSize={"0.8em"}>
 			{createdDateYMD ? (
 				<Box>
-					作成日:
-					<Link asChild color={"blue.10"} fontWeight={"bold"}>
+					<Link asChild color={"blue.10"} gap={1}>
 						<NextLink href={`/search?query=created:${createdDateYMD}`}>
+							<PenIcon />
 							{createdDateYMD}
 						</NextLink>
 					</Link>
@@ -42,10 +45,10 @@ export const FrontMatter = ({ frontmatter: frontMatter }: VFileData) => {
 			) : null}
 			{updateDateYMD ? (
 				<Box>
-					作成日:
-					<Link asChild color={"blue.10"} fontWeight={"bold"}>
-						<NextLink href={`/search?query=created:${createdDateYMD}`}>
-							{createdDateYMD}
+					<Link asChild color={"blue.10"} gap={1}>
+						<NextLink href={`/search?query=updated:${createdDateYMD}`}>
+							<RotateCwIcon />
+							{updateDateYMD}
 						</NextLink>
 					</Link>
 				</Box>

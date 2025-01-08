@@ -7,6 +7,7 @@ import type { Processor } from "unified";
 import { VFile } from "vfile";
 import type { ReactProcessor } from "../processor";
 
+import { toc } from "mdast-util-toc";
 import type { VFileData } from "../frontmatter";
 import { convertNoExtensionPathToMD, lastOfArr, toHeadingSlug } from "./util";
 
@@ -19,7 +20,7 @@ export const getFileContent = async (
 ): Promise<{
 	content: ReactElement | string;
 	title: string;
-	data: { frontMatter?: Record<string, unknown> };
+	data: VFileData;
 }> => {
 	let header: string | undefined;
 
@@ -74,6 +75,8 @@ export const getFileContent = async (
 			parseResult.children = headerChildren;
 		}
 
+		const tocResult = toc(parseResult);
+
 		const rehypeResult = await runProcessor.runSync(parseResult, file);
 
 		const stringifyResult = await stringifyProcessor.stringify(rehypeResult);
@@ -81,14 +84,17 @@ export const getFileContent = async (
 		return {
 			title,
 			content: stringifyResult,
-			data: file.data as VFileData,
+			data: {
+				frontmatter: file.data.frontmatter as VFileData["frontmatter"],
+				toc: tocResult.map,
+			},
 		};
 	} catch (error) {
 		console.error(error);
 		return {
 			title,
 			content: `${title}: ファイルが存在しません`,
-			data: {},
+			data: { toc: undefined },
 		};
 	}
 };
