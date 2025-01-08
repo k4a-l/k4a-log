@@ -10,8 +10,8 @@ import {
 	createRunProcessor,
 	createStringifyProcessor,
 } from "@/features/remark/processor";
+import { getFileContent as getFileData } from "@/features/remark/processor/getContent";
 import { createParseProcessor } from "@/features/remark/processor/parse";
-import { getFileContent as getFileData } from "@/features/remark/wikilink/file";
 import { createFileTrees } from "@/features/remark/wikilink/util";
 import { isSamePath } from "@/utils/path";
 import {} from "react/jsx-runtime";

@@ -5,11 +5,15 @@ import { toString as mdastToString } from "mdast-util-to-string";
 import type { ReactElement } from "react";
 import type { Processor } from "unified";
 import { VFile } from "vfile";
-import type { ReactProcessor } from "../processor";
+import type { ReactProcessor } from ".";
 
+import {
+	convertNoExtensionPathToMD,
+	lastOfArr,
+	toHeadingSlug,
+} from "@/features/remark/wikilink/util";
 import { toc } from "mdast-util-toc";
 import type { VFileData } from "../frontmatter";
-import { convertNoExtensionPathToMD, lastOfArr, toHeadingSlug } from "./util";
 
 export const getFileContent = async (
 	paths: string[],

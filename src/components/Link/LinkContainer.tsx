@@ -5,8 +5,8 @@ import {
 	createRunProcessor,
 	createStringifyProcessor,
 } from "@/features/remark/processor";
+import { getFileContent } from "@/features/remark/processor/getContent";
 import { createParseProcessor } from "@/features/remark/processor/parse";
-import { getFileContent } from "@/features/remark/wikilink/file";
 import { createFileTrees } from "@/features/remark/wikilink/util";
 import path from "path-browserify";
 import { css } from "styled-system/css";
