@@ -22,11 +22,12 @@ export const remarkHashtagPlugin: Plugin = () => {
 		visit(tree, "text", (node, _index, parent) => {
 			if (!parent) return;
 
-			//remove this node
-			const [child, ...others] = parent.children;
+			const childIndex = parent.children.findIndex((c) => c === node);
+			const child = parent.children[childIndex];
+
 			if (child && child.type !== "text") return;
 
-			parent.children = others;
+			parent.children.filter((c, i) => i !== childIndex);
 
 			// AA#tag BB#tag という文章があったとき、[AA,#tag,BB,#tag]にする関数
 			const splitByHashtag = (input: string): string[] => {
@@ -55,10 +56,12 @@ export const remarkHashtagPlugin: Plugin = () => {
 			};
 
 			const texts = splitByHashtag(child?.value ?? "");
-			for (const text of texts) {
+
+			for (let i = 0; i < texts.length; i++) {
+				const text = texts[i] as string;
 				if (text.startsWith("#")) {
 					const hashTagValue = text.replace("#", "");
-					parent.children.unshift({
+					parent.children.splice(childIndex + i, 1, {
 						...child,
 						// TODO: fix
 						// @ts-expect-error
@@ -71,7 +74,9 @@ export const remarkHashtagPlugin: Plugin = () => {
 							},
 						},
 					});
-				} else parent.children.unshift(u("text", text));
+				} else {
+					parent.children.splice(childIndex + i, 1, u("text", text));
+				}
 			}
 		});
 };
