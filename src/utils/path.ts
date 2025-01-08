@@ -10,14 +10,16 @@ export const isSamePath = (path1: string, path2: string): boolean => {
 /**
  * \\,\,/の違いを吸収
  * .mdつきと拡張子無しを同一視
+ * 末尾/を削除
  */
 export const normalizePath = (str: string): string => {
 	return decodeURIComponent(
-		path.join(
-			"/",
-			str.replace(/\\\\/g, "/").replace(/\\/g, "/").replace(/\.md/, ""),
-			"/",
-		),
+		path
+			.join(
+				"/",
+				str.replace(/\\\\/g, "/").replace(/\\/g, "/").replace(/\.md/, ""),
+			)
+			.replace(/\/$/, ""),
 	);
 };
 

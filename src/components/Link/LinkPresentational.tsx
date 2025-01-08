@@ -13,8 +13,10 @@ import { css } from "styled-system/css";
 import { HStack, Stack } from "styled-system/jsx";
 
 import { embedMarkdownClass } from "@/components/Toc";
+import type { PathMap } from "@/features/metadata/type";
 import { IconButton } from "@/park-ui/components/icon-button";
 import { Link } from "@/park-ui/components/link";
+import { normalizePath } from "@/utils/path";
 import { Link as LinkIcons } from "lucide-react";
 import path from "path-browserify";
 import type { StrictOmit } from "ts-essentials";
@@ -23,9 +25,13 @@ type LinkPresentationalType = StrictOmit<
 	WikiLinkData["hProperties"],
 	"rootDirPath" | "assetsDirPath" | "type" | "parentsLinks"
 >;
+
+type MDLinkPresentationalType = PropsWithChildren<
+	LinkPresentationalType & { pathMap: PathMap }
+>;
 export const TransitionLinkDead: FC<
-	PropsWithChildren<LinkPresentationalType>
-> = ({ href, children, ...others }) => {
+	PropsWithChildren<MDLinkPresentationalType>
+> = ({ href, children, pathMap, ...others }) => {
 	return (
 		<Link asChild color="blue.9">
 			<NextLink
@@ -40,12 +46,21 @@ export const TransitionLinkDead: FC<
 	);
 };
 
-export const TransitionLinkExist: FC<
-	PropsWithChildren<LinkPresentationalType>
-> = ({ href, children, alias, title, ...others }) => {
+export const TransitionLinkExist: FC<MDLinkPresentationalType> = ({
+	href,
+	children,
+	alias,
+	title,
+	pathMap,
+	...others
+}) => {
+	const pathOrId = normalizePath(
+		path.join("/", pathMap[normalizePath(href)] ?? href),
+	);
+
 	return (
 		<Link asChild color={"blue.10"}>
-			<NextLink href={href}>{alias ?? title ?? children}</NextLink>
+			<NextLink href={pathOrId}>{alias ?? title ?? children}</NextLink>
 		</Link>
 	);
 };
@@ -170,12 +185,20 @@ export const EmbedLinkPdf: FC<PropsWithChildren<LinkPresentationalType>> = ({
 	);
 };
 
-export const EmbedLinkMarkdown: FC<
-	PropsWithChildren<LinkPresentationalType>
-> = ({ href, title, alias, children }) => {
+export const EmbedLinkMarkdown: FC<MDLinkPresentationalType> = ({
+	href,
+	title,
+	alias,
+	children,
+	pathMap,
+}) => {
 	if (!href) {
 		return <EmbedLinkNotFound title={title} />;
 	}
+
+	const pathOrId = normalizePath(
+		path.join("/", pathMap[normalizePath(href)] ?? href),
+	);
 
 	return (
 		<Stack
@@ -203,7 +226,7 @@ export const EmbedLinkMarkdown: FC<
 					{alias ?? title}
 				</span>
 				<IconButton asChild color="blue.10" variant={"ghost"} size="sm">
-					<NextLink href={href}>
+					<NextLink href={pathOrId}>
 						<LinkIcons size={"1em"} />
 					</NextLink>
 				</IconButton>

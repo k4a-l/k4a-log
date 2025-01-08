@@ -5,6 +5,7 @@ import { css } from "styled-system/css";
 
 import NextLink from "next/link";
 
+import { normalizePath } from "@/utils/path";
 import path from "path-browserify";
 import { Stack } from "styled-system/jsx";
 
@@ -39,7 +40,7 @@ export const BackLinks = ({ tPost }: { tPost: TPost }) => {
 						p={{ md: 2, base: 1 }}
 						textDecoration={"none"}
 					>
-						<NextLink href={path.join("/", bl.path)}>
+						<NextLink href={path.join("/", normalizePath(bl.path))}>
 							<FileIcon />
 							{bl.title}
 						</NextLink>
@@ -71,7 +72,7 @@ export const TwoHopLinks = ({ tPost }: { tPost: TPost }) => {
 						p={{ md: 2, base: 1 }}
 						textDecoration={"none"}
 					>
-						<NextLink href={path.join("/", thl.path)}>
+						<NextLink href={path.join("/", normalizePath(thl.path))}>
 							<FileIcon />
 							{thl.title}
 						</NextLink>
@@ -90,7 +91,7 @@ export const TwoHopLinks = ({ tPost }: { tPost: TPost }) => {
 							ml={"2em"}
 							textDecoration={"none"}
 						>
-							<NextLink href={path.join("/", l.path)}>
+							<NextLink href={path.join("/", normalizePath(l.path))}>
 								<Link2Icon />
 								{l.title}
 							</NextLink>

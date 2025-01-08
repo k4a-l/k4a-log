@@ -32,6 +32,9 @@ export type TPostMetaData = {
 	tags: TTagMetaData[];
 };
 
+/** key:path, value:uid */
+export type PathMap = Record<string, string | undefined>;
+
 /**
  * ファイル単体で解決できる内容
  * 参考: https://docs.obsidian.md/Reference/TypeScript+API/CachedMetadata
@@ -58,4 +61,9 @@ export type TPost = TPostIndependence & {
 	/** pathをキーにvaultObjectからtitleなどは取得できるが、使用時に楽なのでまとめちゃう */
 	backLinks: TPostLink[];
 	twoHopLinks: (TPostLink & { links: TPostLink[] })[];
+};
+
+export type TVault = {
+	posts: TPost[];
+	pathMap: PathMap;
 };

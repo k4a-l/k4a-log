@@ -2,7 +2,7 @@ import { expect, test } from "vitest";
 import { hasExtensionButNotMD, normalizePath } from "./path";
 
 test("normalizePath", () => {
-	const normalized = "/path/to/file/";
+	const normalized = "/path/to/file";
 	expect(normalizePath("/path/to/file/")).toBe(normalized);
 	expect(normalizePath("path/to/file")).toBe(normalized);
 	expect(normalizePath("/path\\to\\file")).toBe(normalized);

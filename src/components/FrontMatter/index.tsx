@@ -18,18 +18,27 @@ const frontMatterKeys = {
 export const FrontMatter = ({
 	frontmatter,
 }: Pick<VFileData, "frontmatter">) => {
-	const createdString = String(frontmatter?.[frontMatterKeys.created]);
-	const createdDateMaybe = stringToDate(createdString);
-	const updatedString = String(frontmatter?.[frontMatterKeys.updated]);
-	const updatedDateMaybe = stringToDate(updatedString);
+	const createdString = frontmatter?.[frontMatterKeys.created];
+	const createdDateMaybe = createdString
+		? stringToDate(String(createdString))
+		: null;
+	const updatedString = frontmatter?.[frontMatterKeys.updated];
+	const updatedDateMaybe = updatedString
+		? stringToDate(String(updatedString))
+		: null;
+
 	const createdDateYMD =
 		createdDateMaybe || updatedDateMaybe
-			? toYYYYMMDD((createdDateMaybe ?? updatedDateMaybe) as Date)
+			? toYYYYMMDD((createdDateMaybe || updatedDateMaybe) as Date)
 			: undefined;
 	const updateDateYMD =
-		(createdDateMaybe ?? updatedDateMaybe)
-			? toYYYYMMDD((createdDateMaybe ?? updatedDateMaybe) as Date)
+		createdDateMaybe || updatedDateMaybe
+			? toYYYYMMDD((createdDateMaybe || updatedDateMaybe) as Date)
 			: undefined;
+
+	if (!createdDateYMD && !updateDateYMD) {
+		return null;
+	}
 
 	return (
 		<HStack justifyContent={"end"} fontSize={"0.8em"}>

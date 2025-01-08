@@ -6,15 +6,18 @@ import { readFile } from "node:fs/promises";
 import { createParseProcessor } from "@/features/remark/processor/parse";
 
 import type {
+	PathMap,
 	TLinkMetaData,
 	TListItemMetaData,
 	TPost,
 	TPostIndependence,
 	TPostMetaData,
+	TVault,
 } from "@/features/metadata/type";
-import type { VFileData } from "@/features/remark/frontmatter";
+import { type VFileData, uidName } from "@/features/remark/frontmatter";
 import { createRunProcessor } from "@/features/remark/processor/run";
 import {
+	type FileTree,
 	createFileTrees,
 	imageExtensions,
 } from "@/features/remark/wikilink/util";
@@ -36,13 +39,12 @@ import {
 	dividePathAndExtension,
 	hasExtensionButNotMD,
 	isSamePath,
+	normalizePath,
 } from "@/utils/path";
 import { toString as mdastToString } from "mdast-util-to-string";
 
 const postsDirPath = "posts";
-const rootDirectoryPath = path.join(assetsDirPath, postsDirPath);
-
-const fileTrees = createFileTrees(rootDirectoryPath);
+const withAssetsDirPath = path.join(assetsDirPath, postsDirPath);
 
 // 各ファイル全部に繰り返す
 
@@ -57,7 +59,11 @@ type FileOrDirEntity =
 	| FileEntity
 	| { type: "dir"; name: string; children: FileOrDirEntity[] };
 
-const createParsedTree = async (rootDirPath: string, dirPath: string) => {
+const createParsedTree = async (
+	fileTrees: FileTree[],
+	rootDirPath: string,
+	dirPath: string,
+) => {
 	const tree: FileOrDirEntity[] = [];
 	const entries = fs.readdirSync(path.join(rootDirPath, dirPath), {
 		withFileTypes: true,
@@ -74,7 +80,11 @@ const createParsedTree = async (rootDirPath: string, dirPath: string) => {
 			tree.push({
 				type: "dir",
 				name: entry.name,
-				children: await createParsedTree(rootDirPath, pathOfUnderRoot),
+				children: await createParsedTree(
+					fileTrees,
+					rootDirPath,
+					pathOfUnderRoot,
+				),
 			});
 		} else {
 			const fPath = path.join(path.resolve(), rootDirPath, pathOfUnderRoot);
@@ -385,9 +395,27 @@ export const injectAllLinksToTPostIndependence = (
 	return posts;
 };
 
-export const createVaultFile = async () => {
-	const parsed = await createParsedTree(rootDirectoryPath, "");
+/**
+ * key: 元の名前、value: uid
+ */
+const createPathMap = (files: FileEntity[]): PathMap => {
+	const pathMap: PathMap = {};
+	for (const file of files) {
+		const uid = file.fileData.frontmatter?.[uidName];
+		console.log(file.name, file.path);
+		if (typeof uid === "string") {
+			const pathName = normalizePath(path.join(postsDirPath, file.path));
+			pathMap[pathName] = normalizePath(path.join(postsDirPath, uid));
+		}
+	}
+	return pathMap;
+};
+
+export const createVaultFile = async (): Promise<TVault> => {
+	const fileTrees = createFileTrees(withAssetsDirPath);
+	const parsed = await createParsedTree(fileTrees, withAssetsDirPath, "");
 	const flattened = flattenParsedTree(parsed);
+	const pathMap = createPathMap(flattened);
 
 	// テスト用MDを変更した場合は、testオブジェクトを出力してテストに使う
 	// fs.writeFileSync(
@@ -398,7 +426,7 @@ export const createVaultFile = async () => {
 	const tIPost = flattened.map((f) => convertFileEntityToTPostIndependence(f));
 	const tPosts = injectAllLinksToTPostIndependence(tIPost);
 
-	return tPosts;
+	return { posts: tPosts, pathMap };
 };
 
 export const main = async () => {

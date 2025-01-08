@@ -1,6 +1,7 @@
 import type { WikiLinkData } from "@/types/mdast";
-import type { AnchorHTMLAttributes, FC, PropsWithChildren } from "react";
+import type { AnchorHTMLAttributes, FC } from "react";
 
+import type { PathMap } from "@/features/metadata/type";
 import {
 	createRunProcessor,
 	createStringifyProcessor,
@@ -19,9 +20,10 @@ import {
 	TransitionLinkExist,
 } from "./LinkPresentational";
 
-export const LinkContainer: FC<
-	AnchorHTMLAttributes<HTMLAnchorElement> & WikiLinkData["hProperties"]
-> = (props) => {
+type WikiLinkComponentProps = AnchorHTMLAttributes<HTMLAnchorElement> &
+	WikiLinkData["hProperties"] & { pathMap: PathMap };
+
+export const LinkContainer: FC<WikiLinkComponentProps> = (props) => {
 	const { href, children, "is-embed": isEmbed, ...others } = props;
 
 	if (isEmbed) {
@@ -31,9 +33,13 @@ export const LinkContainer: FC<
 	return <TransitionLinkContainer {...props} />;
 };
 
-export const TransitionLinkContainer: FC<
-	PropsWithChildren<WikiLinkData["hProperties"]>
-> = ({ rootDirPath, assetsDirPath, parentsLinks, isDeadLink, ...props }) => {
+export const TransitionLinkContainer: FC<WikiLinkComponentProps> = ({
+	rootDirPath,
+	assetsDirPath,
+	parentsLinks,
+	isDeadLink,
+	...props
+}) => {
 	if (isDeadLink === "true") {
 		return <TransitionLinkDead {...props} />;
 	}
@@ -41,14 +47,13 @@ export const TransitionLinkContainer: FC<
 	return <TransitionLinkExist {...props} />;
 };
 
-export const EmbedLinkContainer: FC<
-	PropsWithChildren<WikiLinkData["hProperties"]>
-> = async ({
+export const EmbedLinkContainer: FC<WikiLinkComponentProps> = async ({
 	rootDirPath,
 	assetsDirPath,
 	parentsLinks,
 	isDeadLink,
 	type,
+	pathMap,
 	...props
 }) => {
 	const { href, children, title, alias, ...others } = props;
@@ -76,7 +81,7 @@ export const EmbedLinkContainer: FC<
 
 		const remarkProcessor = createParseProcessor(fileTrees, parentLinksArr);
 		const rehypeProcessor = createRunProcessor();
-		const stringifyProcessor = createStringifyProcessor();
+		const stringifyProcessor = createStringifyProcessor({ pathMap });
 		const data = await getFileContent(
 			paths,
 			rootPath,
@@ -85,7 +90,11 @@ export const EmbedLinkContainer: FC<
 			stringifyProcessor,
 		);
 
-		return <EmbedLinkMarkdown {...props}>{data.content}</EmbedLinkMarkdown>;
+		return (
+			<EmbedLinkMarkdown pathMap={pathMap} {...props}>
+				{data.content}
+			</EmbedLinkMarkdown>
+		);
 	}
 
 	return (

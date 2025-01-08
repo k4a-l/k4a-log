@@ -4,3 +4,5 @@ export type VFileData = {
 	frontmatter?: Record<string, unknown>;
 	toc: Result["map"];
 };
+
+export const uidName = "uid";

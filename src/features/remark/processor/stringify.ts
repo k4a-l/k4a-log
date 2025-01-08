@@ -3,6 +3,7 @@ import { CodeBlock, Pre } from "@/components/CodeBlock";
 import { Hashtag } from "@/components/Hashtag";
 import { MarkdownLink } from "@/components/Link";
 import { ParagraphWrap } from "@/components/ParagraphWrap";
+import type { PathMap } from "@/features/metadata/type";
 import {} from "@/features/remark/hashtag";
 import type { ReactElement } from "react";
 import { Fragment, jsx, jsxs } from "react/jsx-runtime";
@@ -18,13 +19,17 @@ export type ReactProcessor = Processor<
 	ReactElement
 >;
 
-export const createStringifyProcessor = (): ReactProcessor => {
+export const createStringifyProcessor = ({
+	pathMap,
+}: { pathMap: PathMap }): ReactProcessor => {
 	return remark().use(rehypeReact, {
 		Fragment,
 		jsx,
 		jsxs,
 		components: {
-			wikilink: MarkdownLink,
+			wikilink: (props) => {
+				return MarkdownLink({ ...props, pathMap });
+			},
 			hashtag: Hashtag,
 			"paragraph-wrap": ParagraphWrap,
 			blockquote: Callout,
