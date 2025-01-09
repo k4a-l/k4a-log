@@ -402,7 +402,6 @@ const createPathMap = (files: FileEntity[]): PathMap => {
 	const pathMap: PathMap = {};
 	for (const file of files) {
 		const uid = file.fileData.frontmatter?.[uidName];
-		console.log(file.name, file.path);
 		if (typeof uid === "string") {
 			const pathName = normalizePath(path.join(postsDirPath, file.path));
 			pathMap[pathName] = normalizePath(path.join(postsDirPath, uid));
