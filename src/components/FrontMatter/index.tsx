@@ -1,10 +1,10 @@
 import { Box, HStack } from "styled-system/jsx";
 
+import { NextLink } from "@/components/Link/NextLink";
 import type { VFileData } from "@/features/remark/frontmatter";
 import { Link } from "@/park-ui/components/link";
 import { stringToDate, toYYYYMMDD } from "@/utils/date";
 import { PenIcon, RotateCwIcon } from "lucide-react";
-import NextLink from "next/link";
 
 const frontMatterKeys = {
 	created: "created",

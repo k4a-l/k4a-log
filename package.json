@@ -17,6 +17,7 @@
 	"dependencies": {
 		"@ark-ui/react": "^4.6.0",
 		"@babel/standalone": "^7.26.4",
+		"framer-motion": "^11.16.1",
 		"github-slugger": "^2.0.0",
 		"lodash": "^4.17.21",
 		"lucide-react": "^0.469.0",

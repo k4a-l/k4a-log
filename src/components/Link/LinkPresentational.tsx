@@ -1,7 +1,8 @@
 "use client";
 
+import { NextLink } from "@/components/Link/NextLink";
 import type { WikiLinkData } from "@/types/mdast";
-import NextLink from "next/link";
+
 import {
 	type FC,
 	type PropsWithChildren,
@@ -37,7 +38,6 @@ export const TransitionLinkDead: FC<
 			<NextLink
 				{...others}
 				href={path.join("/search", `?query=hasLink:${href}`)}
-				scroll={false}
 				style={{ cursor: "help" }}
 			>
 				{children}
@@ -54,9 +54,7 @@ export const TransitionLinkExist: FC<MDLinkPresentationalType> = ({
 	pathMap,
 	...others
 }) => {
-	const pathOrId = normalizePath(
-		path.join("/", pathMap[normalizePath(href)] ?? href),
-	);
+	const pathOrId = path.join(pathMap[normalizePath(href)] ?? href);
 
 	return (
 		<Link asChild color={"blue.10"}>
@@ -196,9 +194,7 @@ export const EmbedLinkMarkdown: FC<MDLinkPresentationalType> = ({
 		return <EmbedLinkNotFound title={title} />;
 	}
 
-	const pathOrId = normalizePath(
-		path.join("/", pathMap[normalizePath(href)] ?? href),
-	);
+	const pathOrId = path.join(pathMap[normalizePath(href)] ?? href);
 
 	return (
 		<Stack

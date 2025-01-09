@@ -3,7 +3,7 @@ import { Button } from "@/park-ui/components/button";
 import { FileIcon, Link2Icon } from "lucide-react";
 import { css } from "styled-system/css";
 
-import NextLink from "next/link";
+import { NextLink } from "@/components/Link/NextLink";
 
 import { normalizePath } from "@/utils/path";
 import path from "path-browserify";

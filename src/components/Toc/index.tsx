@@ -9,9 +9,9 @@ import type {
 } from "mdast";
 import { useEffect, useState } from "react";
 
+import { NextLink } from "@/components/Link/NextLink";
 import _ from "lodash";
 import type { Result } from "mdast-util-toc";
-import NextLink from "next/link";
 import { css } from "styled-system/css";
 import { Stack } from "styled-system/jsx";
 

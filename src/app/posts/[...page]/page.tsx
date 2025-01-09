@@ -21,13 +21,16 @@ import { HStack, Spacer, Stack } from "styled-system/jsx";
 import { BackLinks, TwoHopLinks } from "@/components/PostLink";
 import { SideTableOfContents } from "@/components/Toc";
 import {} from "lucide-react";
+import { PageWithTransition } from "./pageWithTransition";
 
 const postDirPath = "/posts";
 const directoryPath = path.join(assetsDirPath, postDirPath);
 
 type Params = Promise<{ page: string[] }>;
 
-export default async function Home({ params }: { params: Params }) {
+type Props = { params: Params };
+
+export default async function Page({ params }: Props) {
 	// 生の値取得→postDirはついてない
 	const pathsFromParams = (await params).page;
 	const pathFromParams = path.join(...pathsFromParams);
@@ -74,7 +77,7 @@ export default async function Home({ params }: { params: Params }) {
 	const { frontmatter } = fileData.data;
 
 	return (
-		<>
+		<PageWithTransition>
 			<title>{fileData.title}</title>
 			<meta property="og:title" content={fileData.title} key="title" />
 			<HStack
@@ -139,6 +142,6 @@ export default async function Home({ params }: { params: Params }) {
 					<SideTableOfContents toc={fileData.data.toc} />
 				) : null}
 			</HStack>
-		</>
+		</PageWithTransition>
 	);
 }
