@@ -63,6 +63,9 @@ export const remarkParagraphWrapPlugin: Plugin = () => {
 			node.data = {
 				...node.data,
 				hName: "span",
+				hProperties: {
+					style: "display: block; padding: 0.2em 0;",
+				},
 			};
 			node.children = newChildren;
 		});

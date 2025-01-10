@@ -199,7 +199,8 @@ export const EmbedLinkMarkdown: FC<MDLinkPresentationalType> = ({
 	return (
 		<Stack
 			className={`${css({
-				shadow: "xs",
+				borderWidth: 1,
+				borderColor: "gray.3",
 				w: "100%",
 			})}, ${embedMarkdownClass}`}
 			my={4}

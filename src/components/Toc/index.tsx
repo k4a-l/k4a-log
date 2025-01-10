@@ -9,6 +9,7 @@ import type {
 } from "mdast";
 import { useEffect, useState } from "react";
 
+import { HEADER_HEIGHT } from "@/app/template";
 import { NextLink } from "@/components/Link/NextLink";
 import _ from "lodash";
 import type { Result } from "mdast-util-toc";
@@ -133,7 +134,7 @@ export const SideTableOfContents = ({
 			}}
 			bg="white"
 			rounded={"md"}
-			top={4}
+			style={{ top: `calc(${HEADER_HEIGHT} + 8px)` }}
 			position={"sticky"}
 			maxHeight="100vh"
 			overflowX={"hidden"}

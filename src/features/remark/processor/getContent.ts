@@ -13,7 +13,7 @@ import {
 	toHeadingSlug,
 } from "@/features/remark/wikilink/util";
 import { toc } from "mdast-util-toc";
-import type { VFileData } from "../frontmatter";
+import { type VFileData, getFrontMatters } from "../frontmatter";
 
 export const getFileContent = async (
 	paths: string[],
@@ -82,14 +82,18 @@ export const getFileContent = async (
 		const tocResult = toc(parseResult);
 
 		const rehypeResult = await runProcessor.runSync(parseResult, file);
-
 		const stringifyResult = await stringifyProcessor.stringify(rehypeResult);
+
+		const frontmatterRaw: Record<string, unknown> = (
+			typeof file.data.frontmatter === "object" ? file.data.frontmatter : {}
+		) as Record<string, unknown>;
+		const frontmatter = getFrontMatters(frontmatterRaw);
 
 		return {
 			title,
 			content: stringifyResult,
 			data: {
-				frontmatter: file.data.frontmatter as VFileData["frontmatter"],
+				frontmatter,
 				toc: tocResult.map,
 			},
 		};

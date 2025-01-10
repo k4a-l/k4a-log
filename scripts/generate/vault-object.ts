@@ -14,7 +14,7 @@ import type {
 	TPostMetaData,
 	TVault,
 } from "@/features/metadata/type";
-import { type VFileData, uidName } from "@/features/remark/frontmatter";
+import { type VFileData, frontMatterKeys } from "@/features/remark/frontmatter";
 import { createRunProcessor } from "@/features/remark/processor/run";
 import {
 	type FileTree,
@@ -401,7 +401,7 @@ export const injectAllLinksToTPostIndependence = (
 const createPathMap = (files: FileEntity[]): PathMap => {
 	const pathMap: PathMap = {};
 	for (const file of files) {
-		const uid = file.fileData.frontmatter?.[uidName];
+		const uid = file.fileData.frontmatter?.[frontMatterKeys.uid.key];
 		if (typeof uid === "string") {
 			const pathName = normalizePath(path.join(postsDirPath, file.path));
 			pathMap[pathName] = normalizePath(path.join(postsDirPath, uid));

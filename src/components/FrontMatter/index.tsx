@@ -1,28 +1,19 @@
 import { Box, HStack } from "styled-system/jsx";
 
 import { NextLink } from "@/components/Link/NextLink";
-import type { VFileData } from "@/features/remark/frontmatter";
+import { type VFileData, frontMatterKeys } from "@/features/remark/frontmatter";
 import { Link } from "@/park-ui/components/link";
 import { stringToDate, toYYYYMMDD } from "@/utils/date";
 import { PenIcon, RotateCwIcon } from "lucide-react";
 
-const frontMatterKeys = {
-	created: "created",
-	updated: "updated",
-	// tags: "array", // タグは普通に中のやつ使ってくれ...
-	// author: "string", // 自分しかいない
-	//ノート名でいいけど上書きしたい場合もあるかも...？）
-	// title: "string",
-};
-
 export const FrontMatter = ({
 	frontmatter,
 }: Pick<VFileData, "frontmatter">) => {
-	const createdString = frontmatter?.[frontMatterKeys.created];
+	const createdString = frontmatter?.[frontMatterKeys.created.key];
 	const createdDateMaybe = createdString
 		? stringToDate(String(createdString))
 		: null;
-	const updatedString = frontmatter?.[frontMatterKeys.updated];
+	const updatedString = frontmatter?.[frontMatterKeys.updated.key];
 	const updatedDateMaybe = updatedString
 		? stringToDate(String(updatedString))
 		: null;

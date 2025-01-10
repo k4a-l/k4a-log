@@ -20,19 +20,20 @@ import { HStack, Spacer, Stack } from "styled-system/jsx";
 
 import { BackLinks, TwoHopLinks } from "@/components/PostLink";
 import { SideTableOfContents } from "@/components/Toc";
+import { postDirPath } from "@/constants/path";
+import { colors } from "@/constants/theme";
 import {} from "lucide-react";
 import { PageWithTransition } from "./pageWithTransition";
 
-const postDirPath = "/posts";
 const directoryPath = path.join(assetsDirPath, postDirPath);
 
-type Params = Promise<{ page: string[] }>;
+type Params = Promise<{ page: string[] | undefined }>;
 
 type Props = { params: Params };
 
 export default async function Page({ params }: Props) {
 	// 生の値取得→postDirはついてない
-	const pathsFromParams = (await params).page;
+	const pathsFromParams = (await params).page ?? ["index"];
 	const pathFromParams = path.join(...pathsFromParams);
 
 	// metadataの取得
@@ -76,9 +77,11 @@ export default async function Page({ params }: Props) {
 	// データ加工
 	const { frontmatter } = fileData.data;
 
+	const title: string = frontmatter?.title || fileData.title;
+
 	return (
 		<PageWithTransition>
-			<title>{fileData.title}</title>
+			<title>{title}</title>
 			<meta property="og:title" content={fileData.title} key="title" />
 			<HStack
 				justifyContent={"center"}
@@ -94,7 +97,7 @@ export default async function Page({ params }: Props) {
 						minW: 0,
 					},
 				})}, `}
-				bg="blue.2"
+				bg={colors["html-background"]}
 				minH="100vh"
 			>
 				<Stack maxW={"max(1000px,100%)"} w={"1000px"}>
@@ -107,7 +110,7 @@ export default async function Page({ params }: Props) {
 								borderBottomColor: "gray.3",
 							})}
 						>
-							{fileData.title}
+							{title}
 						</div>
 						{frontmatter ? <FrontMatter frontmatter={frontmatter} /> : null}
 						<div className="md-post-container">{fileData.content}</div>
