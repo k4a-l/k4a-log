@@ -63,7 +63,14 @@ export type TPost = TPostIndependence & {
 	twoHopLinks: (TPostLink & { links: TPostLink[] })[];
 };
 
+export type YMMap = {
+	[year: string]: {
+		[month: string]: number;
+	};
+};
+
 export type TVault = {
 	posts: TPost[];
 	pathMap: PathMap;
+	createdMap: YMMap;
 };

@@ -13,6 +13,7 @@ import type {
 	TPostIndependence,
 	TPostMetaData,
 	TVault,
+	YMMap,
 } from "@/features/metadata/type";
 import { type VFileData, frontMatterKeys } from "@/features/remark/frontmatter";
 import { createRunProcessor } from "@/features/remark/processor/run";
@@ -29,6 +30,7 @@ import { VFile } from "vfile";
 
 import type { Element, ElementContent } from "hast";
 
+import { getFileDate } from "@/components/FrontMatter/util";
 import {
 	assetsDirPath,
 	vaultMetadataFilePath,
@@ -410,6 +412,29 @@ const createPathMap = (files: FileEntity[]): PathMap => {
 	return pathMap;
 };
 
+const createCreatedMap = (files: TPost[]): YMMap => {
+	const createdMap: {
+		[year: string]: {
+			[month: string]: number;
+		};
+	} = {};
+	for (const file of files) {
+		const { created } =
+			getFileDate({
+				frontmatter: file.metadata.frontmatter,
+			}) ?? {};
+
+		if (!created) continue;
+
+		const year = created.getFullYear();
+		const month = created.getMonth() + 1;
+		if (!createdMap[year]) createdMap[year] = {};
+		if (!createdMap[year][month]) createdMap[year][month] = 0;
+		createdMap[year][month]++;
+	}
+	return createdMap;
+};
+
 export const createVaultFile = async (): Promise<TVault> => {
 	const fileTrees = createFileTrees(withAssetsDirPath);
 	const parsed = await createParsedTree(fileTrees, withAssetsDirPath, "");
@@ -424,8 +449,9 @@ export const createVaultFile = async (): Promise<TVault> => {
 
 	const tIPost = flattened.map((f) => convertFileEntityToTPostIndependence(f));
 	const tPosts = injectAllLinksToTPostIndependence(tIPost);
+	const createdMap = createCreatedMap(tPosts);
 
-	return { posts: tPosts, pathMap };
+	return { posts: tPosts, pathMap, createdMap };
 };
 
 export const main = async () => {

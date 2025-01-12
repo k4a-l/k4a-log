@@ -27,6 +27,8 @@
 	body {
 		/* 少し柔らかい感じのフォント */
 		font-family: "Kosugi Maru", sans-serif;
+		height: 100%;
+		overflow: auto;
 	}
 
 	/********** CHECKBOX / LIST**********/
@@ -43,24 +45,27 @@
 		position: relative;
 		height: 100%;
 	}
-	ol ol,
-	ul ul,
-	ol ul,
-	ul ol {
-		li::before {
-			content: "";
-			left: -3em;
-			position: absolute;
-			height: 100%;
-			border-left-width: 1px;
-			border-left-style: solid;
-			border-left-color: #ddd;
-		}
-	}
 
-	li::marker {
-		color: #888;
-		font-size: 0.8em;
+	.md-post-container {
+		ol ol,
+		ul ul,
+		ol ul,
+		ul ol {
+			li::before {
+				content: "";
+				left: -3em;
+				position: absolute;
+				height: 100%;
+				border-left-width: 1px;
+				border-left-style: solid;
+				border-left-color: #ddd;
+			}
+		}
+
+		li::marker {
+			color: #888;
+			font-size: 0.8em;
+		}
 	}
 
 	.toc {

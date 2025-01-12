@@ -114,7 +114,6 @@ export const pathResolver = ({
 }): string | undefined => {
 	if (!_linkName) return undefined;
 
-	// console.log(_linkName, currentPathList);
 	const extensionInfo = getWikiLinkExtension(_linkName);
 
 	// 同一ページ内のアンカーリンク

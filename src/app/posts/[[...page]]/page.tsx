@@ -1,11 +1,6 @@
-import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { FrontMatter } from "@/components/FrontMatter";
-import {
-	assetsDirPath,
-	vaultMetadataFilePath,
-} from "@/features/metadata/constant";
-import type { TVault } from "@/features/metadata/type";
+import { assetsDirPath } from "@/features/metadata/constant";
 import {
 	createRunProcessor,
 	createStringifyProcessor,
@@ -18,12 +13,12 @@ import {} from "react/jsx-runtime";
 import { css } from "styled-system/css";
 import { HStack, Spacer, Stack } from "styled-system/jsx";
 
+import { PageWithTransition } from "@/components/Common/pageWithTransition";
 import { BackLinks, TwoHopLinks } from "@/components/PostLink";
 import { SideTableOfContents } from "@/components/Toc";
 import { postDirPath } from "@/constants/path";
-import { colors } from "@/constants/theme";
+import { getVaultObject } from "@/features/file/io";
 import {} from "lucide-react";
-import { PageWithTransition } from "./pageWithTransition";
 
 const directoryPath = path.join(assetsDirPath, postDirPath);
 
@@ -37,11 +32,7 @@ export default async function Page({ params }: Props) {
 	const pathFromParams = path.join(...pathsFromParams);
 
 	// metadataの取得
-	// TODO: エラーハンドリンク
-	const vaultFileContent = await readFile(vaultMetadataFilePath, {
-		encoding: "utf-8",
-	});
-	const vaultObject: TVault = JSON.parse(vaultFileContent);
+	const vaultObject = await getVaultObject();
 
 	// uid→pathの検索（mapにはpostDirPathが入っている）
 	const uidPathMap = Object.fromEntries(
@@ -86,19 +77,15 @@ export default async function Page({ params }: Props) {
 			<HStack
 				justifyContent={"center"}
 				alignItems={"start"}
-				pb={100}
 				w="100%"
 				className={`${css({
-					px: { md: 10, base: 2 },
-					py: 4,
 					fontSize: { sm: "1em", base: "0.8em" },
 					"& > *": {
 						wordBreak: "break-all",
 						minW: 0,
 					},
 				})}, `}
-				bg={colors["html-background"]}
-				minH="100vh"
+				h="100%"
 			>
 				<Stack maxW={"max(1000px,100%)"} w={"1000px"}>
 					<Stack bg="white" p={4} rounded={"md"}>

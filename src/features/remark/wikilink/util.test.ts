@@ -36,6 +36,16 @@ const TEST_FILE_TREE: FileTree[] = [
 			{ type: "file", name: "ORIGINAL.md" },
 		],
 	},
+	{
+		type: "dir",
+		name: "withDate",
+		children: [
+			{ type: "file", name: "2011-12-31.md" },
+			{ type: "file", name: "2023-06-23.md" },
+			{ type: "file", name: "2025-01-11.md" },
+			{ type: "file", name: "2025-01-12.md" },
+		],
+	},
 	{ type: "file", name: "スペース「 」「　」・記号込.md" },
 ];
 

@@ -1,42 +1,30 @@
 import { Box, HStack } from "styled-system/jsx";
 
+import { getSearchPath } from "@/app/search/util";
 import { NextLink } from "@/components/Link/NextLink";
-import { type VFileData, frontMatterKeys } from "@/features/remark/frontmatter";
+import type { VFileData } from "@/features/remark/frontmatter";
 import { Link } from "@/park-ui/components/link";
-import { stringToDate, toYYYYMMDD } from "@/utils/date";
+import { toYYYYMMDD } from "@/utils/date";
 import { PenIcon, RotateCwIcon } from "lucide-react";
+import { getFileDate } from "./util";
 
 export const FrontMatter = ({
 	frontmatter,
 }: Pick<VFileData, "frontmatter">) => {
-	const createdString = frontmatter?.[frontMatterKeys.created.key];
-	const createdDateMaybe = createdString
-		? stringToDate(String(createdString))
-		: null;
-	const updatedString = frontmatter?.[frontMatterKeys.updated.key];
-	const updatedDateMaybe = updatedString
-		? stringToDate(String(updatedString))
-		: null;
+	const fileDate = getFileDate({ frontmatter });
+	if (!fileDate) return null;
 
-	const createdDateYMD =
-		createdDateMaybe || updatedDateMaybe
-			? toYYYYMMDD((createdDateMaybe || updatedDateMaybe) as Date)
-			: undefined;
-	const updateDateYMD =
-		createdDateMaybe || updatedDateMaybe
-			? toYYYYMMDD((createdDateMaybe || updatedDateMaybe) as Date)
-			: undefined;
+	const { created, updated } = fileDate;
 
-	if (!createdDateYMD && !updateDateYMD) {
-		return null;
-	}
+	const createdDateYMD = toYYYYMMDD((created || updated) as Date);
+	const updateDateYMD = toYYYYMMDD((created || updated) as Date);
 
 	return (
-		<HStack justifyContent={"end"} fontSize={"0.8em"}>
+		<HStack justifyContent={"end"} fontSize={"0.8em"} alignItems={"start"}>
 			{createdDateYMD ? (
 				<Box>
 					<Link asChild color={"blue.10"} gap={1}>
-						<NextLink href={`/search?query=created:${createdDateYMD}`}>
+						<NextLink href={getSearchPath({ created: createdDateYMD })}>
 							<PenIcon />
 							{createdDateYMD}
 						</NextLink>
@@ -44,14 +32,14 @@ export const FrontMatter = ({
 				</Box>
 			) : null}
 			{updateDateYMD ? (
-				<Box>
-					<Link asChild color={"blue.10"} gap={1}>
-						<NextLink href={`/search?query=updated:${createdDateYMD}`}>
-							<RotateCwIcon />
-							{updateDateYMD}
-						</NextLink>
-					</Link>
-				</Box>
+				<HStack fontSize={"1em"} gap={1} color="gray.10">
+					{/* <Link asChild color={"blue.10"} gap={1}> */}
+					{/* <NextLink href={getSearchPath({ created: createdDateYMD })}> */}
+					<RotateCwIcon width={"1em"} height={"1em"} />
+					{updateDateYMD}
+					{/* </NextLink> */}
+					{/* </Link> */}
+				</HStack>
 			) : null}
 		</HStack>
 	);
