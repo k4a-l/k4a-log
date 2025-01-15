@@ -1,12 +1,13 @@
 import Scroll from "@/components/Hook/Scroll";
 import "../../styled-system/styles.css";
 import "./index.css";
-
-import { SearchBox } from "@/app/search/SearchBox";
+import { getSearchPath } from "@/app/search/util";
 import { NextLink } from "@/components/Link/NextLink";
 import { SummarizeByYM } from "@/components/Summazize";
 import { postDirPath } from "@/constants/path";
+import { Button } from "@/park-ui/components/button";
 import { Link } from "@/park-ui/components/link";
+import { HashIcon, SearchIcon } from "lucide-react";
 import Image from "next/image";
 import type React from "react";
 import { css } from "styled-system/css";
@@ -56,7 +57,22 @@ export default function RootLayout({
 								/>
 							</NextLink>
 						</Link>
-						<SearchBox />
+						<Button
+							size="xs"
+							asChild
+							px={2}
+							h="100%"
+							variant={"ghost"}
+							textDecoration={"none"}
+							// fontWeight={"normal"}
+							gap={0}
+						>
+							<NextLink href={getSearchPath({})}>
+								<HashIcon strokeWidth={2} />
+								/
+								<SearchIcon strokeWidth={2} />
+							</NextLink>
+						</Button>
 					</HStack>
 					<Stack w="full" minH="full" h="auto" flex={1}>
 						<Stack

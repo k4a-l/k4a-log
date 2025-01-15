@@ -12,6 +12,7 @@ export type PostMeta = {
 	thumbnailPath?: string;
 	created?: string;
 	updated?: string;
+	description: string;
 };
 
 export const searchAPI = new Hono<BlankEnv, BlankInput, "/">().get(
@@ -82,6 +83,7 @@ export const searchAPI = new Hono<BlankEnv, BlankInput, "/">().get(
 				thumbnailPath: p.thumbnailPath,
 				created: p.metadata.frontmatter?.created,
 				updated: p.metadata.frontmatter?.updated,
+				description: p.metadata.frontmatter?.desc ?? "",
 			}))
 			.sort((a, b) => {
 				if (sort === "created-new")

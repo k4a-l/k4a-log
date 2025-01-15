@@ -14,11 +14,11 @@ import { css } from "styled-system/css";
 import { HStack, Spacer, Stack } from "styled-system/jsx";
 
 import { PageWithTransition } from "@/components/Common/pageWithTransition";
+import { MyHead } from "@/components/Head";
 import { BackLinks, TwoHopLinks } from "@/components/PostLink";
 import { SideTableOfContents } from "@/components/Toc";
 import { postDirPath } from "@/constants/path";
 import { getVaultObject } from "@/features/file/io";
-import {} from "lucide-react";
 
 const directoryPath = path.join(assetsDirPath, postDirPath);
 
@@ -44,8 +44,9 @@ export default async function Page({ params }: Props) {
 	// uidに一致すればそれを使用、しなければそのまま
 	const postPath = uidPathMap[normalizePath(pathFromParams)] ?? pathFromParams;
 
+	const postPathAbsolute = path.join(postDirPath, postPath);
 	const tPost = vaultObject.posts.find((p) =>
-		isSamePath(p.path, path.join(postDirPath, postPath)),
+		isSamePath(p.path, postPathAbsolute),
 	);
 
 	// このファイルの事前準備
@@ -72,8 +73,14 @@ export default async function Page({ params }: Props) {
 
 	return (
 		<PageWithTransition>
-			<title>{title}</title>
-			<meta property="og:title" content={fileData.title} key="title" />
+			<MyHead
+				title={title}
+				description={tPost?.metadata.frontmatter?.desc ?? ""}
+				imagePath={tPost?.thumbnailPath}
+				url={postPathAbsolute}
+				keywords={[]}
+			/>
+
 			<HStack
 				justifyContent={"center"}
 				alignItems={"start"}

@@ -297,7 +297,12 @@ export const convertFileEntityToTPostIndependence = (
 		path: currentPath,
 		metadata: {
 			...metadata,
-			frontmatter: fileEntity.fileData.frontmatter,
+			frontmatter: {
+				[frontMatterKeys.desc.key]: mdastToString(fileEntity.root)
+					.substring(0, 150)
+					.replaceAll("\n", " "),
+				...fileEntity.fileData.frontmatter,
+			},
 		},
 		thumbnailPath,
 	};

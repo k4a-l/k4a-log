@@ -13,6 +13,7 @@ import { sortByItems } from "@/app/api/[[...route]]/search/constant";
 import { Select, createListCollection } from "@/park-ui/components/select";
 import { CheckIcon, ChevronsUpDownIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { SearchBox } from "./SearchBox";
 
 interface Item {
 	label: string;
@@ -49,15 +50,19 @@ export const SearchPresentation = ({
 	return (
 		<>
 			<Stack maxW={"max(1000px,100%)"} w={"min(1000px,100%)"}>
-				<HStack
-					w="100%"
-					className={css({
-						bg: "white",
-					})}
-					rounded={"md"}
-					p={2}
-				>
-					<HStack gap={1} flexWrap={"wrap"}>
+				<SearchBox />
+
+				{hashTagList.length > 0 && (
+					<HStack
+						gap={1}
+						flexWrap={"wrap"}
+						w="100%"
+						className={css({
+							bg: "white",
+						})}
+						rounded={"md"}
+						p={2}
+					>
 						{hashTagList.map((tag) => (
 							<Button
 								size="sm"
@@ -84,7 +89,8 @@ export const SearchPresentation = ({
 							</Button>
 						))}
 					</HStack>
-				</HStack>
+				)}
+
 				<HStack justifyContent={"end"}>
 					<Select.Root
 						collection={collection}

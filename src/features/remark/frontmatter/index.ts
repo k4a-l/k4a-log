@@ -24,6 +24,7 @@ export const frontMatterKeys = {
 	// author: "string", // 自分しかいない
 	/** indexとか、値はindexにしたいけど別のタイトルをつけたい場合がある(uidの逆) */
 	title: { key: "title", type: "string" } as const,
+	desc: { key: "desc", type: "string" },
 } satisfies { [key: string]: { key: string; type: AllowedType } };
 
 type FrontMatter = Partial<
@@ -78,9 +79,13 @@ export const getTypedKey = <T extends AllowedType>(
 
 export const getFrontMatters = (obj: Record<string, unknown>): FrontMatter => {
 	const frontmatter: FrontMatter = strictFromEntries(
-		strictEntries(frontMatterKeys).map(
-			([key, value]): [keyof FrontMatter, FrontMatter[keyof FrontMatter]] => {
-				return [key, getTypedKey(obj, value.key, value.type)];
+		strictEntries(frontMatterKeys).flatMap(
+			([key, { key: _, type }]):
+				| [[keyof FrontMatter, FrontMatter[keyof FrontMatter]]]
+				| [] => {
+				const value = getTypedKey(obj, key, type);
+				if (!value) return [];
+				return [[key, value]];
 			},
 		),
 	);

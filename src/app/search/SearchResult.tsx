@@ -4,6 +4,7 @@ import { NextLink, NextLinkButton } from "@/components/Link/NextLink";
 import { Link } from "@/park-ui/components/link";
 import {} from "@/park-ui/components/select";
 import { Spinner } from "@/park-ui/components/spinner";
+import { normalizePath } from "@/utils/path";
 import {} from "lucide-react";
 import { css } from "styled-system/css";
 import { HStack, Stack } from "styled-system/jsx";
@@ -45,7 +46,7 @@ export const SearchResult = ({
 							textDecoration="none"
 							overflow={"hidden"}
 						>
-							<NextLink href={r.path}>
+							<NextLink href={normalizePath(r.path)}>
 								<Stack
 									w="100%"
 									h="100%"
@@ -82,7 +83,18 @@ export const SearchResult = ({
 									</span>
 									{r.thumbnailPath ? (
 										<img src={r.thumbnailPath} alt={r.title} />
-									) : null}
+									) : (
+										<span
+											className={css({
+												py: 2,
+												fontSize: "0.8em",
+												fontWeight: "normal",
+												color: "gray.10",
+											})}
+										>
+											{r.description}
+										</span>
+									)}
 								</Stack>
 							</NextLink>
 						</Link>
