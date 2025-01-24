@@ -26,11 +26,10 @@
 		"baseUrl": "."
 	},
 	"include": [
-		"**/*.ts",
-		"**/*.tsx",
+		"src/**/*.ts",
+		"src/**/*.tsx",
 		"scripts/**/*.ts",
-		"styled-system",
 		".next/types/**/*.ts"
 	],
-	"exclude": ["node_modules", "assets", ".next/types"]
+	"exclude": ["node_modules", "assets", ".next/types", "dist"]
 }
