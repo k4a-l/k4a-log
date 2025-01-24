@@ -23,8 +23,6 @@ export const MyHead = ({
 		_imagePath ?? "/assets/logo.png",
 	);
 
-	console.log(imagePath);
-
 	return (
 		<>
 			{/* <Head

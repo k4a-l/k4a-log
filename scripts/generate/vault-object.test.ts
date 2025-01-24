@@ -46,22 +46,46 @@ test("1", () => {
 				text: "list-A",
 				parentLineNumber: -1,
 				lineNumber: 12,
+				id: expect.anything(),
 			},
-			{ text: "list-B", parentLineNumber: 12, lineNumber: 13 },
-			{ text: "list-A-1", parentLineNumber: 12, lineNumber: 14 },
-			{ text: "list-A-2", parentLineNumber: 14, lineNumber: 15 },
+			{
+				text: "list-B",
+				parentLineNumber: 12,
+				lineNumber: 13,
+				id: expect.anything(),
+			},
+			{
+				text: "list-A-1",
+				parentLineNumber: 12,
+				lineNumber: 14,
+				id: expect.anything(),
+			},
+			{
+				text: "list-A-2",
+				parentLineNumber: 14,
+				lineNumber: 15,
+				id: expect.anything(),
+			},
 			{
 				text: "list-1",
 				parentLineNumber: -1,
 				lineNumber: 16,
+				id: expect.anything(),
 			},
 			{
 				task: " ",
 				text: "uncompleted",
 				parentLineNumber: 16,
 				lineNumber: 17,
+				id: expect.anything(),
 			},
-			{ task: "x", text: "completed", parentLineNumber: 16, lineNumber: 18 },
+			{
+				task: "x",
+				text: "completed",
+				parentLineNumber: 16,
+				lineNumber: 18,
+				id: expect.anything(),
+			},
 		],
 		tags: [{ tag: "tag" }],
 		frontmatter: {},
@@ -76,8 +100,24 @@ test("ゴールデンマスターテスト", async () => {
 			encoding: "utf-8",
 		}),
 	);
+	const createdData = await createVaultFile();
 	// stringifyするとundefinedプロパティがなくなるので同条件にする
-	const createdData = JSON.parse(JSON.stringify(await createVaultFile()));
+	const createdDataParsed: typeof createdData = JSON.parse(
+		JSON.stringify(createdData),
+	);
+	const createDataIDOmitted = {
+		...createdDataParsed,
+		posts: createdDataParsed.posts.map((p) => ({
+			...p,
+			metadata: {
+				...p.metadata,
+				listItems: p.metadata.listItems.map((l) => ({
+					...l,
+					id: expect.anything(),
+				})),
+			},
+		})),
+	} satisfies typeof createdData;
 
-	expect(createdData).toStrictEqual(masterData);
+	expect(createDataIDOmitted).toStrictEqual(masterData);
 });

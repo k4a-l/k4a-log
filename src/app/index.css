@@ -29,6 +29,8 @@
 		font-family: "Kosugi Maru", sans-serif;
 		height: 100%;
 		overflow: auto;
+		scroll-behavior: smooth;
+		scroll-padding-top: calc(34px + 1em);
 	}
 
 	/********** CHECKBOX / LIST**********/
@@ -44,6 +46,12 @@
 	li {
 		position: relative;
 		height: 100%;
+	}
+
+	/* 強調表示 */
+	.highlight {
+		background-color: yellow !important; /* 背景色を変更 */
+		transition: background-color 0.5s ease; /* 背景色が滑らかに変化 */
 	}
 
 	.md-post-container {
@@ -78,32 +86,31 @@
 		display: flex;
 		align-items: center;
 		gap: 6;
+	}
 
+	input[type="checkbox"] {
 		--checkbox-color: #1b78e2;
+		appearance: none; /* デフォルトのスタイルを無効化 */
+		-webkit-appearance: none;
+		width: 1em; /* チェックボックスの幅 */
+		height: 1em; /* チェックボックスの高さ */
+		border: 1px solid var(--checkbox-color); /* 緑の枠線 */
+		border-radius: 0.2em;
+		background-color: white;
+		cursor: pointer;
+		position: relative;
 
-		input[type="checkbox"] {
-			appearance: none; /* デフォルトのスタイルを無効化 */
-			-webkit-appearance: none;
-			width: 1em; /* チェックボックスの幅 */
-			height: 1em; /* チェックボックスの高さ */
-			border: 1px solid var(--checkbox-color); /* 緑の枠線 */
-			border-radius: 0.2em;
-			background-color: white;
-			cursor: pointer;
-			position: relative;
-
-			&:checked {
-				&::after {
-					content: "";
-					position: absolute;
-					top: 0%;
-					left: 30%;
-					width: 40%;
-					height: 80%;
-					border: solid var(--checkbox-color); /* チェックマークの色 */
-					border-width: 0 0.2em 0.2em 0;
-					transform: rotate(45deg);
-				}
+		&:checked {
+			&::after {
+				content: "";
+				position: absolute;
+				top: 0%;
+				left: 30%;
+				width: 40%;
+				height: 80%;
+				border: solid var(--checkbox-color); /* チェックマークの色 */
+				border-width: 0 0.2em 0.2em 0;
+				transform: rotate(45deg);
 			}
 		}
 	}

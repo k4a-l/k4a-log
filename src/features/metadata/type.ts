@@ -17,6 +17,7 @@ export type TListItemMetaData = {
 	text: string;
 	lineNumber: number;
 	task?: " " | "x";
+	id: string;
 };
 
 type TTagMetaData = {
@@ -74,3 +75,5 @@ export type TVault = {
 	pathMap: PathMap;
 	createdMap: YMMap;
 };
+
+export type MetaProps = { vault: TVault; post: TPost };

@@ -5,7 +5,6 @@ import rehypeRaw from "rehype-raw";
 
 import { remark } from "remark";
 import remarkBreaks from "remark-breaks";
-
 import remarkRehype, {
 	type Options as remarkRehypeOptions,
 } from "remark-rehype";
@@ -24,9 +23,15 @@ import remarkExtractFrontmatter from "remark-extract-frontmatter";
 import yaml from "yaml";
 import type { VFileData } from "../frontmatter";
 
-export const createRunProcessor = (options?: {
-	excludeToc?: boolean;
-}): Processor => {
+import type { TPostMetaData } from "@/features/metadata/type";
+import { syncTaskListIds } from "../list";
+
+export const createRunProcessor = (
+	metadata: Pick<TPostMetaData, "listItems">,
+	options?: {
+		excludeToc?: boolean;
+	},
+): Processor => {
 	const { excludeToc } = options ?? {};
 	return remark()
 		.use(remarkExtractFrontmatter, {
@@ -37,6 +42,7 @@ export const createRunProcessor = (options?: {
 			heading: "目次",
 		} satisfies RemarkTocOptions)
 		.use(remarkBreaks)
+		.use(syncTaskListIds, { taskListMetadata: metadata.listItems })
 		.use(RemarkCalloutPlugin)
 		.use(remarkHashtagPlugin)
 		.use(remarkParagraphWrapPlugin)

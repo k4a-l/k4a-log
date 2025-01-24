@@ -19,6 +19,7 @@ import { BackLinks, TwoHopLinks } from "@/components/PostLink";
 import { SideTableOfContents } from "@/components/Toc";
 import { postDirPath } from "@/constants/path";
 import { getVaultObject } from "@/features/file/io";
+import { Client } from "./Client";
 
 const directoryPath = path.join(assetsDirPath, postDirPath);
 
@@ -49,12 +50,17 @@ export default async function Page({ params }: Props) {
 		isSamePath(p.path, postPathAbsolute),
 	);
 
+	if (!tPost) return null;
+
 	// このファイルの事前準備
 	const fileTrees = createFileTrees(directoryPath);
 	const parseProcessor = createParseProcessor(fileTrees, [postPath]);
-	const runProcessor = createRunProcessor();
+	const runProcessor = createRunProcessor({
+		listItems: tPost.metadata.listItems,
+	});
 	const stringifyProcessor = createStringifyProcessor({
 		pathMap: vaultObject.pathMap,
+		meta: { vault: vaultObject, post: tPost },
 	});
 
 	// 実行
@@ -73,6 +79,7 @@ export default async function Page({ params }: Props) {
 
 	return (
 		<PageWithTransition>
+			<Client />
 			<MyHead
 				title={title}
 				description={tPost?.metadata.frontmatter?.desc ?? ""}

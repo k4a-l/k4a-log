@@ -5,6 +5,8 @@ import { readFile } from "node:fs/promises";
 
 import { createParseProcessor } from "@/features/remark/processor/parse";
 
+import { v4 as uuid } from "uuid";
+
 import type {
 	PathMap,
 	TLinkMetaData,
@@ -99,7 +101,10 @@ const createParsedTree = async (
 			const parseProcessor = createParseProcessor(fileTrees, [
 				path.join(pathOfUnderRoot),
 			]);
-			const runProcessor = createRunProcessor({ excludeToc: true });
+			const runProcessor = createRunProcessor(
+				{ listItems: [] },
+				{ excludeToc: true },
+			);
 			const parseResult = parseProcessor.parse(fileContent);
 			const runResult = (await runProcessor.runSync(parseResult, file)) as Root;
 
@@ -193,6 +198,7 @@ export const convertNodeToFileMetadata = (
 					text: text,
 					lineNumber: node.position?.start.line ?? -1,
 					task,
+					id: uuid(),
 				});
 			} else {
 				const text = mdastToString(
@@ -203,6 +209,7 @@ export const convertNodeToFileMetadata = (
 					parentLineNumber: parentPosition?.start.line ?? -1,
 					text: text,
 					lineNumber: node.position?.start.line ?? -1,
+					id: uuid(),
 				});
 			}
 

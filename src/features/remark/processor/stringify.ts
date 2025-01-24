@@ -3,6 +3,7 @@ import { CodeBlock, Pre } from "@/components/CodeBlock";
 import { Hashtag } from "@/components/Hashtag";
 import { MarkdownLink } from "@/components/Link";
 import { ParagraphWrap } from "@/components/ParagraphWrap";
+import type { MetaProps } from "@/features/metadata/type";
 import type { PathMap } from "@/features/metadata/type";
 import {} from "@/features/remark/hashtag";
 import type { ReactElement } from "react";
@@ -21,20 +22,21 @@ export type ReactProcessor = Processor<
 
 export const createStringifyProcessor = ({
 	pathMap,
-}: { pathMap: PathMap }): ReactProcessor => {
+	meta,
+}: { pathMap: PathMap; meta: MetaProps }): ReactProcessor => {
 	return remark().use(rehypeReact, {
 		Fragment,
 		jsx,
 		jsxs,
 		components: {
 			wikilink: (props) => {
-				return MarkdownLink({ ...props, pathMap });
+				return MarkdownLink({ ...props, pathMap, ...meta });
 			},
 			hashtag: Hashtag,
 			"paragraph-wrap": ParagraphWrap,
 			blockquote: Callout,
 			pre: Pre,
-			code: CodeBlock,
+			code: (props) => CodeBlock({ ...props, ...meta }),
 		},
 	} satisfies RehypeReactOptions);
 };

@@ -7,10 +7,30 @@ import { css } from "styled-system/css";
 import * as Babel from "@babel/standalone";
 import { DynamicK4aReactCode, DynamicReactCode } from "./DynamicReactCode";
 
-export const CodeBlock = (props: PropsWithChildren<HTMLElement>) => {
-	const { children, className } = props;
+import type { MetaProps } from "@/features/metadata/type";
+
+export const CodeBlock = (
+	props: PropsWithChildren<HTMLElement & MetaProps>,
+) => {
+	const { children, className, vault, post } = props;
 
 	const language = className?.match(/language-(\w+)/)?.[1];
+
+	if (!language) {
+		return (
+			<code
+				className={css({
+					bg: "gray.3",
+					color: "blue.10",
+					py: 1,
+					px: 1,
+					borderRadius: "0.2em",
+				})}
+			>
+				{children}
+			</code>
+		);
+	}
 
 	if (language === "react") {
 		const transpiledCode =
@@ -44,12 +64,7 @@ export const CodeBlock = (props: PropsWithChildren<HTMLElement>) => {
 		);
 	}
 
-	if (language === "k4aDataView") {
-		const transpiledCode =
-			Babel.transform(String(children), {
-				presets: ["react"],
-			}).code ?? "";
-
+	if (language === "reactView") {
 		return (
 			<div
 				className={css({
@@ -59,7 +74,11 @@ export const CodeBlock = (props: PropsWithChildren<HTMLElement>) => {
 					p: 2,
 				})}
 			>
-				<DynamicK4aReactCode transpiledCode={transpiledCode} />
+				<DynamicK4aReactCode
+					markdown={children as string}
+					vault={vault}
+					post={post}
+				/>
 			</div>
 		);
 	}

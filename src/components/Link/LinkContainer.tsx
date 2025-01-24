@@ -2,6 +2,7 @@ import type { WikiLinkData } from "@/types/mdast";
 import type { AnchorHTMLAttributes, FC } from "react";
 
 import type { PathMap } from "@/features/metadata/type";
+import type { MetaProps } from "@/features/metadata/type";
 import {
 	createRunProcessor,
 	createStringifyProcessor,
@@ -23,7 +24,9 @@ import {
 type WikiLinkComponentProps = AnchorHTMLAttributes<HTMLAnchorElement> &
 	WikiLinkData["hProperties"] & { pathMap: PathMap };
 
-export const LinkContainer: FC<WikiLinkComponentProps> = (props) => {
+export const LinkContainer: FC<WikiLinkComponentProps & MetaProps> = (
+	props,
+) => {
 	const { href, children, "is-embed": isEmbed, ...others } = props;
 
 	if (isEmbed) {
@@ -47,13 +50,17 @@ export const TransitionLinkContainer: FC<WikiLinkComponentProps> = ({
 	return <TransitionLinkExist {...props} />;
 };
 
-export const EmbedLinkContainer: FC<WikiLinkComponentProps> = async ({
+export const EmbedLinkContainer: FC<
+	WikiLinkComponentProps & MetaProps
+> = async ({
 	rootDirPath,
 	assetsDirPath,
 	parentsLinks,
 	isDeadLink,
 	type,
 	pathMap,
+	vault,
+	post,
 	...props
 }) => {
 	const { href, children, title, alias, ...others } = props;
@@ -80,8 +87,16 @@ export const EmbedLinkContainer: FC<WikiLinkComponentProps> = async ({
 			.map((p) => decodeURIComponent(p));
 
 		const remarkProcessor = createParseProcessor(fileTrees, parentLinksArr);
-		const rehypeProcessor = createRunProcessor();
-		const stringifyProcessor = createStringifyProcessor({ pathMap });
+		const rehypeProcessor = createRunProcessor({
+			listItems: post.metadata.listItems,
+		});
+		const stringifyProcessor = createStringifyProcessor({
+			pathMap,
+			meta: {
+				vault,
+				post,
+			},
+		});
 		const data = await getFileContent(
 			paths,
 			rootPath,

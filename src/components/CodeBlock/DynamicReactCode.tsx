@@ -1,5 +1,14 @@
 "use client";
-import React, { useState } from "react";
+import {} from "@/components/Link/NextLink";
+import type { MetaProps } from "@/features/metadata/type";
+import React, { type ComponentProps, useState } from "react";
+import ReactMarkdown, { type Components } from "react-markdown";
+import {} from "react/jsx-runtime";
+import rehypeRaw from "rehype-raw";
+import remarkGfm from "remark-gfm";
+import remarkRehype from "remark-rehype";
+import {} from "styled-system/jsx";
+import { ReactViewTaskList } from "./TaskList";
 
 export const DynamicReactCode = ({
 	transpiledCode,
@@ -24,27 +33,21 @@ export const executeComponent = (jsxString: string): React.FC => {
 };
 
 export const DynamicK4aReactCode = ({
-	transpiledCode,
-}: { transpiledCode: string }) => {
-	const Component = executeK4aComponent(transpiledCode);
-	return <Component />;
-};
-
-export const TaskTemplate = () => {
-	return <div>TaskTemplate</div>;
-};
-
-export const executeK4aComponent = (jsxString: string): React.FC => {
-	const Component = () => {
-		const componentFunction = new Function(
-			"React",
-			"useState",
-			"TaskTemplate",
-			`return ${jsxString}`,
-		);
-
-		return componentFunction(React, useState, TaskTemplate)();
-	};
-
-	return Component;
+	markdown,
+	vault,
+}: { markdown: string } & MetaProps) => {
+	return (
+		<ReactMarkdown
+			remarkPlugins={[remarkGfm, [remarkRehype, { allowDangerousHtml: true }]]}
+			rehypePlugins={[rehypeRaw]}
+			components={
+				{
+					tasklist: (props: ComponentProps<typeof ReactViewTaskList>) =>
+						ReactViewTaskList({ ...props, vault }),
+				} as Components
+			}
+		>
+			{markdown}
+		</ReactMarkdown>
+	);
 };

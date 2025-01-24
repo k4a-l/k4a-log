@@ -162,7 +162,7 @@ interface WikiLink extends Literal {
 }
 ```
 
-### React
+### Reactを動的に実行
 
 ```react
 () => {
@@ -182,11 +182,10 @@ interface WikiLink extends Literal {
 };
 ```
 
-### k4aDataView
+### DataViewのようなもの
 
-```k4aDataView
-() => {
-    return <TaskTemplate/>
-}
+`reactView`を言語指定
 
+```reactView
+<TaskList />
 ```

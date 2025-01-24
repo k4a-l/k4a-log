@@ -11,8 +11,9 @@
 		"check": "biome check --write ./src",
 		"tsc": "tsc --watch",
 		"test": "vitest",
-		"prepare": "panda codegen",
-		"generate": "tsx --tsconfig tsconfig.json  scripts/generate/vault-object.ts main"
+		"prepare": "panda codegen && npx panda && npm run generate && npm run publish",
+		"generate": "tsx --tsconfig tsconfig.json  scripts/generate/vault-object.ts main",
+		"publish": "tsx --tsconfig tsconfig.json  scripts/copy-posts-assets-to-public.ts"
 	},
 	"dependencies": {
 		"@ark-ui/react": "^4.6.0",
@@ -29,6 +30,7 @@
 		"path-browserify": "^1.0.1",
 		"react": "^19.0.0",
 		"react-dom": "^19.0.0",
+		"react-markdown": "^9.0.3",
 		"react-syntax-highlighter": "^15.6.1",
 		"rehype-parse": "^9.0.1",
 		"rehype-raw": "^7.0.0",
@@ -47,6 +49,7 @@
 		"tocbot": "^4.32.3-0",
 		"unified": "^11.0.5",
 		"unist-builder": "^4.0.0",
+		"uuid": "^11.0.5",
 		"vfile-matter": "^5.0.0",
 		"yaml": "^2.7.0"
 	},
