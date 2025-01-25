@@ -1,5 +1,6 @@
 import { Callout } from "@/components/Callout";
 import { CodeBlock, Pre } from "@/components/CodeBlock";
+import { EmbeddedLink } from "@/components/EmbedLink";
 import { Hashtag } from "@/components/Hashtag";
 import { MarkdownLink } from "@/components/Link";
 import { ParagraphWrap } from "@/components/ParagraphWrap";
@@ -32,6 +33,7 @@ export const createStringifyProcessor = ({
 			wikilink: (props) => {
 				return MarkdownLink({ ...props, pathMap, ...meta });
 			},
+			"embed-link": EmbeddedLink,
 			hashtag: Hashtag,
 			"paragraph-wrap": ParagraphWrap,
 			blockquote: Callout,

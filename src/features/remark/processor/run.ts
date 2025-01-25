@@ -24,6 +24,7 @@ import yaml from "yaml";
 import type { VFileData } from "../frontmatter";
 
 import type { TPostMetaData } from "@/features/metadata/type";
+import { remarkEmbedLinks } from "../link";
 import { syncTaskListIds } from "../list";
 
 export const createRunProcessor = (
@@ -42,6 +43,7 @@ export const createRunProcessor = (
 			heading: "目次",
 		} satisfies RemarkTocOptions)
 		.use(remarkBreaks)
+		.use(remarkEmbedLinks)
 		.use(syncTaskListIds, { taskListMetadata: metadata.listItems })
 		.use(RemarkCalloutPlugin)
 		.use(remarkHashtagPlugin)

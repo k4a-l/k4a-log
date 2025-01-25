@@ -134,9 +134,11 @@ export const SideTableOfContents = ({
 			}}
 			bg="white"
 			rounded={"md"}
-			style={{ top: `calc(${HEADER_HEIGHT} + 8px)` }}
+			style={{
+				top: `calc(${HEADER_HEIGHT} + 8px)`,
+				maxHeight: `calc(100vh - ${HEADER_HEIGHT} - 8px)`,
+			}}
 			position={"sticky"}
-			// maxHeight="100vh"
 			overflowX={"hidden"}
 			overflowY={"auto"}
 			className={css({
@@ -164,7 +166,6 @@ export const SideTableOfContents = ({
 					},
 					"&.is-active": {
 						color: "gray.12",
-						// bg: "gray.4",
 						fontWeight: "bold",
 					},
 				},

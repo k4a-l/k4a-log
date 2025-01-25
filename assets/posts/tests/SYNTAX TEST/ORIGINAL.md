@@ -189,3 +189,33 @@ interface WikiLink extends Literal {
 ```reactView
 <TaskList />
 ```
+
+## 外部埋め込みリンク
+
+### 単独行の場合は埋め込みに変換(連続行でも)
+
+https://www.youtube.com/watch?v=mORyYinMBdg
+https://www.youtube.com/watch?v=mORyYinMBdg
+[タイトル付き](https://www.youtube.com/watch?v=mORyYinMBdg)
+
+### 要素の一部の場合は普通のリンク
+
+-   リストや
+    -   https://www.youtube.com/watch?v=mORyYinMBdg
+
+文章内(https://www.youtube.com/watch?v=mORyYinMBdg)
+
+### 種類ごと
+
+#### YouTube
+
+↑で確認
+
+#### Twitter(未対応)
+
+https://x.com/XDevelopers
+
+#### その他
+
+https://zenn.dev/
+https://nextjs.org/docs/app/building-your-application/optimizing/third-party-libraries
