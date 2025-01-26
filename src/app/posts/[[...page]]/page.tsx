@@ -21,6 +21,8 @@ import { css } from "styled-system/css";
 import { HStack, Spacer, Stack } from "styled-system/jsx";
 import { Client } from "./Client";
 
+export const revalidate = 600; // 10分ごとに再検証する
+
 const directoryPath = path.join(assetsDirPath, postDirPath);
 
 type Params = Promise<{ page: string[] | undefined }>;

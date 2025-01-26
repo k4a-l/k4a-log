@@ -11,9 +11,12 @@
 		"check": "biome check --write ./src",
 		"tsc": "tsc --watch",
 		"test": "vitest",
-		"prepare": "panda codegen && npx panda && npm run generate && npm run publish",
-		"generate": "tsx --tsconfig tsconfig.json  scripts/generate/vault-object.ts main",
-		"publish": "tsx --tsconfig tsconfig.json  scripts/copy-posts-assets-to-public.ts",
+		"prepare": "panda codegen && npx panda",
+		"pull-content": "tsx --tsconfig tsconfig.json scripts/pull-content.ts",
+		"generate-metadata": "tsx --tsconfig tsconfig.json  scripts/generate/vault-object.ts main",
+		"copy-metadata": "tsx --tsconfig tsconfig.json  scripts/copy-obsidian-metadata.ts main",
+		"copy-attachment": "tsx --tsconfig tsconfig.json  scripts/copy-posts-assets-to-public.ts",
+		"prepare-asset": "npm run pull-content &&npm run generate-metadata && npm run copy-metadata && npm run copy-attachment",
 		"debug": "cross-env NODE_OPTIONS='--inspect' next dev"
 	},
 	"dependencies": {

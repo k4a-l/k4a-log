@@ -22,9 +22,13 @@ export const getVaultObject = async (): Promise<TVault> => {
 export const getBookmarkObject = async (): Promise<BookMarkRoot> => {
 	// metadataの取得
 	// TODO: エラーハンドリンク
-	const bookmarkFileContent = await readFile(bookmarkFilePath, {
-		encoding: "utf-8",
-	});
-	const bookmarkObject: BookMarkRoot = JSON.parse(bookmarkFileContent);
-	return bookmarkObject;
+	try {
+		const bookmarkFileContent = await readFile(bookmarkFilePath, {
+			encoding: "utf-8",
+		});
+		const bookmarkObject: BookMarkRoot = JSON.parse(bookmarkFileContent);
+		return bookmarkObject;
+	} catch (error) {
+		return { items: [] };
+	}
 };
