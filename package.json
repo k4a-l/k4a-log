@@ -13,7 +13,8 @@
 		"test": "vitest",
 		"prepare": "panda codegen && npx panda && npm run generate && npm run publish",
 		"generate": "tsx --tsconfig tsconfig.json  scripts/generate/vault-object.ts main",
-		"publish": "tsx --tsconfig tsconfig.json  scripts/copy-posts-assets-to-public.ts"
+		"publish": "tsx --tsconfig tsconfig.json  scripts/copy-posts-assets-to-public.ts",
+		"debug": "cross-env NODE_OPTIONS='--inspect' next dev"
 	},
 	"dependencies": {
 		"@ark-ui/react": "^4.6.0",
@@ -70,6 +71,7 @@
 		"@types/react-dom": "^19",
 		"@types/react-syntax-highlighter": "^15.5.13",
 		"@vitejs/plugin-react": "^4.3.4",
+		"cross-env": "^7.0.3",
 		"jsdom": "^25.0.1",
 		"remark-obsidian-callout": "^1.5.1",
 		"ts-essentials": "^10.0.4",

@@ -15,6 +15,7 @@
 		"jsx": "preserve",
 		"noUncheckedIndexedAccess": true,
 		"incremental": true,
+		"sourceMap": true,
 		"plugins": [
 			{
 				"name": "next"
