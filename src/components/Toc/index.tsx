@@ -24,7 +24,13 @@ const RenderPhrasingContent = ({
 		return (
 			<NextLink
 				href={content.url}
-				className={activeId === content.url.replace("#", "") ? "is-active" : ""}
+				className={`${activeId === content.url.replace("#", "") ? "is-active" : ""} ${css(
+					{
+						textWrap: "nowrap",
+						overflow: "hidden",
+						textOverflow: "ellipsis",
+					},
+				)}`}
 			>
 				{content.children.map((c, i) => (
 					// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>

@@ -34,8 +34,9 @@ import type { Element, ElementContent } from "hast";
 
 import { getFileDate } from "@/components/FrontMatter/util";
 import {
-	assetsDirPath,
+	postsDirPath,
 	vaultMetadataFilePath,
+	withAssetsDirPath,
 } from "@/features/metadata/constant";
 import type { WikiLinkData } from "@/types/mdast";
 import { writeFileRecursive } from "@/utils/file";
@@ -46,9 +47,6 @@ import {
 	normalizePath,
 } from "@/utils/path";
 import { toString as mdastToString } from "mdast-util-to-string";
-
-const postsDirPath = "posts";
-const withAssetsDirPath = path.join(assetsDirPath, postsDirPath);
 
 // 各ファイル全部に繰り返す
 

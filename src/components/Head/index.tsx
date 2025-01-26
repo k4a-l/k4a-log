@@ -11,7 +11,7 @@ interface MyHeadProps {
 
 // https://qiita.com/tsuka-rinorino/items/3b4fb69d980cecddf512
 export const MyHead = ({
-	title,
+	title: _title,
 	description,
 	url: _url,
 	imagePath: _imagePath,
@@ -22,6 +22,7 @@ export const MyHead = ({
 		process.env.NEXT_PUBLIC_BASE_PATH ?? "",
 		_imagePath ?? "/assets/logo.png",
 	);
+	const title = `${_title} | k4a-log`;
 
 	return (
 		<>

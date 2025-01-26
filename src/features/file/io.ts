@@ -1,7 +1,11 @@
 "use server";
 
 import { readFile } from "node:fs/promises";
-import { vaultMetadataFilePath } from "@/features/metadata/constant";
+import type { BookMarkRoot } from "@/components/Bookmark";
+import {
+	bookmarkFilePath,
+	vaultMetadataFilePath,
+} from "@/features/metadata/constant";
 import type { TVault } from "@/features/metadata/type";
 
 export const getVaultObject = async (): Promise<TVault> => {
@@ -13,4 +17,14 @@ export const getVaultObject = async (): Promise<TVault> => {
 	const vaultObject: TVault = JSON.parse(vaultFileContent);
 
 	return vaultObject;
+};
+
+export const getBookmarkObject = async (): Promise<BookMarkRoot> => {
+	// metadataの取得
+	// TODO: エラーハンドリンク
+	const bookmarkFileContent = await readFile(bookmarkFilePath, {
+		encoding: "utf-8",
+	});
+	const bookmarkObject: BookMarkRoot = JSON.parse(bookmarkFileContent);
+	return bookmarkObject;
 };

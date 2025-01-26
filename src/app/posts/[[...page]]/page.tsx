@@ -1,5 +1,12 @@
 import path from "node:path";
+import { BookmarkInnerPart } from "@/components/Bookmark";
+import { PageWithTransition } from "@/components/Common/pageWithTransition";
 import { FrontMatter } from "@/components/FrontMatter";
+import { MyHead } from "@/components/Head";
+import { BackLinks, TwoHopLinks } from "@/components/PostLink";
+import { SideTableOfContents } from "@/components/Toc";
+import { postDirPath } from "@/constants/path";
+import { getBookmarkObject, getVaultObject } from "@/features/file/io";
 import { assetsDirPath } from "@/features/metadata/constant";
 import {
 	createRunProcessor,
@@ -12,13 +19,6 @@ import { isSamePath, normalizePath } from "@/utils/path";
 import {} from "react/jsx-runtime";
 import { css } from "styled-system/css";
 import { HStack, Spacer, Stack } from "styled-system/jsx";
-
-import { PageWithTransition } from "@/components/Common/pageWithTransition";
-import { MyHead } from "@/components/Head";
-import { BackLinks, TwoHopLinks } from "@/components/PostLink";
-import { SideTableOfContents } from "@/components/Toc";
-import { postDirPath } from "@/constants/path";
-import { getVaultObject } from "@/features/file/io";
 import { Client } from "./Client";
 
 const directoryPath = path.join(assetsDirPath, postDirPath);
@@ -77,6 +77,8 @@ export default async function Page({ params }: Props) {
 
 	const title: string = frontmatter?.title || fileData.title;
 
+	const bookmark = await getBookmarkObject();
+
 	return (
 		<PageWithTransition>
 			<Client />
@@ -101,6 +103,7 @@ export default async function Page({ params }: Props) {
 				})}, `}
 				h="100%"
 			>
+				{bookmark.items.length > 0 && <BookmarkInnerPart root={bookmark} />}
 				<Stack maxW={"max(1000px,100%)"} w={"1000px"}>
 					<Stack bg="white" p={4} rounded={"md"}>
 						<div

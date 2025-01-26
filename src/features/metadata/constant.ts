@@ -7,3 +7,12 @@ export const vaultMetadataFilePath = path.join(
 	"metadata",
 	"vault.json",
 );
+
+export const postsDirPath = "posts";
+export const withAssetsDirPath = path.join(assetsDirPath, postsDirPath);
+
+export const bookmarkFilePath = path.join(
+	assetsDirPath,
+	"metadata",
+	"bookmarks.json",
+);
