@@ -3,7 +3,11 @@ import type { InferResponseType } from "hono";
 import { hc } from "hono/client";
 import { useMemo } from "react";
 import useSWR from "swr";
-export const client = hc<AppType>("http://localhost:3000/");
+
+export const client = hc<AppType>(
+	// biome-ignore lint/style/noNonNullAssertion: <explanation>
+	process.env.URL!,
+);
 
 export async function fetcher<T>(
 	url: URL,
