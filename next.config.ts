@@ -7,9 +7,6 @@ const nextConfig: NextConfig = {
 
 		return config;
 	},
-	outputFileTracingExcludes: {
-		"*": ["cloned-rep", "assets", "public"],
-	},
 };
 
 export default nextConfig;
