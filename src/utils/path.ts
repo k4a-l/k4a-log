@@ -1,3 +1,4 @@
+import { postDirPath } from "@/constants/path";
 import path from "path-browserify";
 
 /**
@@ -40,4 +41,8 @@ export const dividePathAndExtension = (
  */
 export const hasExtensionButNotMD = (str: string): boolean => {
 	return /^(?!.*\.md$).*?\.[^.]+$/.test(str);
+};
+
+export const isTestDirPath = (str: string): boolean => {
+	return str.startsWith(normalizePath(path.join(postDirPath, "test")));
 };

@@ -7,6 +7,8 @@ import { pageViewLength, sortStrategy } from "./constant";
 
 import { readdir } from "node:fs/promises";
 import path from "node:path";
+import { IS_PRODUCTION } from "@/utils/env";
+import { isTestDirPath } from "@/utils/path";
 
 export type PostMeta = {
 	title: string;
@@ -55,6 +57,7 @@ export const searchAPI = new Hono<BlankEnv, BlankInput, "/">().get(
 		const vaultObject = getVaultObject();
 
 		const targetPosts: PostMeta[] = vaultObject.posts
+			.filter((p) => !(IS_PRODUCTION && isTestDirPath(p.path)))
 			.filter((p) => {
 				const isTagIncluded = (() => {
 					if (!tag) return true;

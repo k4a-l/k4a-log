@@ -1,5 +1,7 @@
 import { PageWithTransition } from "@/components/Common/pageWithTransition";
 import { getVaultObject } from "@/features/file/io";
+import { IS_PRODUCTION } from "@/utils/env";
+import { isTestDirPath } from "@/utils/path";
 import { Stack } from "styled-system/jsx";
 import { SearchPresentation } from "./SearchPresentation";
 import type { SearchQuery } from "./util";
@@ -16,7 +18,11 @@ export default async function Page({
 	const vault = getVaultObject();
 
 	const hashTagList: string[] = [
-		...new Set(vault.posts.flatMap((p) => p.metadata.tags.map((t) => t.tag))),
+		...new Set(
+			vault.posts
+				.filter((p) => !(IS_PRODUCTION && isTestDirPath(p.path)))
+				.flatMap((p) => p.metadata.tags.map((t) => t.tag)),
+		),
 	];
 	const pageNum = page ? Number.parseInt(page) : 0;
 

@@ -66,7 +66,7 @@ export type TPost = TPostIndependence & {
 
 export type YMMap = {
 	[year: string]: {
-		[month: string]: number;
+		[month: string]: string[];
 	};
 };
 

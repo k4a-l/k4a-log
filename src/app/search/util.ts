@@ -6,6 +6,7 @@ export type SearchQuery = Partial<{
 	page: number;
 	created: string;
 	sort: string;
+	includesTests: string;
 }>;
 
 export const searchQueryKey = {
@@ -14,6 +15,7 @@ export const searchQueryKey = {
 	page: "page",
 	query: "query",
 	sort: "sort",
+	includesTests: "includesTests",
 } satisfies Record<keyof SearchQuery, string>;
 
 export const getSearchPath = (

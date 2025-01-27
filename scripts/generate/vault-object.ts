@@ -425,11 +425,7 @@ const createPathMap = (files: FileEntity[]): PathMap => {
 };
 
 const createCreatedMap = (files: TPost[]): YMMap => {
-	const createdMap: {
-		[year: string]: {
-			[month: string]: number;
-		};
-	} = {};
+	const createdMap: YMMap = {};
 	for (const file of files) {
 		const { created } =
 			getFileDate({
@@ -441,8 +437,8 @@ const createCreatedMap = (files: TPost[]): YMMap => {
 		const year = created.getFullYear();
 		const month = created.getMonth() + 1;
 		if (!createdMap[year]) createdMap[year] = {};
-		if (!createdMap[year][month]) createdMap[year][month] = 0;
-		createdMap[year][month]++;
+		if (!createdMap[year][month]) createdMap[year][month] = [];
+		createdMap[year][month].push(file.path);
 	}
 	return createdMap;
 };
