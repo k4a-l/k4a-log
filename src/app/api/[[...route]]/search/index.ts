@@ -1,10 +1,12 @@
-import { readFile } from "node:fs/promises";
 import { fromDateParamString, searchQueryKey } from "@/app/search/util";
-import { vaultMetadataFilePath } from "@/features/metadata/constant";
-import type { TVault } from "@/features/metadata/type";
+import { getVaultObject } from "@/features/file/io";
+import {} from "@/features/metadata/constant";
 import { Hono } from "hono";
 import type { BlankEnv, BlankInput } from "hono/types";
 import { pageViewLength, sortStrategy } from "./constant";
+
+import { readdir } from "node:fs/promises";
+import path from "node:path";
 
 export type PostMeta = {
 	title: string;
@@ -14,6 +16,16 @@ export type PostMeta = {
 	updated?: string;
 	description: string;
 };
+
+async function getFileList(path: string): Promise<string[]> {
+	try {
+		const files = await readdir(path);
+		return files;
+	} catch (err) {
+		console.error("Error reading directory:", err);
+		return [];
+	}
+}
 
 export const searchAPI = new Hono<BlankEnv, BlankInput, "/">().get(
 	"/",
@@ -27,6 +39,10 @@ export const searchAPI = new Hono<BlankEnv, BlankInput, "/">().get(
 			}>
 		>
 	> => {
+		// おまじない：これを書いておかないとvercelのバンドルに含まれない
+		await getFileList(process.cwd());
+		await getFileList(path.join(process.cwd(), "assets/metadata"));
+
 		const query = c.req.query(searchQueryKey.query);
 		const tag = c.req.query(searchQueryKey.tag);
 		const created = c.req.query(searchQueryKey.created);
@@ -36,10 +52,7 @@ export const searchAPI = new Hono<BlankEnv, BlankInput, "/">().get(
 		const pageStr = c.req.query(searchQueryKey.page);
 		const pageNum = pageStr ? Number.parseInt(pageStr) : 0;
 
-		const vaultFileContent = await readFile(vaultMetadataFilePath, {
-			encoding: "utf-8",
-		});
-		const vaultObject: TVault = JSON.parse(vaultFileContent);
+		const vaultObject = await getVaultObject();
 
 		const targetPosts: PostMeta[] = vaultObject.posts
 			.filter((p) => {
