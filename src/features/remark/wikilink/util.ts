@@ -57,7 +57,7 @@ export function findClosest(
 	if (targetNameSplit.length > 1) {
 		const targetPathList = path
 			.join(...startPath.slice(0, -1), ...targetNameSplit)
-			.split("\\");
+			.split(/\/|\\/);
 
 		const target = allPaths.find(
 			(item) =>

@@ -78,7 +78,7 @@ export const EmbedLinkContainer: FC<
 	}
 
 	if (type === "link") {
-		const paths = href.split("\\").slice(1);
+		const paths = href.split(/\\|\//).filter((p) => p !== "posts");
 		const rootPath = path.join(assetsDirPath, rootDirPath);
 		const fileTrees = createFileTrees(rootPath);
 
