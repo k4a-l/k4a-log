@@ -49,3 +49,7 @@ public/posts
 **/.obsidian/**
 
 assets/metadata/*
+
+# assets/posts配下のtestsフォルダ以外をignore
+assets/posts/**
+!assets/posts/tests
