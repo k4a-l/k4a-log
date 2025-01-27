@@ -98,7 +98,7 @@ export const getFileContent = async (
 			},
 		};
 	} catch (error) {
-		console.error(error);
+		console.error("コンテンツの取得でエラー", fPath, error);
 		return {
 			title,
 			content: `${title}: ファイルが存在しません`,

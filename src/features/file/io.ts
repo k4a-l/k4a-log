@@ -9,14 +9,20 @@ import {
 import type { TVault } from "@/features/metadata/type";
 
 export const getVaultObject = async (): Promise<TVault> => {
-	// metadataの取得
 	// TODO: エラーハンドリンク
-	const vaultFileContent = await readFile(vaultMetadataFilePath, {
-		encoding: "utf-8",
-	});
-	const vaultObject: TVault = JSON.parse(vaultFileContent);
+	try {
+		// metadataの取得
+		// TODO: エラーハンドリンク
+		const vaultFileContent = await readFile(vaultMetadataFilePath, {
+			encoding: "utf-8",
+		});
+		const vaultObject: TVault = JSON.parse(vaultFileContent);
 
-	return vaultObject;
+		return vaultObject;
+	} catch (error) {
+		console.error("vaultMetadataFilePathの取得でエラー", error);
+		return { posts: [], pathMap: {}, createdMap: {} };
+	}
 };
 
 export const getBookmarkObject = async (): Promise<BookMarkRoot> => {
@@ -29,6 +35,7 @@ export const getBookmarkObject = async (): Promise<BookMarkRoot> => {
 		const bookmarkObject: BookMarkRoot = JSON.parse(bookmarkFileContent);
 		return bookmarkObject;
 	} catch (error) {
+		console.error("bookmarkFilePathの取得でエラー", error);
 		return { items: [] };
 	}
 };
