@@ -109,7 +109,7 @@ const createParsedTree = async (
 			tree.push({
 				type: "file",
 				name: entry.name,
-				path: pathOfUnderRoot,
+				path: normalizePath(pathOfUnderRoot),
 				root: runResult,
 				fileData: file.data as VFileData,
 			});
@@ -157,7 +157,9 @@ export const convertNodeToFileMetadata = (
 			const isOwnLink = isSamePath(properties.href, currentPath);
 
 			if (!properties.href.startsWith("#") && !isOwnLink) {
-				const path = properties.href.split("#")[0] ?? properties.href;
+				const path = normalizePath(
+					properties.href.split("#")[0] ?? properties.href,
+				);
 				const title = properties.title.split("#")[0] ?? properties.title;
 				if (properties["is-embed"]) {
 					r.embeds.push({
@@ -286,7 +288,7 @@ export const convertRootContentsToFileMetadata = (
 export const convertFileEntityToTPostIndependence = (
 	fileEntity: FileEntity,
 ): TPostIndependence => {
-	const currentPath = path.join(postsDirPath, fileEntity.path);
+	const currentPath = normalizePath(path.join(postsDirPath, fileEntity.path));
 	const [basename, extension] = fileEntity.name.split(".");
 	const metadata = convertRootContentsToFileMetadata(
 		fileEntity.root.children,

@@ -30,7 +30,7 @@ export const normalizePath = (str: string): string => {
 export const dividePathAndExtension = (
 	str: string,
 ): [string, string | undefined] => {
-	const [baseName, extension] = path.basename(str).split(".");
+	const [baseName, extension] = str.split(".");
 	return [baseName ?? str, extension];
 };
 
