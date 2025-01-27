@@ -22,7 +22,7 @@ export default async function RootLayout({
 }: Readonly<{
 	children: React.ReactNode;
 }>) {
-	const bookmark = await getBookmarkObject();
+	const bookmark = getBookmarkObject();
 
 	return (
 		<html lang="ja">

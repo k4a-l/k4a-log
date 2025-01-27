@@ -1,4 +1,4 @@
-import { readFile } from "node:fs/promises";
+import { readFileSync } from "node:fs";
 import path from "node:path";
 import type { Heading, Root } from "mdast";
 import { toString as mdastToString } from "mdast-util-to-string";
@@ -15,20 +15,19 @@ import {
 import { toc } from "mdast-util-toc";
 import { type VFileData, getFrontMatters } from "../frontmatter";
 
-export const getFileContent = async (
+export const getFileContent = (
 	paths: string[],
 	directoryPath: string,
 	parseProcessor: Processor<Root, undefined, undefined, Root, string>,
 	runProcessor: Processor,
 	stringifyProcessor: ReactProcessor,
-): Promise<
+):
 	| {
 			content: ReactElement | string;
 			title: string;
 			data: VFileData;
 	  }
-	| undefined
-> => {
+	| undefined => {
 	let header: string | undefined;
 
 	const fPath = path.join(
@@ -52,14 +51,14 @@ export const getFileContent = async (
 	);
 
 	try {
-		const fileContent = await readFile(fPath, { encoding: "utf-8" });
+		const fileContent = readFileSync(fPath, { encoding: "utf-8" });
 
 		const file = new VFile({
 			path: fPath,
 			value: fileContent,
 		});
 
-		const parseResult = await parseProcessor.parse(file);
+		const parseResult = parseProcessor.parse(file);
 
 		if (header) {
 			const targetHeaderIndex = parseResult.children.findIndex(
@@ -84,8 +83,8 @@ export const getFileContent = async (
 
 		const tocResult = toc(parseResult);
 
-		const rehypeResult = await runProcessor.runSync(parseResult, file);
-		const stringifyResult = await stringifyProcessor.stringify(rehypeResult);
+		const rehypeResult = runProcessor.runSync(parseResult, file);
+		const stringifyResult = stringifyProcessor.stringify(rehypeResult);
 
 		const frontmatterRaw: Record<string, unknown> = (
 			typeof file.data.frontmatter === "object" ? file.data.frontmatter : {}

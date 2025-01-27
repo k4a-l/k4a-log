@@ -8,7 +8,7 @@ import { Stack } from "styled-system/jsx";
 
 export const SummarizeByYM = async () => {
 	// metadataの取得
-	const vaultObject = await getVaultObject();
+	const vaultObject = getVaultObject();
 
 	return (
 		<Stack>

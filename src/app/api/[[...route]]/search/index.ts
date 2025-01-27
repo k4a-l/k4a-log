@@ -52,7 +52,7 @@ export const searchAPI = new Hono<BlankEnv, BlankInput, "/">().get(
 		const pageStr = c.req.query(searchQueryKey.page);
 		const pageNum = pageStr ? Number.parseInt(pageStr) : 0;
 
-		const vaultObject = await getVaultObject();
+		const vaultObject = getVaultObject();
 
 		const targetPosts: PostMeta[] = vaultObject.posts
 			.filter((p) => {

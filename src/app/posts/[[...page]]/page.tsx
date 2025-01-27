@@ -13,7 +13,7 @@ import {
 	createRunProcessor,
 	createStringifyProcessor,
 } from "@/features/remark/processor";
-import { getFileContent as getFileData } from "@/features/remark/processor/getContent";
+import { getFileContent } from "@/features/remark/processor/getContent";
 import { createParseProcessor } from "@/features/remark/processor/parse";
 import { createFileTrees } from "@/features/remark/wikilink/util";
 import { isSamePath, normalizePath } from "@/utils/path";
@@ -36,7 +36,7 @@ export default async function Page({ params }: Props) {
 	const pathFromParams = path.join(...pathsFromParams);
 
 	// metadataの取得
-	const vaultObject = await getVaultObject();
+	const vaultObject = getVaultObject();
 
 	// uid→pathの検索（mapにはpostDirPathが入っている）
 	const uidPathMap = Object.fromEntries(
@@ -67,7 +67,7 @@ export default async function Page({ params }: Props) {
 	});
 
 	// 実行
-	const fileData = await getFileData(
+	const fileData = getFileContent(
 		postPath.split(/\\|\//),
 		directoryPath,
 		parseProcessor,
@@ -76,13 +76,12 @@ export default async function Page({ params }: Props) {
 	);
 
 	if (!fileData) return <NotFound href={pathFromParams} />;
-
 	// データ加工
 	const { frontmatter } = fileData.data;
 
 	const title: string = frontmatter?.title || fileData.title;
 
-	const bookmark = await getBookmarkObject();
+	const bookmark = getBookmarkObject();
 
 	return (
 		<PageWithTransition>

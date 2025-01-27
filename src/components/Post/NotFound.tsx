@@ -19,7 +19,7 @@ import Fuse from "fuse.js";
 
 export const NotFound = async ({ href: _href }: { href: string }) => {
 	const href = _href.split(/\\|\//).join("/");
-	const vault = await getVaultObject();
+	const vault = getVaultObject();
 
 	const fuse = new Fuse(vault.posts, {
 		keys: ["path"],

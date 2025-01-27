@@ -1,6 +1,5 @@
-"use server";
-
-import { readFile } from "node:fs/promises";
+// biome-ignore lint/style/useNodejsImportProtocol: <explanation> なんかここだけnode:をつけるとwebpackエラーが出る
+import { readFileSync } from "fs";
 import type { BookMarkRoot } from "@/components/Bookmark";
 import {
 	bookmarkFilePath,
@@ -8,12 +7,12 @@ import {
 } from "@/features/metadata/constant";
 import type { TVault } from "@/features/metadata/type";
 
-export const getVaultObject = async (): Promise<TVault> => {
+export const getVaultObject = (): TVault => {
 	// TODO: エラーハンドリンク
 	try {
 		// metadataの取得
 		// TODO: エラーハンドリンク
-		const vaultFileContent = await readFile(vaultMetadataFilePath, {
+		const vaultFileContent = readFileSync(vaultMetadataFilePath, {
 			encoding: "utf-8",
 		});
 		const vaultObject: TVault = JSON.parse(vaultFileContent);
@@ -25,11 +24,11 @@ export const getVaultObject = async (): Promise<TVault> => {
 	}
 };
 
-export const getBookmarkObject = async (): Promise<BookMarkRoot> => {
+export const getBookmarkObject = (): BookMarkRoot => {
 	// metadataの取得
 	// TODO: エラーハンドリンク
 	try {
-		const bookmarkFileContent = await readFile(bookmarkFilePath, {
+		const bookmarkFileContent = readFileSync(bookmarkFilePath, {
 			encoding: "utf-8",
 		});
 		const bookmarkObject: BookMarkRoot = JSON.parse(bookmarkFileContent);

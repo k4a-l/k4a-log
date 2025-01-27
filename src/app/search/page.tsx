@@ -13,7 +13,7 @@ export default async function Page({
 }) {
 	const { query, tag, page, created, sort } = await searchParams;
 
-	const vault = await getVaultObject();
+	const vault = getVaultObject();
 
 	const hashTagList: string[] = [
 		...new Set(vault.posts.flatMap((p) => p.metadata.tags.map((t) => t.tag))),

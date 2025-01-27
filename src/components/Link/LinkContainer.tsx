@@ -97,7 +97,7 @@ export const EmbedLinkContainer: FC<
 				post,
 			},
 		});
-		const data = await getFileContent(
+		const data = getFileContent(
 			paths,
 			rootPath,
 			remarkProcessor,
