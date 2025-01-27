@@ -21,11 +21,14 @@ export const getFileContent = async (
 	parseProcessor: Processor<Root, undefined, undefined, Root, string>,
 	runProcessor: Processor,
 	stringifyProcessor: ReactProcessor,
-): Promise<{
-	content: ReactElement | string;
-	title: string;
-	data: VFileData;
-}> => {
+): Promise<
+	| {
+			content: ReactElement | string;
+			title: string;
+			data: VFileData;
+	  }
+	| undefined
+> => {
 	let header: string | undefined;
 
 	const fPath = path.join(
@@ -99,10 +102,6 @@ export const getFileContent = async (
 		};
 	} catch (error) {
 		console.error("コンテンツの取得でエラー", fPath, error);
-		return {
-			title,
-			content: `${title}: ファイルが存在しません`,
-			data: { toc: undefined },
-		};
+		return undefined;
 	}
 };

@@ -23,7 +23,7 @@ export const NextLinkButton = (
 	}
 
 	return (
-		<Button {...others} asChild>
+		<Button textDecoration={"none"} fontWeight={"normal"} {...others} asChild>
 			<NextLink href={props.href}>{children}</NextLink>
 		</Button>
 	);

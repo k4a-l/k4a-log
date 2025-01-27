@@ -105,6 +105,10 @@ export const EmbedLinkContainer: FC<
 			stringifyProcessor,
 		);
 
+		if (!data) {
+			return <EmbedLinkMarkdown pathMap={pathMap} {...props} href={""} />;
+		}
+
 		return (
 			<EmbedLinkMarkdown pathMap={pathMap} {...props}>
 				{data.content}

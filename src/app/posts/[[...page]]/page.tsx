@@ -3,6 +3,7 @@ import { BookmarkInnerPart } from "@/components/Bookmark";
 import { PageWithTransition } from "@/components/Common/pageWithTransition";
 import { FrontMatter } from "@/components/FrontMatter";
 import { MyHead } from "@/components/Head";
+import { NotFound } from "@/components/Post/NotFound";
 import { BackLinks, TwoHopLinks } from "@/components/PostLink";
 import { SideTableOfContents } from "@/components/Toc";
 import { postDirPath } from "@/constants/path";
@@ -31,7 +32,7 @@ type Props = { params: Params };
 
 export default async function Page({ params }: Props) {
 	// 生の値取得→postDirはついてない
-	const pathsFromParams = (await params).page ?? ["index"];
+	const pathsFromParams = (await params).page ?? ["Index"];
 	const pathFromParams = path.join(...pathsFromParams);
 
 	// metadataの取得
@@ -52,7 +53,7 @@ export default async function Page({ params }: Props) {
 		isSamePath(p.path, postPathAbsolute),
 	);
 
-	if (!tPost) return null;
+	if (!tPost) return <NotFound href={pathFromParams} />;
 
 	// このファイルの事前準備
 	const fileTrees = createFileTrees(directoryPath);
@@ -73,6 +74,8 @@ export default async function Page({ params }: Props) {
 		runProcessor,
 		stringifyProcessor,
 	);
+
+	if (!fileData) return <NotFound href={pathFromParams} />;
 
 	// データ加工
 	const { frontmatter } = fileData.data;
