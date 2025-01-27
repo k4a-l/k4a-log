@@ -16,10 +16,12 @@ export const SearchBox = () => {
 
 	const router = useRouter();
 
-	const [searchQuery, setSearchQuery] = useState(query ?? undefined);
+	const [searchQuery, setSearchQuery] = useState(
+		query ? decodeURIComponent(query) : undefined,
+	);
 
 	useEffect(() => {
-		setSearchQuery(query ?? undefined);
+		setSearchQuery(query ? decodeURIComponent(query) : undefined);
 	}, [query]);
 
 	const search = () => {
@@ -28,6 +30,11 @@ export const SearchBox = () => {
 			tag ? new URLSearchParams({ tag }) : undefined,
 		);
 		router.push(path);
+	};
+
+	const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+		if (e.nativeEvent.isComposing || e.key !== "Enter") return;
+		search();
 	};
 
 	return (
@@ -52,6 +59,7 @@ export const SearchBox = () => {
 					type="search"
 					value={searchQuery ?? ""}
 					onChange={(e) => setSearchQuery(e.target.value)}
+					onKeyDown={handleKeyDown}
 				/>
 				<IconButton
 					position={"absolute"}
