@@ -1,10 +1,11 @@
 import { PageWithTransition } from "@/components/Common/pageWithTransition";
+import { MyHead } from "@/components/Head";
 import { getVaultObject } from "@/features/file/io";
 import { IS_PRODUCTION } from "@/utils/env";
 import { isTestDirPath } from "@/utils/path";
 import { Stack } from "styled-system/jsx";
 import { SearchPresentation } from "./SearchPresentation";
-import type { SearchQuery } from "./util";
+import { type SearchQuery, searchPath } from "./util";
 
 export type SearchParams = Promise<SearchQuery>;
 
@@ -28,6 +29,13 @@ export default async function Page({
 
 	return (
 		<PageWithTransition>
+			<MyHead
+				title={"検索"}
+				description={""}
+				imagePath={undefined}
+				url={searchPath}
+				keywords={[]}
+			/>
 			<Stack alignItems={"center"} w="full" h="full">
 				<SearchPresentation
 					query={query ? decodeURIComponent(query) : undefined}
