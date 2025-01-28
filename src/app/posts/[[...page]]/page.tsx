@@ -88,8 +88,10 @@ export default async function Page({ params }: Props) {
 			<Client />
 			<MyHead
 				title={title}
-				description={tPost?.metadata.frontmatter?.desc ?? ""}
-				imagePath={tPost?.thumbnailPath}
+				description={tPost.metadata.frontmatter?.description || ""}
+				imagePath={
+					tPost.metadata.frontmatter?.thumbnailPath || tPost.thumbnailPath
+				}
 				url={postPathAbsolute}
 				keywords={[]}
 			/>
