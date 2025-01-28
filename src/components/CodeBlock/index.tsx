@@ -21,10 +21,14 @@ export const CodeBlock = (
 			<code
 				className={css({
 					bg: "gray.3",
-					color: "blue.10",
-					py: 1,
-					px: 1,
+					p: 1,
 					borderRadius: "0.2em",
+					"pre > &": {
+						my: 2,
+						color: "gray.12",
+						p: 2,
+						display: "block",
+					},
 				})}
 			>
 				{children}
@@ -95,5 +99,5 @@ export const CodeBlock = (
 };
 
 export const Pre = ({ children }: PropsWithChildren) => {
-	return <>{children}</>;
+	return <pre>{children}</pre>;
 };
