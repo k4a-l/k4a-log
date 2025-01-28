@@ -5,6 +5,7 @@ import type { Handler } from "mdast-util-to-hast";
 import { u } from "unist-builder";
 
 import type { Plugin } from "unified";
+import { splitByHashtag } from "./util";
 
 export const hashTagHandler: Handler = (_h: unknown, node) => {
 	return {
@@ -26,34 +27,9 @@ export const remarkHashtagPlugin: Plugin = () => {
 			const child = parent.children[childIndex];
 
 			if (child && child.type !== "text") return;
+			if (parent.type === "link") return;
 
 			parent.children.filter((c, i) => i !== childIndex);
-
-			// AA#tag BB#tag という文章があったとき、[AA,#tag,BB,#tag]にする関数
-			const splitByHashtag = (input: string): string[] => {
-				const regex = /#[a-zA-Z0-9]+/g;
-				const result: string[] = [];
-				let lastIndex = 0;
-
-				input.replace(regex, (match, offset) => {
-					// マッチする前の部分を追加
-					if (lastIndex < offset) {
-						result.push(input.slice(lastIndex, offset));
-					}
-					// マッチした値を追加
-					result.push(match);
-					// 次の開始位置を更新
-					lastIndex = offset + match.length;
-					return match;
-				});
-
-				// 最後の部分を追加
-				if (lastIndex < input.length) {
-					result.push(input.slice(lastIndex));
-				}
-
-				return result;
-			};
 
 			const texts = splitByHashtag(child?.value ?? "");
 
