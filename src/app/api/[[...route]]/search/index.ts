@@ -7,6 +7,7 @@ import { pageViewLength, sortStrategy } from "./constant";
 
 import { readdir } from "node:fs/promises";
 import path from "node:path";
+import { idParser } from "@/features/remark/frontmatter";
 import { IS_PRODUCTION } from "@/utils/env";
 import { isTestDirPath } from "@/utils/path";
 
@@ -93,14 +94,18 @@ export const searchAPI = new Hono<BlankEnv, BlankInput, "/">().get(
 
 				return isTagIncluded && isCreatedDateMatch && isQueryMatch;
 			})
-			.map((p) => ({
-				title: p.basename,
-				path: p.path,
-				thumbnailPath: p.thumbnailPath,
-				created: p.metadata.frontmatter?.created,
-				updated: p.metadata.frontmatter?.updated,
-				description: p.metadata.frontmatter?.desc ?? "",
-			}))
+			.map((p) => {
+				const frontmatter = p.metadata.frontmatter;
+				const id = idParser(p, frontmatter);
+				return {
+					title: frontmatter?.title || p.basename,
+					path: id || p.path,
+					thumbnailPath: frontmatter?.thumbnailPath || p.thumbnailPath,
+					created: frontmatter?.created,
+					updated: frontmatter?.updated,
+					description: frontmatter?.description ?? "",
+				};
+			})
 			.sort((a, b) => {
 				if (sort === "created-new") {
 					// 設定なしは常に最後

@@ -1,9 +1,11 @@
 import type { VFileData } from "@/features/remark/frontmatter";
+import type { Position } from "unist";
 
 export type TLinkMetaData = {
 	aliasTitle?: string;
 	title: string;
 	path: string;
+	position?: Position;
 };
 
 type TEmbedMetaData = TLinkMetaData;

@@ -17,7 +17,11 @@ import type {
 	TVault,
 	YMMap,
 } from "@/features/metadata/type";
-import { type VFileData, frontMatterKeys } from "@/features/remark/frontmatter";
+import {
+	type VFileData,
+	frontMatterKeys,
+	idParser,
+} from "@/features/remark/frontmatter";
 import { createRunProcessor } from "@/features/remark/processor/run";
 import {
 	type FileTree,
@@ -166,12 +170,14 @@ export const convertNodeToFileMetadata = (
 						title: title,
 						path: path,
 						aliasTitle: properties.alias,
+						position: node.position,
 					});
 				} else {
 					r.links.push({
 						title: title,
 						path: path,
 						aliasTitle: properties.alias,
+						position: node.position,
 					});
 				}
 			}
@@ -294,9 +300,25 @@ export const convertFileEntityToTPostIndependence = (
 		fileEntity.root.children,
 		currentPath,
 	);
-	const thumbnailPath = metadata.embeds.find((e) =>
-		imageExtensions.some((r) => e.path.match(r)),
-	)?.path;
+	const thumbnailPath = [...metadata.embeds, ...metadata.links]
+		.sort((a, b) => {
+			if (!a.position && b.position) return 0;
+			if (!a.position) return 1;
+			if (!b.position) return -1;
+			if (a.position?.start.line < b.position?.start.line) {
+				return -1;
+			}
+			if (a.position.start.line > b.position?.start.line) {
+				return 1;
+			}
+			if (a.position.start.column < b.position?.start.column) {
+				return -1;
+			}
+			return 0;
+		})
+		.find((e) => imageExtensions.some((r) => e.path.match(r)))?.path;
+
+	const frontmatter = fileEntity.fileData.frontmatter;
 
 	const data: TPostIndependence = {
 		basename: basename ?? fileEntity.name,
@@ -305,10 +327,12 @@ export const convertFileEntityToTPostIndependence = (
 		metadata: {
 			...metadata,
 			frontmatter: {
-				[frontMatterKeys.desc.key]: mdastToString(fileEntity.root)
-					.substring(0, 150)
-					.replaceAll("\n", " "),
-				...fileEntity.fileData.frontmatter,
+				...frontmatter,
+				[frontMatterKeys.description.key]:
+					frontmatter?.description ||
+					mdastToString(fileEntity.root)
+						.substring(0, 150)
+						.replaceAll("\n", " "),
 			},
 		},
 		thumbnailPath,
@@ -415,10 +439,11 @@ export const injectAllLinksToTPostIndependence = (
 const createPathMap = (files: FileEntity[]): PathMap => {
 	const pathMap: PathMap = {};
 	for (const file of files) {
-		const uid = file.fileData.frontmatter?.[frontMatterKeys.uid.key];
-		if (typeof uid === "string") {
+		const id = idParser(file, file.fileData.frontmatter);
+
+		if (id) {
 			const pathName = normalizePath(path.join(postsDirPath, file.path));
-			pathMap[pathName] = normalizePath(path.join(postsDirPath, uid));
+			pathMap[pathName] = normalizePath(path.join(postsDirPath, id));
 		}
 	}
 	return pathMap;

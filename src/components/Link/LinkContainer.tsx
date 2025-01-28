@@ -27,7 +27,11 @@ type WikiLinkComponentProps = AnchorHTMLAttributes<HTMLAnchorElement> &
 export const LinkContainer: FC<WikiLinkComponentProps & MetaProps> = (
 	props,
 ) => {
-	const { href, children, "is-embed": isEmbed, ...others } = props;
+	const { href, children, "is-embed": isEmbed, alias, ...others } = props;
+
+	if (alias === "thumbnail") {
+		return;
+	}
 
 	if (isEmbed) {
 		return <EmbedLinkContainer {...props} />;
