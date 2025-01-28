@@ -61,7 +61,7 @@ export function fromMarkdown(
 
 const createWikiLinkData = (
 	token: Token,
-	pathValue: string,
+	_pathValue: string,
 	wikiLink: WikiLinkContentMap,
 	opts: Required<WikiLinkOption>,
 ): WikiLinkData => {
@@ -70,11 +70,15 @@ const createWikiLinkData = (
 		return `/${permalink}`;
 	};
 	const hrefTemplate = defaultHrefTemplate;
+	const pathValue = _pathValue.trim();
 
 	const isEmbed = Boolean(token.embed);
 
 	const parentsLinks = opts.parentsLinks.map((p) => decodeURIComponent(p));
-	const currentPaths: string[] = lastOfArr(parentsLinks)?.split("/") ?? [];
+	const currentPaths: string[] =
+		lastOfArr(parentsLinks)
+			?.split("/")
+			.filter((s) => s) ?? [];
 
 	const _link = pathResolver({
 		linkName: pathValue,

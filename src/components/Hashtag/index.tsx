@@ -11,12 +11,13 @@ export const Hashtag = ({
 }: AnchorHTMLAttributes<HTMLAnchorElement> & { href: string }) => {
 	return (
 		<Button
-			size="sm"
+			size={{ base: "xs", sm: "sm" }}
 			asChild
 			py={1}
-			px={2}
+			px={"0.8em"}
 			colorPalette={"blue"}
 			variant={"subtle"}
+			fontSize={{ base: "0.5em", sm: "0.8em" }}
 		>
 			<Link
 				className={css({
@@ -27,7 +28,12 @@ export const Hashtag = ({
 				})}
 				href={getSearchPath({ tag: href, query: "" })}
 			>
-				<Hash size={"1em"} />
+				<Hash
+					className={css({
+						w: "0.8em",
+						h: "0.8em",
+					})}
+				/>
 				{children}
 			</Link>
 		</Button>

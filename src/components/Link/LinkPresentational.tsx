@@ -104,6 +104,7 @@ export const EmbedLinkImage: FC<PropsWithChildren<LinkPresentationalType>> = ({
 			className={css({
 				maxW: "100%",
 				objectFit: "contain",
+				w: "auto",
 			})}
 		/>
 	);

@@ -16,7 +16,7 @@ export const paragraphWrapHandler: Handler = (_h: unknown, node) => {
 
 export const remarkParagraphWrapPlugin: Plugin = () => {
 	return (tree: Root) =>
-		visit(tree, "paragraph", (node) => {
+		visit(tree, "paragraph", (node, i, parent) => {
 			const children = node.children;
 			const newChildren: PhrasingContent[] = [];
 			let buffer: PhrasingContent[] = [];
@@ -25,6 +25,9 @@ export const remarkParagraphWrapPlugin: Plugin = () => {
 			if (node.children.some((c) => c.type === "break")) {
 				node.data = {
 					hName: "span",
+					hProperties: {
+						style: "display: block; padding-bottom: 1em;",
+					},
 					...node.data,
 				};
 				return;
@@ -64,7 +67,10 @@ export const remarkParagraphWrapPlugin: Plugin = () => {
 				...node.data,
 				hName: "span",
 				hProperties: {
-					style: "display: block; padding: 0.2em 0;",
+					style:
+						parent?.type === "root"
+							? "display: block; padding-bottom: 1em"
+							: undefined,
 				},
 			};
 			node.children = newChildren;

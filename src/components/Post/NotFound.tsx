@@ -18,14 +18,17 @@ import { normalizePath } from "@/utils/path";
 import Fuse from "fuse.js";
 
 export const NotFound = async ({ href: _href }: { href: string }) => {
-	const href = _href.split(/\\|\//).join("/");
+	const href = decodeURIComponent(_href.split(/\\|\//).join("/"));
 	const vault = getVaultObject();
 
-	const fuse = new Fuse(vault.posts, {
-		keys: ["path"],
-		threshold: 0.7,
-		distance: 30,
-		shouldSort: true,
+	const searchTargets = vault.posts.map((p) => ({
+		...p,
+		title: p.metadata.frontmatter?.title ?? p.basename,
+	}));
+
+	const fuse = new Fuse(searchTargets, {
+		keys: ["title", "path"] satisfies (keyof (typeof searchTargets)[number])[],
+		threshold: 0.5,
 	});
 	const result = fuse.search(href);
 
@@ -99,6 +102,7 @@ export const NotFound = async ({ href: _href }: { href: string }) => {
 											alignItems={"end"}
 											lineHeight={"1em"}
 											gap={1}
+											flexWrap={"wrap"}
 										>
 											<NextLink
 												href={path.join("/", normalizePath(r.item.path))}
@@ -113,8 +117,8 @@ export const NotFound = async ({ href: _href }: { href: string }) => {
 												</span>
 												<span
 													className={css({
-														fontSize: "0.8em",
-														lineHeight: "1.4em",
+														fontSize: "0.6em",
+														lineHeight: "1.8em",
 													})}
 												>
 													({normalizePath(r.item.path).replace(postDirPath, "")}
