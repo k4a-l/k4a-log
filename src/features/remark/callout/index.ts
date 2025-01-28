@@ -20,7 +20,7 @@ import {
 	zapIcon,
 } from "./icons";
 
-import type { BlockContent, Root } from "mdast";
+import type { BlockContent, PhrasingContent, Root } from "mdast";
 
 type Callout = Record<string, unknown>;
 
@@ -173,7 +173,8 @@ const RemarkCalloutPlugin: Plugin = (
 	return (tree: Root): void => {
 		visit(tree, "blockquote", (node) => {
 			if (!("children" in node) || node.children.length === 0) return;
-			const firstChild = node.children[0];
+			const [firstChild, ...otherChildren] = node.children;
+			node.children = [];
 
 			if (!firstChild) return;
 			if (firstChild.type !== "paragraph") return;
@@ -243,7 +244,12 @@ const RemarkCalloutPlugin: Plugin = (
 							hProperties: { className: contentClass },
 							hName: "div",
 						},
-						children: remainingLines,
+						children: [
+							...remainingLines,
+							// これ以降はデフォルトの動作に任せる
+							{ type: "break" },
+							...(otherChildren as PhrasingContent[]),
+						],
 					});
 				}
 			}
