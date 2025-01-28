@@ -6,7 +6,7 @@ import { IS_PRODUCTION } from "@/utils/env";
 import { strictEntries } from "@/utils/object";
 import { isTestDirPath } from "@/utils/path";
 import { css } from "styled-system/css";
-import { Stack } from "styled-system/jsx";
+import { HStack, Stack } from "styled-system/jsx";
 
 export const SummarizeByYM = async () => {
 	// metadataの取得
@@ -27,61 +27,65 @@ export const SummarizeByYM = async () => {
 					pl: 4,
 				})}
 			>
-				{strictEntries(vaultObject.createdMap).map(([yKey, mValue]) => {
-					const year = typeof yKey === "number" ? yKey : Number.parseInt(yKey);
+				{strictEntries(vaultObject.createdMap)
+					.sort(([yKeyA], [yKeyB]) => Number(yKeyB) - Number(yKeyA))
+					.map(([yKey, mValue]) => {
+						const year =
+							typeof yKey === "number" ? yKey : Number.parseInt(yKey);
 
-					const yearCount = strictEntries(mValue).reduce(
-						(acc: number, v) =>
-							acc +
-							v[1].filter((p) => !(IS_PRODUCTION && isTestDirPath(p))).length,
-						0,
-					);
+						const yearCount = strictEntries(mValue).reduce(
+							(acc: number, v) =>
+								acc +
+								v[1].filter((p) => !(IS_PRODUCTION && isTestDirPath(p))).length,
+							0,
+						);
 
-					if (!yearCount) return;
+						if (!yearCount) return;
 
-					return (
-						<Stack key={yKey} gap={0}>
-							<li>
-								<Link asChild>
-									<NextLink
-										href={getSearchPath({
-											created: toDateParamString({ year: year }),
-										})}
-									>
-										{year}年({yearCount})
-									</NextLink>
-								</Link>
-							</li>
-							<ul>
-								{strictEntries(mValue).map(([mKey, paths]) => {
-									const month =
-										typeof mKey === "number" ? mKey : Number.parseInt(mKey);
+						return (
+							<Stack key={yKey} gap={0} pb={2}>
+								<li>
+									<Link asChild>
+										<NextLink
+											href={getSearchPath({
+												created: toDateParamString({ year: year }),
+											})}
+										>
+											{year}年({yearCount})
+										</NextLink>
+									</Link>
+								</li>
+								<HStack>
+									{strictEntries(mValue).map(([mKey, paths], i) => {
+										const month =
+											typeof mKey === "number" ? mKey : Number.parseInt(mKey);
 
-									const monthCount = paths.filter(
-										(p) => !(IS_PRODUCTION && isTestDirPath(p)),
-									).length;
+										const monthCount = paths.filter(
+											(p) => !(IS_PRODUCTION && isTestDirPath(p)),
+										).length;
 
-									if (!monthCount) return;
+										if (!monthCount) return;
 
-									return (
-										<li key={month}>
-											<Link asChild>
-												<NextLink
-													href={getSearchPath({
-														created: toDateParamString({ year: year, month }),
-													})}
-												>
-													{month}月(
-													{monthCount})
-												</NextLink>
-											</Link>
-										</li>
-									);
-								})}
-							</ul>
-						</Stack>
-					);
-				})}
+										return (
+											<span key={month}>
+												<Link asChild>
+													<NextLink
+														href={getSearchPath({
+															created: toDateParamString({ year: year, month }),
+														})}
+													>
+														{month}月(
+														{monthCount})
+													</NextLink>
+												</Link>
+												{i !== strictEntries(mValue).length - 1 && ","}
+											</span>
+										);
+									})}
+								</HStack>
+							</Stack>
+						);
+					})}
 			</ul>
 		</Stack>
 	);
