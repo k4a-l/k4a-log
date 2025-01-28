@@ -215,7 +215,7 @@
 	blockquote[data-callout] .callout-title {
 		align-items: center;
 		display: flex;
-		font-size: 14px;
+		font-size: 1em;
 		line-height: 1;
 		gap: 0.3em;
 		font-weight: bold;
@@ -270,5 +270,76 @@
 	blockquote[data-callout="quote"] {
 		--color-callout-bg: var(--color-default-bg);
 		--color-callout-fg: var(--color-default-fg);
+	}
+
+	blockquote[data-callout="chat1"],
+	blockquote[data-callout="chat2"] {
+		all: revert;
+		& > * {
+			all: revert;
+		}
+		display: flex;
+
+		.callout-title {
+			display: none;
+		}
+
+		.callout-content {
+			br:first-child {
+				display: none;
+			}
+
+			box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1);
+
+			max-width: 85%;
+			position: relative;
+			display: inline-block;
+			margin: 10px 0px 10px 0px;
+			border-radius: 10px;
+			padding: 10px 15px 10px 15px;
+
+			line-height: 1.6em;
+			font-weight: 600;
+			font-size: 0.9em;
+		}
+	}
+
+	blockquote[data-callout="chat1"] {
+		--color_chat1: var(--color-default-bg);
+		justify-content: flex-end;
+
+		.callout-content {
+			background: var(--color_chat1);
+			&:after {
+				content: "";
+				position: absolute;
+				top: -2px;
+				right: -22px;
+				border: 8px solid transparent;
+				border-left: 22px solid var(--color_chat1);
+				transform: rotate(-35deg);
+			}
+		}
+	}
+
+	blockquote[data-callout="chat2"] {
+		--color_chat2: var(--color-success-fg);
+		justify-content: flex-start;
+
+		.callout-content {
+			background: var(--color_chat2);
+			color: white;
+
+			&:before {
+				content: "";
+				display: inline-block;
+				position: absolute;
+				top: -2px;
+				left: -22px;
+				border: 8px solid transparent;
+				border-left: 22px solid var(--color_chat2);
+				transform: rotate(215deg);
+			}
+		}
 	}
 }

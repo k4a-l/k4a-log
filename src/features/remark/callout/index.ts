@@ -6,6 +6,7 @@ import { visit } from "unist-util-visit";
 import {
 	alertTriangleIcon,
 	bugIcon,
+	chatIcon,
 	checkCircleIcon,
 	checkIcon,
 	clipboardListIcon,
@@ -116,6 +117,8 @@ const defaultConfig: Config = {
 		example: listIcon,
 		quote: quoteIcon,
 		cite: quoteIcon,
+		chat1: chatIcon,
+		chat2: chatIcon,
 	},
 };
 
