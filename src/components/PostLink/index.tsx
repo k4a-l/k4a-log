@@ -39,6 +39,7 @@ export const BackLinks = ({ tPost }: { tPost: TPost }) => {
 						height={"auto"}
 						p={{ md: 2, base: 1 }}
 						textDecoration={"none"}
+						textWrap={"wrap"}
 					>
 						<NextLink href={path.join("/", normalizePath(bl.path))}>
 							<FileIcon />
@@ -71,6 +72,7 @@ export const TwoHopLinks = ({ tPost }: { tPost: TPost }) => {
 						height={"auto"}
 						p={{ md: 2, base: 1 }}
 						textDecoration={"none"}
+						textWrap={"wrap"}
 					>
 						<NextLink href={path.join("/", normalizePath(thl.path))}>
 							<FileIcon />
