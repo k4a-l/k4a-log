@@ -62,39 +62,48 @@ export const SearchResult = ({
 											transform: "translateY(3px)",
 										},
 									})}
-									gap={0}
 								>
-									<span
-										className={css({
-											w: "100%",
-											wordBreak: "break-all",
-											whiteSpace: "wrap",
-										})}
-									>
-										{r.title}
-									</span>
-									<span
-										className={css({
-											fontSize: "xs",
-											opacity: 0.7,
-										})}
-									>
-										{r.created}
-									</span>
-									{r.thumbnailPath ? (
-										<img src={r.thumbnailPath} alt={r.title} />
-									) : (
+									<Stack overflow={"hidden"} gap={0}>
 										<span
 											className={css({
-												py: 2,
-												fontSize: "0.8em",
-												fontWeight: "normal",
-												color: "gray.10",
+												fontSize: "xs",
+												opacity: 0.7,
 											})}
 										>
-											{r.description}
+											{r.created ? r.created : "作成日不明"}
 										</span>
-									)}
+										<span
+											className={css({
+												w: "100%",
+												wordBreak: "break-all",
+												whiteSpace: "wrap",
+											})}
+										>
+											{r.title}
+										</span>
+
+										{r.thumbnailPath ? (
+											<img
+												src={r.thumbnailPath}
+												alt={r.thumbnailPath}
+												className={css({
+													// alt用
+													fontSize: "0.5em",
+												})}
+											/>
+										) : (
+											<span
+												className={css({
+													py: 2,
+													fontSize: "0.8em",
+													fontWeight: "normal",
+													color: "gray.10",
+												})}
+											>
+												{r.description}
+											</span>
+										)}
+									</Stack>
 								</Stack>
 							</NextLink>
 						</Link>
