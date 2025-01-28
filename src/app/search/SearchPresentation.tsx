@@ -28,6 +28,7 @@ export const SearchPresentation = ({
 	created,
 	sort,
 	hashTagList,
+	hasLink,
 }: PickRequired<SearchQuery, "page"> & { hashTagList: string[] }) => {
 	const result = useHonoQuery("search", {
 		query,
@@ -35,6 +36,7 @@ export const SearchPresentation = ({
 		created,
 		page: page.toString(),
 		sort,
+		hasLink,
 	});
 
 	const router = useRouter();

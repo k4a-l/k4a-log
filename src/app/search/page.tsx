@@ -14,7 +14,7 @@ export default async function Page({
 }: {
 	searchParams: Record<keyof SearchQuery, string>;
 }) {
-	const { query, tag, page, created, sort } = await searchParams;
+	const { query, tag, page, created, sort, hasLink } = await searchParams;
 
 	const vault = getVaultObject();
 
@@ -44,6 +44,7 @@ export default async function Page({
 					created={created}
 					sort={sort}
 					hashTagList={hashTagList}
+					hasLink={hasLink}
 				/>
 			</Stack>
 		</PageWithTransition>

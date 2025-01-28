@@ -51,6 +51,7 @@ export const searchAPI = new Hono<BlankEnv, BlankInput, "/">().get(
 		const created = c.req.query(searchQueryKey.created);
 		const sort =
 			c.req.query(searchQueryKey.sort) ?? sortStrategy["created-new"];
+		const hasLink = c.req.query(searchQueryKey.hasLink);
 
 		const pageStr = c.req.query(searchQueryKey.page);
 		const pageNum = pageStr ? Number.parseInt(pageStr) : 0;
@@ -92,7 +93,16 @@ export const searchAPI = new Hono<BlankEnv, BlankInput, "/">().get(
 					return p.basename.toLowerCase().includes(query.toLowerCase());
 				})();
 
-				return isTagIncluded && isCreatedDateMatch && isQueryMatch;
+				const isHasLinkMatch = (() => {
+					if (!hasLink) return true;
+					return [...p.metadata.links, ...p.metadata.embeds].find(
+						(l) => l.title === hasLink,
+					);
+				})();
+
+				return (
+					isTagIncluded && isCreatedDateMatch && isQueryMatch && isHasLinkMatch
+				);
 			})
 			.map((p) => {
 				const frontmatter = p.metadata.frontmatter;

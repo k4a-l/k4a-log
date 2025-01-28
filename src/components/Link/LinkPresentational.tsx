@@ -13,6 +13,7 @@ import {
 import { css } from "styled-system/css";
 import { HStack, Stack } from "styled-system/jsx";
 
+import { getSearchPath } from "@/app/search/util";
 import { embedMarkdownClass } from "@/components/Toc";
 import type { PathMap } from "@/features/metadata/type";
 import { IconButton } from "@/park-ui/components/icon-button";
@@ -37,7 +38,7 @@ export const TransitionLinkDead: FC<
 		<Link asChild color="blue.9">
 			<NextLink
 				{...others}
-				href={path.join("/search", `?query=hasLink:${href}`)}
+				href={getSearchPath({ hasLink: href })}
 				style={{ cursor: "help" }}
 			>
 				{children}

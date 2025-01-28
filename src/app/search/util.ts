@@ -7,6 +7,7 @@ export type SearchQuery = Partial<{
 	created: string;
 	sort: string;
 	includesTests: string;
+	hasLink: string;
 }>;
 
 export const searchQueryKey = {
@@ -16,6 +17,7 @@ export const searchQueryKey = {
 	query: "query",
 	sort: "sort",
 	includesTests: "includesTests",
+	hasLink: "hasLink",
 } satisfies Record<keyof SearchQuery, string>;
 
 export const getSearchPath = (
@@ -46,6 +48,10 @@ export const getSearchPath = (
 	}
 	if (searchQuery.sort) {
 		searchParams.set(searchQueryKey.sort, searchQuery.sort);
+	}
+
+	if (searchQuery.hasLink) {
+		searchParams.set(searchQueryKey.hasLink, searchQuery.hasLink);
 	}
 
 	return `${searchPath}?${searchParams.toString()}`;
