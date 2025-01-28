@@ -102,20 +102,31 @@ export const searchAPI = new Hono<BlankEnv, BlankInput, "/">().get(
 				description: p.metadata.frontmatter?.desc ?? "",
 			}))
 			.sort((a, b) => {
-				if (sort === "created-new")
-					return (a.created ?? Number.MAX_SAFE_INTEGER) <
-						(b.created ?? Number.MAX_SAFE_INTEGER)
-						? 1
-						: -1;
-				if (sort === "created-old")
-					return (a.created ?? -1) > (b.created ?? -1) ? 1 : -1;
-				if (sort === "updated-new")
-					return (a.updated ?? Number.MAX_SAFE_INTEGER) <
-						(b.updated ?? Number.MAX_SAFE_INTEGER)
-						? 1
-						: -1;
-				if (sort === "updated-old")
-					return (a.updated ?? -1) > (b.updated ?? -1) ? 1 : -1;
+				if (sort === "created-new") {
+					// 設定なしは常に最後
+					if (!a.created && !a.created) return 0;
+					if (!a.created) return 1;
+					if (!b.created) return -1;
+					return a.created < b.created ? 1 : -1;
+				}
+				if (sort === "created-old") {
+					if (!a.created && !a.created) return 0;
+					if (!a.created) return 1;
+					if (!b.created) return -1;
+					return a.created > b.created ? 1 : -1;
+				}
+				if (sort === "updated-new") {
+					if (!a.updated && !a.updated) return 0;
+					if (!a.updated) return 1;
+					if (!b.updated) return -1;
+					return a.updated < b.updated ? 1 : -1;
+				}
+				if (sort === "updated-old") {
+					if (!a.updated && !a.updated) return 0;
+					if (!a.updated) return 1;
+					if (!b.updated) return -1;
+					return a.updated > b.updated ? 1 : -1;
+				}
 				if (sort === "title-asc") return a.title > b.title ? 1 : -1;
 				if (sort === "title-desc") return a.title < b.title ? 1 : -1;
 
