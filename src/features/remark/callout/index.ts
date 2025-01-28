@@ -177,7 +177,6 @@ const RemarkCalloutPlugin: Plugin = (
 		visit(tree, "blockquote", (node) => {
 			if (!("children" in node) || node.children.length === 0) return;
 			const [firstChild, ...otherChildren] = node.children;
-			node.children = [];
 
 			if (!firstChild) return;
 			if (firstChild.type !== "paragraph") return;
@@ -189,6 +188,8 @@ const RemarkCalloutPlugin: Plugin = (
 			const matched = firstLine.value.match(REGEX);
 
 			if (matched) {
+				node.children = [];
+
 				const array = REGEX.exec(firstLine.value);
 
 				const calloutType = array?.at(1);

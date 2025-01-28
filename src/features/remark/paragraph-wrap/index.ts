@@ -26,7 +26,7 @@ export const remarkParagraphWrapPlugin: Plugin = () => {
 				node.data = {
 					hName: "span",
 					hProperties: {
-						style: "display: block; padding-bottom: 1em;",
+						style: "display: block;  padding: 0.5em 0;",
 					},
 					...node.data,
 				};
@@ -69,7 +69,7 @@ export const remarkParagraphWrapPlugin: Plugin = () => {
 				hProperties: {
 					style:
 						parent?.type === "root"
-							? "display: block; padding-bottom: 1em"
+							? "display: block; padding: 0.5em 0"
 							: undefined,
 				},
 			};
