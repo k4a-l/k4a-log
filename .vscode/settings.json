@@ -31,5 +31,9 @@
 	"cSpell.words": ["frontmatter", "mdast", "wikilink"],
 	"[css]": {
 		"editor.defaultFormatter": "biomejs.biome"
-	}
+	},
+	"[markdown]": {
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
+	},
+	"prettier.tabWidth": 1
 }
