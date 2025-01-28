@@ -3,7 +3,7 @@ import { BookmarkInnerPart } from "@/components/Bookmark";
 import { PageWithTransition } from "@/components/Common/pageWithTransition";
 import { FrontMatter } from "@/components/FrontMatter";
 import { MyHead } from "@/components/Head";
-import { NotFound } from "@/components/Post/NotFound";
+import { PostNotFound } from "@/components/Post/NotFound";
 import { BackLinks, TwoHopLinks } from "@/components/PostLink";
 import { SideTableOfContents } from "@/components/Toc";
 import { postDirPath } from "@/constants/path";
@@ -53,7 +53,7 @@ export default async function Page({ params }: Props) {
 		isSamePath(p.path, postPathAbsolute),
 	);
 
-	if (!tPost) return <NotFound href={pathFromParams} />;
+	if (!tPost) return <PostNotFound href={pathFromParams} />;
 
 	// このファイルの事前準備
 	const fileTrees = createFileTrees(directoryPath);
@@ -75,7 +75,7 @@ export default async function Page({ params }: Props) {
 		stringifyProcessor,
 	);
 
-	if (!fileData) return <NotFound href={pathFromParams} />;
+	if (!fileData) return <PostNotFound href={pathFromParams} />;
 	// データ加工
 	const { frontmatter } = fileData.data;
 
