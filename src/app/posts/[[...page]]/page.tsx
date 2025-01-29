@@ -6,9 +6,8 @@ import { MyHead } from "@/components/Head";
 import { PostNotFound } from "@/components/Post/NotFound";
 import { BackLinks, TwoHopLinks } from "@/components/PostLink";
 import { SideTableOfContents } from "@/components/Toc";
-import { postDirPath } from "@/constants/path";
 import { getBookmarkObject, getVaultObject } from "@/features/file/io";
-import { assetsDirPath } from "@/features/metadata/constant";
+import { assetsDirPath, postsDirPath } from "@/features/metadata/constant";
 import {
 	createRunProcessor,
 	createStringifyProcessor,
@@ -16,6 +15,7 @@ import {
 import { getFileContent } from "@/features/remark/processor/getContent";
 import { createParseProcessor } from "@/features/remark/processor/parse";
 import { createFileTrees } from "@/features/remark/wikilink/util";
+import { reverseObjects } from "@/utils/object";
 import { isSamePath, normalizePath } from "@/utils/path";
 import {} from "react/jsx-runtime";
 import { css } from "styled-system/css";
@@ -24,7 +24,7 @@ import { Client } from "./Client";
 
 export const revalidate = 600; // 10分ごとに再検証する
 
-const directoryPath = path.join(assetsDirPath, postDirPath);
+const directoryPath = path.join(assetsDirPath, postsDirPath);
 
 type Params = Promise<{ page: string[] | undefined }>;
 
@@ -38,17 +38,17 @@ export default async function Page({ params }: Props) {
 	// metadataの取得
 	const vaultObject = getVaultObject();
 
-	// uid→pathの検索（mapにはpostDirPathが入っている）
-	const uidPathMap = Object.fromEntries(
-		Object.entries(vaultObject.pathMap).map(([key, value]) => [
-			value?.replace(new RegExp(`^${postDirPath}`), ""),
-			key?.replace(new RegExp(`^${postDirPath}`), ""),
-		]),
-	);
-	// uidに一致すればそれを使用、しなければそのまま
-	const postPath = uidPathMap[normalizePath(pathFromParams)] ?? pathFromParams;
+	// uid→pathの検索
+	const uidPathMap = reverseObjects(vaultObject.pathMap);
 
-	const postPathAbsolute = path.join(postDirPath, postPath);
+	// uidに一致すればそれを使用、しなければそのまま
+	const postPath =
+		uidPathMap[normalizePath(path.join(postsDirPath, pathFromParams))]?.replace(
+			postsDirPath,
+			"",
+		) ?? pathFromParams;
+
+	const postPathAbsolute = path.join("/", postsDirPath, postPath);
 	const tPost = vaultObject.posts.find((p) =>
 		isSamePath(p.path, postPathAbsolute),
 	);

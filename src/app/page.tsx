@@ -1,7 +1,7 @@
 import path from "node:path";
-import { postDirPath } from "@/constants/path";
+import { postsDirPath } from "@/features/metadata/constant";
 import { redirect } from "next/navigation";
 
 export default async function Page() {
-	redirect(path.join(postDirPath));
+	redirect(path.join("/", postsDirPath));
 }

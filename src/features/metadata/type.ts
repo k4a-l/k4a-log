@@ -36,7 +36,7 @@ export type TPostMetaData = {
 };
 
 /** key:path, value:uid */
-export type PathMap = Record<string, string | undefined>;
+export type PathMap = Record<string, string>;
 
 /**
  * ファイル単体で解決できる内容

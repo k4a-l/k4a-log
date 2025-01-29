@@ -1,6 +1,5 @@
 import { searchPath } from "@/app/search/util";
 import { NextLink, NextLinkButton } from "@/components/Link/NextLink";
-import { postDirPath } from "@/constants/path";
 import { getVaultObject } from "@/features/file/io";
 import {
 	MapPinHouseIcon,
@@ -13,6 +12,7 @@ import { css } from "styled-system/css";
 import { HStack, Spacer, Stack } from "styled-system/jsx";
 
 import path from "node:path";
+import { postsDirPath } from "@/features/metadata/constant";
 import { Link } from "@/park-ui/components/link";
 import { normalizePath } from "@/utils/path";
 import Fuse from "fuse.js";
@@ -94,51 +94,62 @@ export const PostNotFound = async ({ href: _href }: { href: string }) => {
 									my: 0,
 								})}
 							>
-								{result.map((r) => (
-									<li key={r.item.path}>
-										<Link
-											asChild
-											textAlign={"end"}
-											alignItems={"end"}
-											lineHeight={"1em"}
-											gap={1}
-											flexWrap={"wrap"}
-										>
-											<NextLink
-												href={path.join("/", normalizePath(r.item.path))}
+								{result.map((r) => {
+									const pathOrId =
+										vault.pathMap[normalizePath(r.item.path)] ?? r.item.path;
+									return (
+										<li key={r.item.path}>
+											<Link
+												asChild
+												textAlign={"end"}
+												alignItems={"end"}
+												lineHeight={"1em"}
+												gap={1}
+												flexWrap={"wrap"}
 											>
-												<span
-													className={css({
-														lineHeight: "1.4em",
-													})}
+												<NextLink
+													href={path.join("/", normalizePath(pathOrId))}
 												>
-													{r.item.metadata.frontmatter?.title ??
-														r.item.basename}
-												</span>
-												<span
-													className={css({
-														fontSize: "0.6em",
-														lineHeight: "1.8em",
-													})}
-												>
-													({normalizePath(r.item.path).replace(postDirPath, "")}
-													)
-												</span>
-											</NextLink>
-										</Link>
-									</li>
-								))}
+													<span
+														className={css({
+															lineHeight: "1.4em",
+														})}
+													>
+														{r.item.metadata.frontmatter?.title ??
+															r.item.basename}
+													</span>
+													<span
+														className={css({
+															fontSize: "0.6em",
+															lineHeight: "1.8em",
+														})}
+													>
+														(
+														{normalizePath(pathOrId)
+															.split("/")
+															.filter((p) => p !== postsDirPath)
+															.join("/")}
+														)
+													</span>
+												</NextLink>
+											</Link>
+										</li>
+									);
+								})}
 							</ul>
 						</HStack>
 					</Stack>
 				)}
 				<Spacer />
 				<HStack>
-					<NextLinkButton href={postDirPath} variant={"subtle"}>
+					<NextLinkButton
+						href={path.join("/", postsDirPath)}
+						variant={"subtle"}
+					>
 						<NotebookIcon />
 						トップページ
 					</NextLinkButton>
-					<NextLinkButton href={searchPath} variant={"subtle"}>
+					<NextLinkButton href={path.join("/", searchPath)} variant={"subtle"}>
 						<SearchIcon />
 						検索ページ
 					</NextLinkButton>

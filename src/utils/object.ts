@@ -9,3 +9,9 @@ export const strictFromEntries = <K extends string, T>(
 ): Record<K, T> => {
 	return Object.fromEntries(array) as Record<K, T>;
 };
+
+export const reverseObjects = <T extends Record<string, string>>(t: T) => {
+	return Object.fromEntries(
+		Object.entries(t).map(([key, value]) => [value, key]),
+	);
+};

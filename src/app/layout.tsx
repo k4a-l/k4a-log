@@ -5,13 +5,14 @@ import { getSearchPath } from "@/app/search/util";
 import { BookmarkDrawer } from "@/components/Bookmark";
 import { NextLink } from "@/components/Link/NextLink";
 import { SummarizeByYM } from "@/components/Summazize";
-import { postDirPath } from "@/constants/path";
 import { getBookmarkObject } from "@/features/file/io";
+import { postsDirPath } from "@/features/metadata/constant";
 import { Button } from "@/park-ui/components/button";
 import { Link } from "@/park-ui/components/link";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import { HashIcon, SearchIcon } from "lucide-react";
 import Image from "next/image";
+import path from "path-browserify";
 import type React from "react";
 import { css } from "styled-system/css";
 import { HStack, Spacer, Stack } from "styled-system/jsx";
@@ -57,7 +58,7 @@ export default async function RootLayout({
 					>
 						<BookmarkDrawer root={bookmark} />
 						<Link asChild>
-							<NextLink href={postDirPath}>
+							<NextLink href={path.join("/", postsDirPath)}>
 								<Image
 									src="/assets/logo.png"
 									alt="logo"

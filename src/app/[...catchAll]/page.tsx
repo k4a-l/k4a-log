@@ -1,6 +1,5 @@
 import path from "node:path";
-import { postDirPath } from "@/constants/path";
-import { blogDirPath } from "@/features/metadata/constant";
+import { blogDirPath, postsDirPath } from "@/features/metadata/constant";
 import { strictEntries, strictFromEntries } from "@/utils/object";
 import { normalizePath } from "@/utils/path";
 import { redirect } from "next/navigation";
@@ -42,7 +41,10 @@ const redirectMap: { [key: string]: string } = strictFromEntries(
 	strictEntries({
 		// 過去のブログ
 		...strictFromEntries(
-			oldBlogDirPaths.map((p) => [p, path.join(postDirPath, blogDirPath, p)]),
+			oldBlogDirPaths.map((p) => [
+				p,
+				path.join("/", postsDirPath, blogDirPath, p),
+			]),
 		),
 	} satisfies { [key: string]: string }).map(([k, v]) => [
 		normalizePath(k.toString()),
