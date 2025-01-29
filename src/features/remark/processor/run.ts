@@ -23,12 +23,12 @@ import remarkExtractFrontmatter from "remark-extract-frontmatter";
 import yaml from "yaml";
 import type { VFileData } from "../frontmatter";
 
-import type { TPostMetaData } from "@/features/metadata/type";
+import type { TNoteMetaData } from "@/features/metadata/type";
 import { remarkEmbedLinks } from "../link";
 import { syncTaskListIds } from "../list";
 
 export const createRunProcessor = (
-	metadata: Pick<TPostMetaData, "listItems">,
+	metadata: Pick<TNoteMetaData, "listItems">,
 	options?: {
 		excludeToc?: boolean;
 	},

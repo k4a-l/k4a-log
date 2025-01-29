@@ -9,7 +9,7 @@ import { normalizePath } from "@/utils/path";
 import path from "path-browserify";
 import { Stack } from "styled-system/jsx";
 
-export const BackLinks = ({ tPost }: { tPost: TNote }) => {
+export const BackLinks = ({ tNote }: { tNote: TNote }) => {
 	return (
 		<>
 			<p
@@ -27,7 +27,7 @@ export const BackLinks = ({ tPost }: { tPost: TNote }) => {
 					gap: 0,
 				})}
 			>
-				{tPost?.backLinks.map((bl) => (
+				{tNote?.backLinks.map((bl) => (
 					<Button
 						asChild
 						key={bl.path}
@@ -52,10 +52,10 @@ export const BackLinks = ({ tPost }: { tPost: TNote }) => {
 	);
 };
 
-export const TwoHopLinks = ({ tPost }: { tPost: TNote }) => {
+export const TwoHopLinks = ({ tNote }: { tNote: TNote }) => {
 	return (
 		<>
-			{tPost?.twoHopLinks.map((thl) => (
+			{tNote?.twoHopLinks.map((thl) => (
 				<Stack
 					key={thl.path}
 					className={css({

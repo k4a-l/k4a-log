@@ -26,7 +26,7 @@ type TTagMetaData = {
 	tag: string;
 };
 
-export type TPostMetaData = {
+export type TNoteMetaData = {
 	embeds: TEmbedMetaData[];
 	frontmatter: TFrontMatterMetaData;
 	headings: THeadingMetaData[];
@@ -55,7 +55,7 @@ export type TNoteIndependence = {
 	// 	mMSecFromUnix: number;
 	// 	byteSize: number;
 	// };
-	metadata: TPostMetaData;
+	metadata: TNoteMetaData;
 	thumbnailPath?: string;
 };
 
@@ -78,4 +78,4 @@ export type TVault = {
 	createdMap: YMMap;
 };
 
-export type MetaProps = { vault: TVault; post: TNote };
+export type MetaProps = { vault: TVault; note: TNote };

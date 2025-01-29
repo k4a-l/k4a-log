@@ -17,7 +17,7 @@ import { Link } from "@/park-ui/components/link";
 import { normalizePath } from "@/utils/path";
 import Fuse from "fuse.js";
 
-export const PostNotFound = async ({ href: _href }: { href: string }) => {
+export const NoteNotFound = async ({ href: _href }: { href: string }) => {
 	const href = decodeURIComponent(_href.split(/\\|\//).join("/"));
 	const vault = getVaultObject();
 

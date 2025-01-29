@@ -13,7 +13,7 @@ import type {
 	TListItemMetaData,
 	TNote,
 	TNoteIndependence,
-	TPostMetaData,
+	TNoteMetaData,
 	TVault,
 	YMMap,
 } from "@/features/metadata/type";
@@ -134,8 +134,8 @@ export const convertNodeToFileMetadata = (
 	node: Element | ElementContent | RootContent,
 	parentPosition: Position | undefined,
 	currentPath: string,
-): StrictOmit<TPostMetaData, "frontmatter"> => {
-	const r: StrictOmit<TPostMetaData, "frontmatter"> = {
+): StrictOmit<TNoteMetaData, "frontmatter"> => {
+	const r: StrictOmit<TNoteMetaData, "frontmatter"> = {
 		listItems: [],
 		tags: [],
 		links: [],
@@ -269,7 +269,7 @@ export const convertNodeToFileMetadata = (
 export const convertRootContentsToFileMetadata = (
 	contents: RootContent[],
 	currentPath: string,
-): TPostMetaData => {
+): TNoteMetaData => {
 	const children = contents.flatMap((c) =>
 		convertNodeToFileMetadata(c, undefined, currentPath),
 	);
@@ -291,7 +291,7 @@ export const convertRootContentsToFileMetadata = (
 	};
 };
 
-export const convertFileEntityToTPostIndependence = (
+export const convertFileEntityToTNoteIndependence = (
 	fileEntity: FileEntity,
 ): TNoteIndependence => {
 	const currentPath = normalizePath(path.join(notesDirPath, fileEntity.path));
@@ -340,7 +340,7 @@ export const convertFileEntityToTPostIndependence = (
 	return data;
 };
 
-export const injectAllLinksToTPostIndependence = (
+export const injectAllLinksToTNoteIndependence = (
 	iNotes: TNoteIndependence[],
 ): TNote[] => {
 	const notes = iNotes.map((p): TNote => {
@@ -387,25 +387,25 @@ export const injectAllLinksToTPostIndependence = (
 	 * 日本語で表すと、「同じfrontLinkを持つものを関連づけ、frontLink経由のtwoHopLinkとする」という感じ
 	 */
 
-	for (const post of notes) {
-		for (const link of [...post.metadata.links, ...post.metadata.embeds]) {
-			if (post.twoHopLinks?.find((thl) => thl.path === link.path)) continue;
+	for (const note of notes) {
+		for (const link of [...note.metadata.links, ...note.metadata.embeds]) {
+			if (note.twoHopLinks?.find((thl) => thl.path === link.path)) continue;
 			// .md以外の.**の場合は何もしない
 			if (hasExtensionButNotMD(link.path)) continue;
 
-			// 同じlinkを持つpostをまとめる
+			// 同じlinkを持つものをまとめる
 			const targets = notes.filter((p) => {
 				// おおもとのファイルと同じ場合は除外
-				if (isSamePath(post.path, p.path)) {
+				if (isSamePath(note.path, p.path)) {
 					return false;
 				}
 				return [...p.metadata.links, ...p.metadata.embeds].find((l) => {
 					// おおもとのファイルと同じ場合は除外
-					if (isSamePath(post.path, l.path)) {
+					if (isSamePath(note.path, l.path)) {
 						return false;
 					}
 					// backLinkに含まれていたら除外
-					if (post.backLinks.some((bl) => isSamePath(bl.path, l.path))) {
+					if (note.backLinks.some((bl) => isSamePath(bl.path, l.path))) {
 						return false;
 					}
 					// 画像なども除外
@@ -419,7 +419,7 @@ export const injectAllLinksToTPostIndependence = (
 			// twoHopLinksが空ならそもそも追加しない
 			if (!targets.length) continue;
 
-			post.twoHopLinks.push({
+			note.twoHopLinks.push({
 				links: targets.map((t) => ({
 					path: t.path,
 					title: t.basename,
@@ -480,8 +480,8 @@ export const createVaultFile = async (): Promise<TVault> => {
 	// 	JSON.stringify(flattened[0]?.root.children),
 	// );
 
-	const tiNotes = flattened.map((f) => convertFileEntityToTPostIndependence(f));
-	const tNotes = injectAllLinksToTPostIndependence(tiNotes);
+	const tiNotes = flattened.map((f) => convertFileEntityToTNoteIndependence(f));
+	const tNotes = injectAllLinksToTNoteIndependence(tiNotes);
 	const createdMap = createCreatedMap(tNotes);
 
 	return { notes: tNotes, pathMap, createdMap };

@@ -3,8 +3,8 @@ import { BookmarkInnerPart } from "@/components/Bookmark";
 import { PageWithTransition } from "@/components/Common/pageWithTransition";
 import { FrontMatter } from "@/components/FrontMatter";
 import { MyHead } from "@/components/Head";
-import { PostNotFound } from "@/components/Post/NotFound";
-import { BackLinks, TwoHopLinks } from "@/components/PostLink";
+import { NoteNotFound } from "@/components/Note/NotFound";
+import { BackLinks, TwoHopLinks } from "@/components/NoteLink";
 import { SideTableOfContents } from "@/components/Toc";
 import { getBookmarkObject, getVaultObject } from "@/features/file/io";
 import { assetsDirPath, notesDirPath } from "@/features/metadata/constant";
@@ -31,7 +31,7 @@ type Params = Promise<{ page: string[] | undefined }>;
 type Props = { params: Params };
 
 export default async function Page({ params }: Props) {
-	// 生の値取得→postDirはついてない
+	// 生の値取得→noteDirはついてない
 	const pathsFromParams = (await params).page ?? ["Index"];
 	const pathFromParams = path.join(...pathsFromParams);
 
@@ -42,40 +42,40 @@ export default async function Page({ params }: Props) {
 	const uidPathMap = reverseObjects(vaultObject.pathMap);
 
 	// uidに一致すればそれを使用、しなければそのまま
-	const postPath =
+	const notePath =
 		uidPathMap[normalizePath(path.join(notesDirPath, pathFromParams))]?.replace(
 			notesDirPath,
 			"",
 		) ?? pathFromParams;
 
-	const postPathAbsolute = path.join("/", notesDirPath, postPath);
-	const tPost = vaultObject.notes.find((p) =>
-		isSamePath(p.path, postPathAbsolute),
+	const notePathAbsolute = path.join("/", notesDirPath, notePath);
+	const tNote = vaultObject.notes.find((p) =>
+		isSamePath(p.path, notePathAbsolute),
 	);
 
-	if (!tPost) return <PostNotFound href={pathFromParams} />;
+	if (!tNote) return <NoteNotFound href={pathFromParams} />;
 
 	// このファイルの事前準備
 	const fileTrees = createFileTrees(directoryPath);
-	const parseProcessor = createParseProcessor(fileTrees, [postPath]);
+	const parseProcessor = createParseProcessor(fileTrees, [notePath]);
 	const runProcessor = createRunProcessor({
-		listItems: tPost.metadata.listItems,
+		listItems: tNote.metadata.listItems,
 	});
 	const stringifyProcessor = createStringifyProcessor({
 		pathMap: vaultObject.pathMap,
-		meta: { vault: vaultObject, post: tPost },
+		meta: { vault: vaultObject, note: tNote },
 	});
 
 	// 実行
 	const fileData = getFileContent(
-		postPath.split(/\\|\//),
+		notePath.split(/\\|\//),
 		directoryPath,
 		parseProcessor,
 		runProcessor,
 		stringifyProcessor,
 	);
 
-	if (!fileData) return <PostNotFound href={pathFromParams} />;
+	if (!fileData) return <NoteNotFound href={pathFromParams} />;
 	// データ加工
 	const { frontmatter } = fileData.data;
 
@@ -88,11 +88,11 @@ export default async function Page({ params }: Props) {
 			<Client />
 			<MyHead
 				title={title}
-				description={tPost.metadata.frontmatter?.description || ""}
+				description={tNote.metadata.frontmatter?.description || ""}
 				imagePath={
-					tPost.metadata.frontmatter?.thumbnailPath || tPost.thumbnailPath
+					tNote.metadata.frontmatter?.thumbnailPath || tNote.thumbnailPath
 				}
-				url={postPathAbsolute}
+				url={notePathAbsolute}
 				keywords={[]}
 			/>
 
@@ -123,10 +123,10 @@ export default async function Page({ params }: Props) {
 							{title}
 						</div>
 						{frontmatter ? <FrontMatter frontmatter={frontmatter} /> : null}
-						<div className="md-post-container">{fileData.content}</div>
+						<div className="md-note-container">{fileData.content}</div>
 					</Stack>
 					<Spacer h={4} />
-					{tPost?.backLinks.length ? (
+					{tNote?.backLinks.length ? (
 						<Stack
 							className={css({
 								bg: "white",
@@ -135,10 +135,10 @@ export default async function Page({ params }: Props) {
 								gap: 2,
 							})}
 						>
-							<BackLinks tPost={tPost} />
+							<BackLinks tNote={tNote} />
 						</Stack>
 					) : null}
-					{tPost?.twoHopLinks.length ? (
+					{tNote?.twoHopLinks.length ? (
 						<Stack
 							className={css({
 								bg: "white",
@@ -147,7 +147,7 @@ export default async function Page({ params }: Props) {
 								gap: 2,
 							})}
 						>
-							<TwoHopLinks tPost={tPost} />
+							<TwoHopLinks tNote={tNote} />
 						</Stack>
 					) : null}
 				</Stack>

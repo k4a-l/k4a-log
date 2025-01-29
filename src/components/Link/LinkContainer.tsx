@@ -65,7 +65,7 @@ export const EmbedLinkContainer: FC<
 	type,
 	pathMap,
 	vault,
-	post,
+	note,
 	...props
 }) => {
 	const { href, children, title, alias, ...others } = props;
@@ -93,13 +93,13 @@ export const EmbedLinkContainer: FC<
 
 		const remarkProcessor = createParseProcessor(fileTrees, parentLinksArr);
 		const rehypeProcessor = createRunProcessor({
-			listItems: post.metadata.listItems,
+			listItems: note.metadata.listItems,
 		});
 		const stringifyProcessor = createStringifyProcessor({
 			pathMap,
 			meta: {
 				vault,
-				post,
+				note: note,
 			},
 		});
 		const data = getFileContent(

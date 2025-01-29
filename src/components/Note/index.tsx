@@ -1,1 +1,1 @@
-export { PostNotFound as NotFound } from "./NotFound";
+export { NoteNotFound as NotFound } from "./NotFound";

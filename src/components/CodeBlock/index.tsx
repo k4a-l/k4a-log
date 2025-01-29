@@ -12,7 +12,7 @@ import type { MetaProps } from "@/features/metadata/type";
 export const CodeBlock = (
 	props: PropsWithChildren<HTMLElement & MetaProps>,
 ) => {
-	const { children, className, vault, post } = props;
+	const { children, className, vault, note } = props;
 
 	const language = className?.match(/language-(\w+)/)?.[1];
 
@@ -81,7 +81,7 @@ export const CodeBlock = (
 				<DynamicK4aReactCode
 					markdown={children as string}
 					vault={vault}
-					post={post}
+					note={note}
 				/>
 			</div>
 		);

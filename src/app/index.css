@@ -55,7 +55,7 @@
 		transition: background-color 0.5s ease; /* 背景色が滑らかに変化 */
 	}
 
-	.md-post-container {
+	.md-note-container {
 		ol ol,
 		ul ul,
 		ol ul,

@@ -72,17 +72,17 @@ export const searchAPI = new Hono<BlankEnv, BlankInput, "/">().get(
 
 					const { year: targetYear, month: targetMonth } =
 						fromDateParamString(created) ?? {};
-					const postCreatedDate = new Date(p.metadata.frontmatter.created);
+					const createdDate = new Date(p.metadata.frontmatter.created);
 
 					if (!targetYear) {
 						return true;
 					}
-					if (targetYear !== postCreatedDate.getFullYear()) {
+					if (targetYear !== createdDate.getFullYear()) {
 						return false;
 					}
 
 					if (targetMonth) {
-						return targetMonth === postCreatedDate.getMonth() + 1;
+						return targetMonth === createdDate.getMonth() + 1;
 					}
 
 					return true;

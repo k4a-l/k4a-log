@@ -1,4 +1,4 @@
-import type { TPostMetaData } from "@/features/metadata/type";
+import type { TNoteMetaData } from "@/features/metadata/type";
 import type { Root } from "node_modules/remark-parse/lib";
 import type { Plugin } from "unified";
 import { visit } from "unist-util-visit";
@@ -6,7 +6,7 @@ import { visit } from "unist-util-visit";
 export const syncTaskListIds: Plugin<
 	[
 		{
-			taskListMetadata: TPostMetaData["listItems"];
+			taskListMetadata: TNoteMetaData["listItems"];
 		},
 	]
 > = function syncTaskListIds(this, { taskListMetadata }) {

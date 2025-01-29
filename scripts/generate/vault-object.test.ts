@@ -5,7 +5,7 @@ import fs from "node:fs";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { notesDirPath } from "@/features/metadata/constant";
-import type { TPostMetaData } from "@/features/metadata/type";
+import type { TNoteMetaData } from "@/features/metadata/type";
 import { expect, test } from "vitest";
 import {
 	convertRootContentsToFileMetadata,
@@ -23,7 +23,7 @@ test("1", () => {
 		parsedJson,
 		`/${notesDirPath}/tests/SOME.md`,
 	);
-	const expected: TPostMetaData = {
+	const expected: TNoteMetaData = {
 		embeds: [
 			{
 				title: "COMMON",

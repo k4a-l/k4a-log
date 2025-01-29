@@ -100,7 +100,7 @@ export const getFrontMatters = (obj: Record<string, unknown>): FrontMatter => {
 const specialId = {
 	"{dirname}": {
 		matcher: (file) =>
-			// TODO: postから始まるpathと、それ以降から始まるpathが混在している
+			// TODO: noteから始まるpathと、それ以降から始まるpathが混在している
 			file.path.startsWith(normalizePath(path.join("/", blogDirPath))) ||
 			file.path.startsWith(
 				normalizePath(path.join("/", notesDirPath, blogDirPath)),
