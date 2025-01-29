@@ -92,6 +92,7 @@ export const TwoHopLinks = ({ tPost }: { tPost: TPost }) => {
 							p={{ md: 2, base: 1 }}
 							ml={"2em"}
 							textDecoration={"none"}
+							textWrap={"wrap"}
 						>
 							<NextLink href={path.join("/", normalizePath(l.path))}>
 								<Link2Icon />

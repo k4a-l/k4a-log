@@ -275,6 +275,7 @@
 	blockquote[data-callout="chat1"],
 	blockquote[data-callout="chat2"] {
 		all: revert;
+		margin: 0;
 		& > * {
 			all: revert;
 		}
@@ -307,6 +308,7 @@
 	blockquote[data-callout="chat1"] {
 		--color_chat1: var(--color-default-bg);
 		justify-content: flex-end;
+		margin-right: 22px;
 
 		.callout-content {
 			background: var(--color_chat1);
@@ -325,6 +327,7 @@
 	blockquote[data-callout="chat2"] {
 		--color_chat2: var(--color-success-fg);
 		justify-content: flex-start;
+		margin-left: 22px;
 
 		.callout-content {
 			background: var(--color_chat2);
