@@ -1,13 +1,13 @@
-import type { TNote } from "@/features/metadata/type";
-import { Button } from "@/park-ui/components/button";
 import { FileIcon, Link2Icon } from "lucide-react";
-import { css } from "styled-system/css";
+import path from "path-browserify";
 
 import { NextLink } from "@/components/Link/NextLink";
-
+import { Button } from "@/park-ui/components/button";
 import { normalizePath } from "@/utils/path";
-import path from "path-browserify";
+import { css } from "styled-system/css";
 import { Stack } from "styled-system/jsx";
+
+import type { TNote } from "@/features/metadata/type";
 
 export const BackLinks = ({ tNote }: { tNote: TNote }) => {
 	return (
@@ -30,16 +30,16 @@ export const BackLinks = ({ tNote }: { tNote: TNote }) => {
 				{tNote?.backLinks.map((bl) => (
 					<Button
 						asChild
-						key={bl.path}
-						variant={"ghost"}
-						size={{ md: "md", base: "sm" }}
 						fontWeight={"normal"}
-						justifyContent={"start"}
-						rounded={"sm"}
 						height={"auto"}
+						justifyContent={"start"}
+						key={bl.path}
 						p={{ md: 2, base: 1 }}
+						rounded={"sm"}
+						size={{ md: "md", base: "sm" }}
 						textDecoration={"none"}
 						textWrap={"wrap"}
+						variant={"ghost"}
 					>
 						<NextLink href={path.join("/", normalizePath(bl.path))}>
 							<FileIcon />
@@ -57,22 +57,22 @@ export const TwoHopLinks = ({ tNote }: { tNote: TNote }) => {
 		<>
 			{tNote?.twoHopLinks.map((thl) => (
 				<Stack
-					key={thl.path}
 					className={css({
 						gap: 0,
 					})}
+					key={thl.path}
 				>
 					<Button
 						asChild
-						key={thl.path}
-						variant={"ghost"}
-						size={{ md: "md", base: "sm" }}
-						justifyContent={"start"}
-						rounded={"sm"}
 						height={"auto"}
+						justifyContent={"start"}
+						key={thl.path}
 						p={{ md: 2, base: 1 }}
+						rounded={"sm"}
+						size={{ md: "md", base: "sm" }}
 						textDecoration={"none"}
 						textWrap={"wrap"}
+						variant={"ghost"}
 					>
 						<NextLink href={path.join("/", normalizePath(thl.path))}>
 							<FileIcon />
@@ -82,17 +82,17 @@ export const TwoHopLinks = ({ tNote }: { tNote: TNote }) => {
 					{thl.links.map((l) => (
 						<Button
 							asChild
-							key={l.path}
-							variant={"ghost"}
-							size={{ md: "md", base: "sm" }}
 							fontWeight={"normal"}
-							justifyContent={"start"}
-							rounded={"sm"}
 							height={"auto"}
-							p={{ md: 2, base: 1 }}
+							justifyContent={"start"}
+							key={l.path}
 							ml={"2em"}
+							p={{ md: 2, base: 1 }}
+							rounded={"sm"}
+							size={{ md: "md", base: "sm" }}
 							textDecoration={"none"}
 							textWrap={"wrap"}
+							variant={"ghost"}
 						>
 							<NextLink href={path.join("/", normalizePath(l.path))}>
 								<Link2Icon />

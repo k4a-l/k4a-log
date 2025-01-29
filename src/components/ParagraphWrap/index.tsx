@@ -1,6 +1,7 @@
-import type { PropsWithChildren } from "react";
 import { css } from "styled-system/css";
 import { Box } from "styled-system/jsx";
+
+import type { PropsWithChildren } from "react";
 
 export const ParagraphWrap = ({ children }: PropsWithChildren) => {
 	return (

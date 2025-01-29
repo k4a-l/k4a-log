@@ -1,9 +1,11 @@
+import { Hash } from "lucide-react";
+
 import { getSearchPath } from "@/app/search/util";
 import { Button } from "@/park-ui/components/button";
 import { Link } from "@/park-ui/components/link";
-import { Hash } from "lucide-react";
-import type { AnchorHTMLAttributes } from "react";
 import { css } from "styled-system/css";
+
+import type { AnchorHTMLAttributes } from "react";
 
 export const Hashtag = ({
 	children,
@@ -11,13 +13,13 @@ export const Hashtag = ({
 }: AnchorHTMLAttributes<HTMLAnchorElement> & { href: string }) => {
 	return (
 		<Button
-			size={{ base: "xs", sm: "sm" }}
 			asChild
-			py={1}
-			px={"0.8em"}
 			colorPalette={"blue"}
-			variant={"subtle"}
 			fontSize={{ base: "0.5em", sm: "0.8em" }}
+			px={"0.8em"}
+			py={1}
+			size={{ base: "xs", sm: "sm" }}
+			variant={"subtle"}
 		>
 			<Link
 				className={css({

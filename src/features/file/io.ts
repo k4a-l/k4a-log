@@ -1,10 +1,12 @@
 // biome-ignore lint/style/useNodejsImportProtocol: <explanation> なんかここだけnode:をつけるとwebpackエラーが出る
 import { readFileSync } from "fs";
-import type { BookMarkRoot } from "@/components/Bookmark";
+
 import {
 	bookmarkFilePath,
 	vaultMetadataFilePath,
 } from "@/features/metadata/constant";
+
+import type { BookMarkRoot } from "@/components/Bookmark";
 import type { TVault } from "@/features/metadata/type";
 
 export const getVaultObject = (): TVault => {

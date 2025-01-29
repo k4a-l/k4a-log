@@ -1,11 +1,11 @@
+import { u } from "unist-builder";
 import { visit } from "unist-util-visit";
+
+import { splitByHashtag } from "./util";
 
 import type { Root } from "mdast";
 import type { Handler } from "mdast-util-to-hast";
-import { u } from "unist-builder";
-
 import type { Plugin } from "unified";
-import { splitByHashtag } from "./util";
 
 export const hashTagHandler: Handler = (_h: unknown, node) => {
 	return {

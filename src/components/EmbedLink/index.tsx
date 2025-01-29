@@ -1,15 +1,16 @@
+import { YouTubeEmbed } from "@next/third-parties/google";
+import metaFetcher from "meta-fetcher";
 import { ErrorBoundary } from "react-error-boundary";
+
+import { css } from "styled-system/css";
+import { Stack } from "styled-system/jsx";
+
 import {
 	EmbeddedCardError,
 	EmbeddedCardPresentational,
 } from "./Presentational";
 
-import metaFetcher from "meta-fetcher";
-
-import { YouTubeEmbed } from "@next/third-parties/google";
 import type { AnchorHTMLAttributes, PropsWithChildren } from "react";
-import { css } from "styled-system/css";
-import { Stack } from "styled-system/jsx";
 
 const EmbeddedLinkWithBoundary = async ({
 	href,
@@ -36,14 +37,14 @@ const EmbeddedLink = async ({
 		if (id) {
 			return (
 				<Stack>
-					<YouTubeEmbed videoid={id} height={400} params="controls=1" />
+					<YouTubeEmbed height={400} params="controls=1" videoid={id} />
 					<a
-						href={url}
-						target="blank"
 						className={css({
 							fontSize: "0.5em",
 							color: "",
 						})}
+						href={url}
+						target="blank"
 					>
 						{children}
 					</a>
@@ -56,12 +57,12 @@ const EmbeddedLink = async ({
 
 	return (
 		<EmbeddedCardPresentational
-			url={url}
-			title={metadata.metadata.title}
-			description={metadata.metadata.description}
-			website={metadata.metadata.website}
 			banner={metadata.metadata.banner}
+			description={metadata.metadata.description}
 			favicons={metadata.favicons}
+			title={metadata.metadata.title}
+			url={url}
+			website={metadata.metadata.website}
 		/>
 	);
 };

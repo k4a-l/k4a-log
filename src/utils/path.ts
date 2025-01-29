@@ -1,5 +1,6 @@
-import { notesDirPath } from "@/features/metadata/constant";
 import path from "path-browserify";
+
+import { notesDirPath } from "@/features/metadata/constant";
 
 /**
  * @see {@link normalizePath}

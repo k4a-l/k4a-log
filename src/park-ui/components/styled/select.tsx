@@ -1,9 +1,11 @@
 'use client'
-import type { Assign } from '@ark-ui/react'
 import { Select } from '@ark-ui/react/select'
 import { type SelectVariantProps, select } from 'styled-system/recipes'
-import type { ComponentProps, HTMLStyledProps } from 'styled-system/types'
+
 import { createStyleContext } from './utils/create-style-context'
+
+import type { Assign } from '@ark-ui/react'
+import type { ComponentProps, HTMLStyledProps } from 'styled-system/types'
 
 const { withProvider, withContext } = createStyleContext(select)
 

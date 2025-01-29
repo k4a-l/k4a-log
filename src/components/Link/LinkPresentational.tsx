@@ -1,8 +1,7 @@
 "use client";
 
-import { NextLink } from "@/components/Link/NextLink";
-import type { WikiLinkData } from "@/types/mdast";
-
+import { Link as LinkIcons } from "lucide-react";
+import path from "path-browserify";
 import {
 	type FC,
 	type PropsWithChildren,
@@ -10,17 +9,18 @@ import {
 	useRef,
 	useState,
 } from "react";
-import { css } from "styled-system/css";
-import { HStack, Stack } from "styled-system/jsx";
 
 import { getSearchPath } from "@/app/search/util";
+import { NextLink } from "@/components/Link/NextLink";
 import { embedMarkdownClass } from "@/components/Toc";
-import type { PathMap } from "@/features/metadata/type";
 import { IconButton } from "@/park-ui/components/icon-button";
 import { Link } from "@/park-ui/components/link";
 import { normalizePath } from "@/utils/path";
-import { Link as LinkIcons } from "lucide-react";
-import path from "path-browserify";
+import { css } from "styled-system/css";
+import { HStack, Stack } from "styled-system/jsx";
+
+import type { PathMap } from "@/features/metadata/type";
+import type { WikiLinkData } from "@/types/mdast";
 import type { StrictOmit } from "ts-essentials";
 
 type LinkPresentationalType = StrictOmit<
@@ -64,7 +64,7 @@ export const TransitionLinkExist: FC<MDLinkPresentationalType> = ({
 	);
 };
 
-const EmbedLinkNotFound = ({ title }: { title: string }) => {
+export const EmbedLinkNotFound = ({ title }: { title: string }) => {
 	return (
 		<span
 			className={css({
@@ -77,7 +77,7 @@ const EmbedLinkNotFound = ({ title }: { title: string }) => {
 				fontWeight: "light",
 			})}
 		>
-			"{title}" が存在しません
+			&quot;{title}&quot; が存在しません
 		</span>
 	);
 };
@@ -89,24 +89,20 @@ export const EmbedLinkImage: FC<PropsWithChildren<LinkPresentationalType>> = ({
 	children,
 	...others
 }) => {
-	if (!href) {
-		return <EmbedLinkNotFound title={title} />;
-	}
-
 	const size = Number(alias);
 
 	return (
 		<img
 			{...others}
-			src={href || ":"}
-			loading={"lazy"}
 			alt={title}
-			style={{ width: Number.isNaN(size) ? "auto" : size }}
 			className={css({
 				maxW: "100%",
 				objectFit: "contain",
 				w: "auto",
 			})}
+			loading={"lazy"}
+			src={href || ":"}
+			style={{ width: Number.isNaN(size) ? "auto" : size }}
 		/>
 	);
 };
@@ -118,21 +114,17 @@ export const EmbedLinkVideo: FC<PropsWithChildren<LinkPresentationalType>> = ({
 	children,
 	...others
 }) => {
-	if (!href) {
-		return <EmbedLinkNotFound title={title} />;
-	}
-
 	return (
 		<video
 			{...others}
-			controls
-			preload="metadata"
-			poster=""
-			src={href || ":"}
 			className={css({
 				maxW: "100%",
 				objectFit: "contain",
 			})}
+			controls
+			poster=""
+			preload="metadata"
+			src={href || ":"}
 		/>
 	);
 };
@@ -144,10 +136,6 @@ export const EmbedLinkPdf: FC<PropsWithChildren<LinkPresentationalType>> = ({
 	children,
 	...others
 }) => {
-	if (!href) {
-		return <EmbedLinkNotFound title={title} />;
-	}
-
 	const iframeRef = useRef<HTMLIFrameElement>(null);
 	const [iframeHeight, setIframeHeight] = useState<number>(500); // 初期高さを500pxに設定
 
@@ -176,10 +164,10 @@ export const EmbedLinkPdf: FC<PropsWithChildren<LinkPresentationalType>> = ({
 	return (
 		<iframe
 			{...others}
-			src={href || ":"}
-			loading="lazy"
 			className={css({ w: "100%", maxH: "1000px" })}
+			loading="lazy"
 			ref={iframeRef}
+			src={href || ":"}
 			style={{ height: `${iframeHeight}px` }}
 		/>
 	);
@@ -208,13 +196,13 @@ export const EmbedLinkMarkdown: FC<MDLinkPresentationalType> = ({
 			my={4}
 		>
 			<HStack
-				justifyContent={"space-between"}
 				className={css({
 					borderBottomWidth: "1",
 					borderBottomColor: "gray.3",
 					px: 2,
 					py: 1,
 				})}
+				justifyContent={"space-between"}
 			>
 				<span
 					className={css({
@@ -224,7 +212,7 @@ export const EmbedLinkMarkdown: FC<MDLinkPresentationalType> = ({
 				>
 					{alias ?? title}
 				</span>
-				<IconButton asChild color="blue.10" variant={"ghost"} size="sm">
+				<IconButton asChild color="blue.10" size="sm" variant={"ghost"}>
 					<NextLink href={pathOrId}>
 						<LinkIcons size={"1em"} />
 					</NextLink>

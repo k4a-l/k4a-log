@@ -1,7 +1,8 @@
+import { visit } from "unist-util-visit";
+
 import type { TNoteMetaData } from "@/features/metadata/type";
 import type { Root } from "node_modules/remark-parse/lib";
 import type { Plugin } from "unified";
-import { visit } from "unist-util-visit";
 
 export const syncTaskListIds: Plugin<
 	[

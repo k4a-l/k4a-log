@@ -1,12 +1,14 @@
-import { Box, HStack } from "styled-system/jsx";
+import { PenIcon, RotateCwIcon } from "lucide-react";
 
 import { getSearchPath } from "@/app/search/util";
 import { NextLink } from "@/components/Link/NextLink";
-import type { VFileData } from "@/features/remark/frontmatter";
 import { Link } from "@/park-ui/components/link";
 import { toYYYYMMDD } from "@/utils/date";
-import { PenIcon, RotateCwIcon } from "lucide-react";
+import { Box, HStack } from "styled-system/jsx";
+
 import { getFileDate } from "./util";
+
+import type { VFileData } from "@/features/remark/frontmatter";
 
 export const FrontMatter = ({
 	frontmatter,
@@ -20,7 +22,7 @@ export const FrontMatter = ({
 	const updateDateYMD = toYYYYMMDD((created || updated) as Date);
 
 	return (
-		<HStack justifyContent={"end"} fontSize={"0.8em"} alignItems={"start"}>
+		<HStack alignItems={"start"} fontSize={"0.8em"} justifyContent={"end"}>
 			{createdDateYMD ? (
 				<Box>
 					<Link asChild color={"blue.10"} gap={1}>
@@ -32,10 +34,10 @@ export const FrontMatter = ({
 				</Box>
 			) : null}
 			{updateDateYMD ? (
-				<HStack fontSize={"1em"} gap={1} color="gray.10">
+				<HStack color="gray.10" fontSize={"1em"} gap={1}>
 					{/* <Link asChild color={"blue.10"} gap={1}> */}
 					{/* <NextLink href={getSearchPath({ created: createdDateYMD })}> */}
-					<RotateCwIcon width={"1em"} height={"1em"} />
+					<RotateCwIcon height={"1em"} width={"1em"} />
 					{updateDateYMD}
 					{/* </NextLink> */}
 					{/* </Link> */}

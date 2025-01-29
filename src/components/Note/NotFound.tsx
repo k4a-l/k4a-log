@@ -1,6 +1,6 @@
-import { searchPath } from "@/app/search/util";
-import { NextLink, NextLinkButton } from "@/components/Link/NextLink";
-import { getVaultObject } from "@/features/file/io";
+import path from "node:path";
+
+import Fuse from "fuse.js";
 import {
 	MapPinHouseIcon,
 	MessageCircleQuestionIcon,
@@ -8,14 +8,15 @@ import {
 	RabbitIcon,
 	SearchIcon,
 } from "lucide-react";
-import { css } from "styled-system/css";
-import { HStack, Spacer, Stack } from "styled-system/jsx";
 
-import path from "node:path";
+import { searchPath } from "@/app/search/util";
+import { NextLink, NextLinkButton } from "@/components/Link/NextLink";
+import { getVaultObject } from "@/features/file/io";
 import { notesDirPath } from "@/features/metadata/constant";
 import { Link } from "@/park-ui/components/link";
 import { normalizePath } from "@/utils/path";
-import Fuse from "fuse.js";
+import { css } from "styled-system/css";
+import { HStack, Spacer, Stack } from "styled-system/jsx";
 
 export const NoteNotFound = async ({ href: _href }: { href: string }) => {
 	const href = decodeURIComponent(_href.split(/\\|\//).join("/"));
@@ -34,9 +35,7 @@ export const NoteNotFound = async ({ href: _href }: { href: string }) => {
 
 	return (
 		<HStack
-			justifyContent={"center"}
 			alignItems={"start"}
-			w="100%"
 			className={`${css({
 				fontSize: { sm: "1em", base: "0.8em" },
 				"& > *": {
@@ -45,12 +44,14 @@ export const NoteNotFound = async ({ href: _href }: { href: string }) => {
 				},
 			})}, `}
 			h="100%"
+			justifyContent={"center"}
+			w="100%"
 		>
 			<Stack
 				bg="white"
+				maxW={"max(1000px,100%)"}
 				p={4}
 				rounded={"md"}
-				maxW={"max(1000px,100%)"}
 				w={"1000px"}
 			>
 				<HStack alignItems={"end"}>
@@ -71,7 +72,7 @@ export const NoteNotFound = async ({ href: _href }: { href: string }) => {
 				<p>「{href}」ページが見つかりませんでした</p>
 				{result.length !== 0 && (
 					<Stack gap={1}>
-						<HStack gap={1} alignItems={"end"}>
+						<HStack alignItems={"end"} gap={1}>
 							<MapPinHouseIcon />
 							<span
 								className={css({
@@ -82,10 +83,10 @@ export const NoteNotFound = async ({ href: _href }: { href: string }) => {
 							</span>
 						</HStack>
 						<HStack
-							flexWrap={"wrap"}
-							borderWidth={"1px"}
-							borderRadius={"md"}
 							borderColor={"gray.3"}
+							borderRadius={"md"}
+							borderWidth={"1px"}
+							flexWrap={"wrap"}
 							p={2}
 						>
 							<ul
@@ -100,12 +101,12 @@ export const NoteNotFound = async ({ href: _href }: { href: string }) => {
 									return (
 										<li key={r.item.path}>
 											<Link
-												asChild
-												textAlign={"end"}
 												alignItems={"end"}
-												lineHeight={"1em"}
-												gap={1}
+												asChild
 												flexWrap={"wrap"}
+												gap={1}
+												lineHeight={"1em"}
+												textAlign={"end"}
 											>
 												<NextLink
 													href={path.join("/", normalizePath(pathOrId))}

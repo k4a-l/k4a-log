@@ -1,7 +1,9 @@
 import path from "node:path";
+
 import { blogDirPath, notesDirPath } from "@/features/metadata/constant";
 import { strictEntries, strictFromEntries } from "@/utils/object";
 import { normalizePath } from "@/utils/path";
+
 import type { Result } from "mdast-util-toc";
 
 type YAMLValue = string | number | boolean | null | YAMLObject | YAMLArray;

@@ -1,10 +1,12 @@
+import path from "path-browserify";
+
 import { NextLink, NextLinkButton } from "@/components/Link/NextLink";
-import type { MetaProps } from "@/features/metadata/type";
 import { Link } from "@/park-ui/components/link";
 import { normalizePath } from "@/utils/path";
-import path from "path-browserify";
-import type { PropsWithChildren } from "react";
 import { HStack, Stack } from "styled-system/jsx";
+
+import type { MetaProps } from "@/features/metadata/type";
+import type { PropsWithChildren } from "react";
 
 type Props = { tag: string[] };
 
@@ -30,21 +32,21 @@ export const ReactViewTaskList = ({
 						</Link>
 						{p.tasks.map((t, i) => (
 							<NextLinkButton
-								size="sm"
+								borderRadius={"none"}
+								color={"inherit"}
 								fontSize={"inherit"}
+								fontWeight={"normal"}
 								height="auto"
+								href={path.join("/", normalizePath(p.path), `#${t.id}`)}
+								justifyContent={"start"}
 								// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
 								key={i}
-								color={"inherit"}
-								href={path.join("/", normalizePath(p.path), `#${t.id}`)}
-								variant={"ghost"}
-								justifyContent={"start"}
-								borderRadius={"none"}
-								fontWeight={"normal"}
+								size="sm"
 								textDecoration={"none"}
+								variant={"ghost"}
 							>
 								<HStack gap={2}>
-									<input type="checkbox" checked={t.task === "x"} readOnly />{" "}
+									<input checked={t.task === "x"} readOnly type="checkbox" />{" "}
 									{t.text}
 								</HStack>
 							</NextLinkButton>

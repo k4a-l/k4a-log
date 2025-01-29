@@ -43,7 +43,7 @@ export const SummarizeByYM = async () => {
 						if (!yearCount) return;
 
 						return (
-							<Stack key={yKey} gap={0} pb={2}>
+							<Stack gap={0} key={yKey} pb={2}>
 								<li>
 									<Link asChild>
 										<NextLink

@@ -1,8 +1,11 @@
 import path from "node:path";
+
+import { redirect } from "next/navigation";
+
 import { blogDirPath, notesDirPath } from "@/features/metadata/constant";
 import { strictEntries, strictFromEntries } from "@/utils/object";
 import { normalizePath } from "@/utils/path";
-import { redirect } from "next/navigation";
+
 import NotFound from "../notFound";
 
 const oldBlogDirPaths = [

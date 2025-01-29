@@ -1,5 +1,7 @@
-import { notesDirPath } from "@/features/metadata/constant";
 import { describe, expect, test } from "vitest";
+
+import { notesDirPath } from "@/features/metadata/constant";
+
 import { type FileTree, createFileTrees, findClosest } from "./util";
 
 const TEST_FILE_TREE: FileTree[] = [

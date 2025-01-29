@@ -1,5 +1,6 @@
-import { normalizePath } from "@/utils/path";
 import path from "path-browserify";
+
+import { normalizePath } from "@/utils/path";
 
 interface MyHeadProps {
 	title: string;
@@ -40,25 +41,25 @@ export const MyHead = ({
 				/> */}
 			{/* <!-- 一般的なタグ --> */}
 			<meta
-				name="viewport"
 				content="width=device-width,initial-scale=1,shrink-to-fit=no"
+				name="viewport"
 			/>
-			<meta name="description" content={description} />
-			<meta name="keywords" content={keywords.join(",")} />
+			<meta content={description} name="description" />
+			<meta content={keywords.join(",")} name="keywords" />
 			{/* <!-- 設定 --> */}
 			<meta
-				name="format-detection"
 				content="telephone=no,email=no,address=no"
+				name="format-detection"
 			/>
 			{/* <!-- SNS向け --> */}
-			<meta property="og:type" content="website" />
-			<meta property="og:title" content={title} key="title" />
-			<meta property="og:description" content={description} />
-			<meta property="og:url" content={url} />
-			<meta property="og:image" content={imagePath} />
-			<meta property="og:site_name" content="EXP Map" />
-			<meta name="twitter:card" content={"summary"} />
-			<meta name="twitter:image" content={imagePath} />
+			<meta content="website" property="og:type" />
+			<meta content={title} key="title" property="og:title" />
+			<meta content={description} property="og:description" />
+			<meta content={url} property="og:url" />
+			<meta content={imagePath} property="og:image" />
+			<meta content="EXP Map" property="og:site_name" />
+			<meta content={"summary"} name="twitter:card" />
+			<meta content={imagePath} name="twitter:image" />
 			{/* <meta name="twitter:title" content={title} /> */}
 			{/* <meta name="twitter:description" content={description} /> */}
 			{/* <meta name="twitter:image" content={imagePath} /> */}
@@ -66,11 +67,11 @@ export const MyHead = ({
 			{/* <meta name="twitter:site" content="@{{ twitter id }}" />
 				<meta name="twitter:creator" content="@{{ twitter id }}" /> */}
 			{/* <!-- アイコン関係 --> */}
-			<link rel="icon" type="shortcut icon" href="/favicon.ico" />
+			<link href="/favicon.ico" rel="icon" type="shortcut icon" />
 			<link
+				href="/assets/common/apple-touch-icon.png"
 				rel="apple-touch-icon"
 				sizes="180x180"
-				href="/assets/common/apple-touch-icon.png"
 			/>
 			{/* <!-- Windows --> */}
 			{/* TODO: 設定 */}
@@ -78,7 +79,7 @@ export const MyHead = ({
 			{/* <!-- Android --> */}
 			{/* TODO: 設定 */}
 			{/* <meta name="theme-color" content="{{ color }}" /> */}
-			<link rel="canonical" href={url} />
+			<link href={url} rel="canonical" />
 			{/* </Head> */}
 		</>
 	);

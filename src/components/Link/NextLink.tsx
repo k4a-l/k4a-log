@@ -1,5 +1,7 @@
-import { Button } from "@/park-ui/components/button";
 import Link from "next/link";
+
+import { Button } from "@/park-ui/components/button";
+
 import type { ComponentProps } from "react";
 import type { StrictOmit } from "ts-essentials";
 
@@ -23,7 +25,7 @@ export const NextLinkButton = (
 	}
 
 	return (
-		<Button textDecoration={"none"} fontWeight={"normal"} {...others} asChild>
+		<Button fontWeight={"normal"} textDecoration={"none"} {...others} asChild>
 			<NextLink href={props.href}>{children}</NextLink>
 		</Button>
 	);

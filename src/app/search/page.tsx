@@ -4,6 +4,7 @@ import { getVaultObject } from "@/features/file/io";
 import { IS_PRODUCTION } from "@/utils/env";
 import { isTestDirPath } from "@/utils/path";
 import { Stack } from "styled-system/jsx";
+
 import { SearchPresentation } from "./SearchPresentation";
 import { type SearchQuery, searchPath } from "./util";
 
@@ -30,14 +31,15 @@ export default async function Page({
 	return (
 		<PageWithTransition>
 			<MyHead
-				title={"検索"}
 				description={""}
 				imagePath={undefined}
-				url={searchPath}
 				keywords={[]}
+				title={"検索"}
+				url={searchPath}
 			/>
-			<Stack alignItems={"center"} w="full" h="full">
+			<Stack alignItems={"center"} h="full" w="full">
 				<SearchPresentation
+					hashTagList={hashTagList}
 					searchQuery={{
 						query: query ? decodeURIComponent(query) : undefined,
 						tag: tag ? decodeURIComponent(tag) : undefined,
@@ -46,7 +48,6 @@ export default async function Page({
 						sort: sort,
 						hasLink: hasLink,
 					}}
-					hashTagList={hashTagList}
 				/>
 			</Stack>
 		</PageWithTransition>

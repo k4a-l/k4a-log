@@ -1,13 +1,13 @@
-import type { PropsWithChildren } from "react";
-
+import * as Babel from "@babel/standalone";
 import SyntaxHighlighter from "react-syntax-highlighter";
 import { docco } from "react-syntax-highlighter/dist/esm/styles/hljs";
+
 import { css } from "styled-system/css";
 
-import * as Babel from "@babel/standalone";
 import { DynamicK4aReactCode, DynamicReactCode } from "./DynamicReactCode";
 
 import type { MetaProps } from "@/features/metadata/type";
+import type { PropsWithChildren } from "react";
 
 export const CodeBlock = (
 	props: PropsWithChildren<HTMLElement & MetaProps>,
@@ -62,9 +62,9 @@ export const CodeBlock = (
 					<DynamicReactCode transpiledCode={transpiledCode} />
 				</div>
 				<SyntaxHighlighter
+					className={css({ fontFamily: "monospace", margin: 0 })}
 					language={"tsx"}
 					style={docco}
-					className={css({ fontFamily: "monospace", margin: 0 })}
 				>
 					{children as string}
 				</SyntaxHighlighter>
@@ -84,8 +84,8 @@ export const CodeBlock = (
 			>
 				<DynamicK4aReactCode
 					markdown={children as string}
-					vault={vault}
 					note={note}
+					vault={vault}
 				/>
 			</div>
 		);
@@ -93,9 +93,9 @@ export const CodeBlock = (
 
 	return (
 		<SyntaxHighlighter
+			className={css({ fontFamily: "monospace" })}
 			language={language}
 			style={docco}
-			className={css({ fontFamily: "monospace" })}
 		>
 			{children as string}
 		</SyntaxHighlighter>

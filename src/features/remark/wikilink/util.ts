@@ -1,5 +1,8 @@
 import * as fs from "node:fs";
 import * as path from "node:path";
+
+import GithubSlugger from "github-slugger";
+
 import type { WikiLinkData } from "@/types/mdast";
 import {} from "react/jsx-runtime";
 
@@ -217,8 +220,6 @@ export function getWikiLinkExtension(value: string | undefined): {
 export function lastOfArr<T>(stack: T[]) {
 	return stack[stack.length - 1];
 }
-
-import GithubSlugger from "github-slugger";
 
 export const toHeadingSlug = (str: string) => {
 	const slugs = new GithubSlugger();

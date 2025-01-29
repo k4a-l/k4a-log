@@ -1,14 +1,16 @@
 "use client";
 import {} from "@/components/Link/NextLink";
-import type { MetaProps } from "@/features/metadata/type";
 import React, { type ComponentProps, useState } from "react";
 import ReactMarkdown, { type Components } from "react-markdown";
 import {} from "react/jsx-runtime";
 import rehypeRaw from "rehype-raw";
 import remarkGfm from "remark-gfm";
 import remarkRehype from "remark-rehype";
+
 import {} from "styled-system/jsx";
 import { ReactViewTaskList } from "./TaskList";
+
+import type { MetaProps } from "@/features/metadata/type";
 
 export const DynamicReactCode = ({
 	transpiledCode,
@@ -38,14 +40,14 @@ export const DynamicK4aReactCode = ({
 }: { markdown: string } & MetaProps) => {
 	return (
 		<ReactMarkdown
-			remarkPlugins={[remarkGfm, [remarkRehype, { allowDangerousHtml: true }]]}
-			rehypePlugins={[rehypeRaw]}
 			components={
 				{
 					tasklist: (props: ComponentProps<typeof ReactViewTaskList>) =>
 						ReactViewTaskList({ ...props, vault }),
 				} as Components
 			}
+			rehypePlugins={[rehypeRaw]}
+			remarkPlugins={[remarkGfm, [remarkRehype, { allowDangerousHtml: true }]]}
 		>
 			{markdown}
 		</ReactMarkdown>

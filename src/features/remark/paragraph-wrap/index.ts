@@ -1,9 +1,9 @@
+import { u } from "unist-builder";
 import { visit } from "unist-util-visit";
 
 import type { PhrasingContent, Root } from "mdast";
 import type { Handler } from "mdast-util-to-hast";
 import type { Plugin } from "unified";
-import { u } from "unist-builder";
 
 export const paragraphWrapHandler: Handler = (_h: unknown, node) => {
 	return {

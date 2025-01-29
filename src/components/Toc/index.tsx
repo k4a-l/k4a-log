@@ -1,5 +1,13 @@
 "use client";
 
+import _ from "lodash";
+import { useEffect, useState } from "react";
+
+import { HEADER_HEIGHT } from "@/app/layout";
+import { NextLink } from "@/components/Link/NextLink";
+import { css } from "styled-system/css";
+import { Stack } from "styled-system/jsx";
+
 import type {
 	BlockContent,
 	DefinitionContent,
@@ -7,14 +15,7 @@ import type {
 	ListItem,
 	PhrasingContent,
 } from "mdast";
-import { useEffect, useState } from "react";
-
-import { HEADER_HEIGHT } from "@/app/layout";
-import { NextLink } from "@/components/Link/NextLink";
-import _ from "lodash";
 import type { Result } from "mdast-util-toc";
-import { css } from "styled-system/css";
-import { Stack } from "styled-system/jsx";
 
 const RenderPhrasingContent = ({
 	content,
@@ -23,7 +24,6 @@ const RenderPhrasingContent = ({
 	if (content.type === "link") {
 		return (
 			<NextLink
-				href={content.url}
 				className={`${activeId === content.url.replace("#", "") ? "is-active" : ""} ${css(
 					{
 						textWrap: "nowrap",
@@ -31,10 +31,11 @@ const RenderPhrasingContent = ({
 						textOverflow: "ellipsis",
 					},
 				)}`}
+				href={content.url}
 			>
 				{content.children.map((c, i) => (
 					// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-					<RenderPhrasingContent key={i} content={c} activeId={activeId} />
+					<RenderPhrasingContent activeId={activeId} content={c} key={i} />
 				))}
 			</NextLink>
 		);
@@ -56,14 +57,14 @@ const RenderBlockContent = ({
 			<p>
 				{content.children.map((c, i) => (
 					// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-					<RenderPhrasingContent key={i} content={c} activeId={activeId} />
+					<RenderPhrasingContent activeId={activeId} content={c} key={i} />
 				))}
 			</p>
 		);
 	}
 
 	if (content.type === "list") {
-		return <RecursiveList list={content} activeId={activeId} />;
+		return <RecursiveList activeId={activeId} list={content} />;
 	}
 
 	return null;
@@ -78,7 +79,7 @@ export const RecursiveListItem = ({
 			{listItem.children.length
 				? listItem.children.map((item, i) => (
 						// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-						<RenderBlockContent key={i} content={item} activeId={activeId} />
+						<RenderBlockContent activeId={activeId} content={item} key={i} />
 					))
 				: null}
 		</>
@@ -93,7 +94,7 @@ export const RecursiveList = ({
 		<ul>
 			{list.children.map((c, i) => (
 				// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-				<RecursiveListItem listItem={c} key={i} activeId={activeId} />
+				<RecursiveListItem activeId={activeId} key={i} listItem={c} />
 			))}
 		</ul>
 	);
@@ -132,21 +133,7 @@ export const SideTableOfContents = ({
 
 	return (
 		<Stack
-			w={1280 - 1000 - 10}
-			display={{
-				// 1280px
-				xl: "flex",
-				base: "none",
-			}}
 			bg="white"
-			rounded={"md"}
-			style={{
-				top: `calc(${HEADER_HEIGHT} + 8px)`,
-				maxHeight: `calc(100vh - ${HEADER_HEIGHT} - 8px)`,
-			}}
-			position={"sticky"}
-			overflowX={"hidden"}
-			overflowY={"auto"}
 			className={css({
 				fontSize: "0.8em",
 				px: 2,
@@ -176,8 +163,22 @@ export const SideTableOfContents = ({
 					},
 				},
 			})}
+			display={{
+				// 1280px
+				xl: "flex",
+				base: "none",
+			}}
+			overflowX={"hidden"}
+			overflowY={"auto"}
+			position={"sticky"}
+			rounded={"md"}
+			style={{
+				top: `calc(${HEADER_HEIGHT} + 8px)`,
+				maxHeight: `calc(100vh - ${HEADER_HEIGHT} - 8px)`,
+			}}
+			w={1280 - 1000 - 10}
 		>
-			<RecursiveList list={toc} activeId={activeId ?? ""} />
+			<RecursiveList activeId={activeId ?? ""} list={toc} />
 		</Stack>
 	);
 };

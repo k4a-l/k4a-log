@@ -1,5 +1,6 @@
-import type { PropsWithChildren } from "react";
 import { css } from "styled-system/css";
+
+import type { PropsWithChildren } from "react";
 
 export const TodoComponent = ({ children }: PropsWithChildren) => {
 	return (

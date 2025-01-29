@@ -1,13 +1,11 @@
 import { fromMarkdown } from "./from-markdown";
-
 import { wikiLinkTokenize } from "./syntax";
 
+import type { WikiLinkOption } from "./type";
+import type { Root } from "mdast";
 import type { Extension as mDastExtension } from "mdast-util-from-markdown";
 import type { Extension as MicromarkExtension } from "micromark-util-types";
 import type { Plugin } from "unified";
-import type { WikiLinkOption } from "./type";
-
-import type { Root } from "mdast";
 
 const wikiLinkPlugin: Plugin<
 	[(Readonly<WikiLinkOption> | null | undefined)?],

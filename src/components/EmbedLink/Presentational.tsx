@@ -25,25 +25,25 @@ export const EmbeddedCardPresentational = ({
 	return (
 		<Container>
 			<a
-				href={url}
 				className={css({
 					display: "flex",
 					justifyContent: "space-between",
 					color: "inherit",
 					textDecoration: "none",
 				})}
-				target="_blank"
+				href={url}
 				rel="noopener noreferrer"
+				target="_blank"
 			>
 				<Stack
-					p={2}
-					justifyContent={"space-between"}
 					className={css({
 						flexShrink: 1,
 						flexGrow: 0,
 						w: "auto",
 						overflow: "hidden",
 					})}
+					justifyContent={"space-between"}
+					p={2}
 				>
 					<span
 						className={css({
@@ -72,26 +72,26 @@ export const EmbeddedCardPresentational = ({
 					>
 						{favicon ? (
 							<img
+								alt={title}
 								className={css({
 									objectFit: "cover",
 									height: "14px",
 									maxWidth: "14px",
 								})}
 								src={favicon}
-								alt={title}
 							/>
 						) : null}
 						{urlObj.hostname}
 					</HStack>
 				</Stack>
 				<img
-					src={banner}
 					alt={title}
 					className={css({
 						objectFit: "cover",
 						height: "120px",
 						maxWidth: "230px",
 					})}
+					src={banner}
 				/>
 			</a>
 		</Container>
@@ -102,9 +102,6 @@ export const EmbeddedCardError = ({ url }: { url: string }) => {
 	return (
 		<Container>
 			<a
-				href={url}
-				target="_blank"
-				rel="noopener noreferrer"
 				className={css({
 					display: "flex",
 					p: 2,
@@ -112,6 +109,9 @@ export const EmbeddedCardError = ({ url }: { url: string }) => {
 					color: "inherit",
 					textDecoration: "none",
 				})}
+				href={url}
+				rel="noopener noreferrer"
+				target="_blank"
 			>
 				{url}
 			</a>

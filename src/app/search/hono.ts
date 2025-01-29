@@ -1,8 +1,9 @@
-import type { AppType } from "@/app/api/[[...route]]/route";
-import type { InferResponseType } from "hono";
 import { hc } from "hono/client";
 import { useMemo } from "react";
 import useSWR from "swr";
+
+import type { AppType } from "@/app/api/[[...route]]/route";
+import type { InferResponseType } from "hono";
 
 export const client = hc<AppType>(
 	// biome-ignore lint/style/noNonNullAssertion: <explanation>

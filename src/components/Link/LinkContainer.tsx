@@ -1,9 +1,6 @@
-import type { WikiLinkData } from "@/types/mdast";
-import type { AnchorHTMLAttributes, FC } from "react";
+import path from "path-browserify";
 
 import { notesDirPath } from "@/features/metadata/constant";
-import type { PathMap } from "@/features/metadata/type";
-import type { MetaProps } from "@/features/metadata/type";
 import {
 	createRunProcessor,
 	createStringifyProcessor,
@@ -11,8 +8,8 @@ import {
 import { getFileContent } from "@/features/remark/processor/getContent";
 import { createParseProcessor } from "@/features/remark/processor/parse";
 import { createFileTrees } from "@/features/remark/wikilink/util";
-import path from "path-browserify";
 import { css } from "styled-system/css";
+
 import {
 	EmbedLinkImage,
 	EmbedLinkMarkdown,
@@ -21,6 +18,10 @@ import {
 	TransitionLinkDead,
 	TransitionLinkExist,
 } from "./LinkPresentational";
+
+import type { MetaProps, PathMap } from "@/features/metadata/type";
+import type { WikiLinkData } from "@/types/mdast";
+import type { AnchorHTMLAttributes, FC } from "react";
 
 type WikiLinkComponentProps = AnchorHTMLAttributes<HTMLAnchorElement> &
 	WikiLinkData["hProperties"] & { pathMap: PathMap };

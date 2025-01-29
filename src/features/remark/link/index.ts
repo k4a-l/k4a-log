@@ -1,8 +1,8 @@
-import type { Plugin } from "unified";
-import type { Node } from "unist";
 import { visit } from "unist-util-visit";
 
 import type { PhrasingContent, Root } from "mdast";
+import type { Plugin } from "unified";
+import type { Node } from "unist";
 
 interface LinkNode extends Node {
 	type: string;

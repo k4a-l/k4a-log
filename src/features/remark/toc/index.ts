@@ -1,7 +1,7 @@
-import type { Options } from "mdast-util-toc";
+import { toc } from "mdast-util-toc";
 
 import type { Root } from "mdast";
-import { toc } from "mdast-util-toc";
+import type { Options } from "mdast-util-toc";
 
 export type RemarkTocOptions = Options;
 

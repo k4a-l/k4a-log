@@ -1,11 +1,12 @@
-import { searchPath } from "@/app/search/util";
-import { NextLinkButton } from "@/components/Link/NextLink";
 import {
 	MessageCircleQuestionIcon,
 	NotebookIcon,
 	PiggyBankIcon,
 	SearchIcon,
 } from "lucide-react";
+
+import { searchPath } from "@/app/search/util";
+import { NextLinkButton } from "@/components/Link/NextLink";
 import { css } from "styled-system/css";
 import { HStack, Stack } from "styled-system/jsx";
 
@@ -13,9 +14,7 @@ export default function NotFound() {
 	return (
 		<>
 			<HStack
-				justifyContent={"center"}
 				alignItems={"start"}
-				w="100%"
 				className={`${css({
 					fontSize: { sm: "1em", base: "0.8em" },
 					"& > *": {
@@ -24,12 +23,14 @@ export default function NotFound() {
 					},
 				})}, `}
 				h="100%"
+				justifyContent={"center"}
+				w="100%"
 			>
 				<Stack
 					bg="white"
+					maxW={"max(1000px,100%)"}
 					p={4}
 					rounded={"md"}
-					maxW={"max(1000px,100%)"}
 					w={"1000px"}
 				>
 					<HStack alignItems={"end"}>

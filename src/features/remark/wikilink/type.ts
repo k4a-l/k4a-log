@@ -1,5 +1,5 @@
-import type { WikiLink } from "@/types/mdast";
 import type { FileTree } from "./util";
+import type { WikiLink } from "@/types/mdast";
 
 export type WikiLinkOption = {
 	assetPath: string;

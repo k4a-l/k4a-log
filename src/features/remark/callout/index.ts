@@ -1,8 +1,8 @@
 // ref: https://github.com/escwxyz/remark-obsidian-callout
 
-import type { Plugin } from "unified";
 import type {} from "unist";
 import { visit } from "unist-util-visit";
+
 import {
 	alertTriangleIcon,
 	bugIcon,
@@ -22,6 +22,7 @@ import {
 } from "./icons";
 
 import type { BlockContent, PhrasingContent, Root } from "mdast";
+import type { Plugin } from "unified";
 
 type Callout = Record<string, unknown>;
 

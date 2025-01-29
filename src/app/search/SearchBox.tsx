@@ -1,12 +1,13 @@
 "use client";
 
-import { IconButton } from "@/park-ui/components/icon-button";
 import { DeleteIcon, SearchIcon } from "lucide-react";
-import { useSearchParams } from "next/navigation";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
+
+import { IconButton } from "@/park-ui/components/icon-button";
 import { css } from "styled-system/css";
 import { HStack } from "styled-system/jsx";
+
 import { getSearchPath } from "./util";
 
 export const SearchBox = () => {
@@ -39,12 +40,12 @@ export const SearchBox = () => {
 
 	return (
 		<HStack
-			gap={1}
 			className={css({
 				height: "full",
 			})}
+			gap={1}
 		>
-			<HStack w="100%" position="relative">
+			<HStack position="relative" w="100%">
 				<input
 					className={css({
 						border: "none",
@@ -55,28 +56,28 @@ export const SearchBox = () => {
 						bg: "neutral.200",
 						pr: "2em",
 					})}
+					onChange={(e) => setSearchQuery(e.target.value)}
+					onKeyDown={handleKeyDown}
 					placeholder="タイトル検索"
 					type="search"
 					value={searchQuery ?? ""}
-					onChange={(e) => setSearchQuery(e.target.value)}
-					onKeyDown={handleKeyDown}
 				/>
 				<IconButton
-					position={"absolute"}
-					right="0"
-					variant={"ghost"}
-					size="sm"
 					height="full"
-					rounded={"none"}
 					onClick={() => {
 						setSearchQuery(undefined);
 					}}
+					position={"absolute"}
+					right="0"
+					rounded={"none"}
+					size="sm"
+					variant={"ghost"}
 				>
 					<DeleteIcon />
 				</IconButton>
 			</HStack>
 
-			<IconButton variant={"ghost"} size="sm" onClick={search}>
+			<IconButton onClick={search} size="sm" variant={"ghost"}>
 				<SearchIcon />
 			</IconButton>
 		</HStack>

@@ -5,11 +5,12 @@ import { Link } from "@/park-ui/components/link";
 import {} from "@/park-ui/components/select";
 import { Spinner } from "@/park-ui/components/spinner";
 import { normalizePath } from "@/utils/path";
-import {} from "lucide-react";
 import { css } from "styled-system/css";
 import { HStack, Stack } from "styled-system/jsx";
-import type { useHonoQuery } from "./hono";
+
 import { type SearchQuery, getSearchPath } from "./util";
+
+import type { useHonoQuery } from "./hono";
 
 export const SearchResult = ({
 	data,
@@ -24,7 +25,7 @@ export const SearchResult = ({
 	if (error) return <div>データの取得でエラーが発生しました</div>;
 	if (isLoading)
 		return (
-			<HStack p={4} justifyContent={"center"}>
+			<HStack justifyContent={"center"} p={4}>
 				<Spinner /> 取得中
 			</HStack>
 		);
@@ -35,28 +36,24 @@ export const SearchResult = ({
 		<>
 			<Stack w="100%">
 				<HStack
-					flexWrap={"wrap"}
-					flexDir={{ base: "column", sm: "row" }}
 					display="grid"
-					gridTemplateColumns={"repeat(auto-fill, minmax(200px, 1fr))"}
+					flexDir={{ base: "column", sm: "row" }}
+					flexWrap={"wrap"}
 					gap="10px"
+					gridTemplateColumns={"repeat(auto-fill, minmax(200px, 1fr))"}
 				>
 					{data.notes.map((r) => (
 						<Link
 							asChild
-							key={r.path}
 							aspectRatio="1 / 1"
 							boxSizing={"border-box"}
-							textDecoration="none"
+							key={r.path}
 							overflow={"hidden"}
+							textDecoration="none"
 						>
 							<NextLink href={normalizePath(r.path)}>
 								<Stack
-									w="100%"
-									h="100%"
 									boxShadow={"sm"}
-									rounded={"xs"}
-									p={2}
 									className={css({
 										bg: "white",
 										color: "black",
@@ -66,8 +63,12 @@ export const SearchResult = ({
 											transform: "translateY(3px)",
 										},
 									})}
+									h="100%"
+									p={2}
+									rounded={"xs"}
+									w="100%"
 								>
-									<Stack overflow={"hidden"} gap={0}>
+									<Stack gap={0} overflow={"hidden"}>
 										<span
 											className={css({
 												fontSize: "xs",
@@ -88,12 +89,12 @@ export const SearchResult = ({
 
 										{r.thumbnailPath ? (
 											<img
-												src={r.thumbnailPath}
 												alt={r.thumbnailPath}
 												className={css({
 													// alt用
 													fontSize: "0.5em",
 												})}
+												src={r.thumbnailPath}
 											/>
 										) : (
 											<span
@@ -116,8 +117,8 @@ export const SearchResult = ({
 			</Stack>
 			{data.allNumber > pageViewLength ? (
 				<Pagination
-					page={page}
 					allNumber={data.allNumber}
+					page={page}
 					pageViewLength={pageViewLength}
 					searchQuery={searchQuery}
 				/>
@@ -138,15 +139,14 @@ const Pagination = (props: {
 		<HStack justifyContent={"space-between"}>
 			{/* ページネーション実装 */}
 			<NextLinkButton
-				size={"sm"}
 				disabled={page < 1}
 				href={getSearchPath({ ...searchQuery, page: page - 1 })}
+				size={"sm"}
 			>
 				前へ
 			</NextLinkButton>
 			{page + 1} / {maxPage}
 			<NextLinkButton
-				size={"sm"}
 				disabled={page >= maxPage - 1}
 				href={getSearchPath({
 					...searchQuery,
@@ -154,6 +154,7 @@ const Pagination = (props: {
 					query: "",
 					tag: "",
 				})}
+				size={"sm"}
 			>
 				次へ
 			</NextLinkButton>

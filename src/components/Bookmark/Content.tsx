@@ -1,12 +1,13 @@
-import { dividePathAndExtension, normalizePath } from "@/utils/path";
 import { ChevronDownIcon, FileIcon } from "lucide-react";
-import { css } from "styled-system/css";
-import type { BookMarkItem } from "./type";
+import path from "path-browserify";
 
 import { NextLinkButton } from "@/components/Link/NextLink";
 import { notesDirPath } from "@/features/metadata/constant";
-import path from "path-browserify";
+import { dividePathAndExtension, normalizePath } from "@/utils/path";
+import { css } from "styled-system/css";
 import { HStack, Stack } from "styled-system/jsx";
+
+import type { BookMarkItem } from "./type";
 
 export const BookmarkGroup = ({ items }: { items: BookMarkItem[] }) => {
 	return (
@@ -19,34 +20,34 @@ export const BookmarkGroup = ({ items }: { items: BookMarkItem[] }) => {
 		>
 			{items.map((item) => (
 				<li
-					key={item.type === "file" ? item.path : item.title}
 					className={css({
 						listStyle: "none",
 						h: "auto",
 					})}
+					key={item.type === "file" ? item.path : item.title}
 				>
 					{item.type === "file" ? (
 						<NextLinkButton
 							display={"flex"}
-							justifyContent={"start"}
 							fontWeight={"normal"}
-							textDecoration={"none"}
-							w="auto"
+							gap={1}
 							h="auto"
+							href={path.join("/", notesDirPath, normalizePath(item.path))}
+							justifyContent={"start"}
 							px={1.5}
 							py={1.5}
 							rounded={"md"}
-							href={path.join("/", notesDirPath, normalizePath(item.path))}
+							textDecoration={"none"}
 							variant={"ghost"}
-							gap={1}
+							w="auto"
 						>
 							<FileIcon
-								opacity={0.6}
 								className={css({
 									width: "1em",
 									height: "1em",
 									flexShrink: 0,
 								})}
+								opacity={0.6}
 							/>
 							<span
 								className={css({
@@ -59,13 +60,13 @@ export const BookmarkGroup = ({ items }: { items: BookMarkItem[] }) => {
 							</span>
 						</NextLinkButton>
 					) : (
-						<Stack px={1.5} gap={0}>
+						<Stack gap={0} px={1.5}>
 							<HStack gap={1} py={1.5}>
 								<ChevronDownIcon
-									size="0.8em"
 									className={css({
 										flexShrink: 0,
 									})}
+									size="0.8em"
 								/>
 								<span
 									className={css({
@@ -79,15 +80,15 @@ export const BookmarkGroup = ({ items }: { items: BookMarkItem[] }) => {
 								</span>
 							</HStack>
 							<Stack
-								pl={0}
-								ml={1.5}
-								borderLeftWidth={1}
 								borderLeftColor={"gray.3"}
+								borderLeftWidth={1}
 								className={css({
 									"& ul": {
 										pl: 1,
 									},
 								})}
+								ml={1.5}
+								pl={0}
 							>
 								<BookmarkGroup items={item.items} />
 							</Stack>

@@ -1,19 +1,22 @@
 import { readFileSync } from "node:fs";
 import path from "node:path";
-import type { Heading, Root } from "mdast";
+
 import { toString as mdastToString } from "mdast-util-to-string";
-import type { ReactElement } from "react";
-import type { Processor } from "unified";
+import { toc } from "mdast-util-toc";
 import { VFile } from "vfile";
-import type { ReactProcessor } from ".";
 
 import {
 	convertNoExtensionPathToMD,
 	lastOfArr,
 	toHeadingSlug,
 } from "@/features/remark/wikilink/util";
-import { toc } from "mdast-util-toc";
+
 import { type VFileData, getFrontMatters } from "../frontmatter";
+
+import type { ReactProcessor } from ".";
+import type { Heading, Root } from "mdast";
+import type { ReactElement } from "react";
+import type { Processor } from "unified";
 
 export const getFileContent = (
 	paths: string[],

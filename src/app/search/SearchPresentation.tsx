@@ -1,22 +1,23 @@
 "use client";
-import { NextLink } from "@/components/Link/NextLink";
-import { Button } from "@/park-ui/components/button";
-import type { PickRequired } from "@/utils/type";
-import { Hash, XIcon } from "lucide-react";
-import { css } from "styled-system/css";
-import { HStack, Stack } from "styled-system/jsx";
+import { CheckIcon, ChevronsUpDownIcon, Hash, XIcon } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { P, match } from "ts-pattern";
-import { SearchResult } from "./SearchResult";
-import { useHonoQuery } from "./hono";
-import { type SearchQuery, getSearchPath } from "./util";
 
 import { sortByItems } from "@/app/api/[[...route]]/search/constant";
+import { NextLink } from "@/components/Link/NextLink";
+import { Button } from "@/park-ui/components/button";
 import { Select, createListCollection } from "@/park-ui/components/select";
 import { strictEntries, strictFromEntries } from "@/utils/object";
-import { CheckIcon, ChevronsUpDownIcon } from "lucide-react";
-import { useRouter } from "next/navigation";
-import type { ComponentProps, ReactNode } from "react";
+import { css } from "styled-system/css";
+import { HStack, Stack } from "styled-system/jsx";
+
+import { useHonoQuery } from "./hono";
 import { SearchBox } from "./SearchBox";
+import { SearchResult } from "./SearchResult";
+import { type SearchQuery, getSearchPath } from "./util";
+
+import type { PickRequired } from "@/utils/type";
+import type { ComponentProps, ReactNode } from "react";
 
 interface Item {
 	label: string;
@@ -26,12 +27,12 @@ interface Item {
 
 const ButtonTag = (props: ComponentProps<typeof Button>) => (
 	<Button
-		size="sm"
 		asChild
-		py={1}
-		px={2}
 		colorPalette={"blue"}
 		h={"1.5em"}
+		px={2}
+		py={1}
+		size="sm"
 		textDecoration={"none"}
 		{...props}
 	/>
@@ -99,20 +100,20 @@ export const SearchPresentation = ({
 
 				{hashTagList.length > 0 && (
 					<HStack
-						gap={1}
-						flexWrap={"wrap"}
-						w="100%"
 						className={css({
 							bg: "white",
 						})}
-						rounded={"md"}
+						flexWrap={"wrap"}
+						gap={1}
 						p={2}
+						rounded={"md"}
+						w="100%"
 					>
 						{hashTagList.map((tag) => (
 							<ButtonTag
+								gap={0}
 								key={tag}
 								variant={selectedTag === tag ? "solid" : "subtle"}
-								gap={0}
 							>
 								<NextLink
 									href={getSearchPath({
@@ -139,8 +140,8 @@ export const SearchPresentation = ({
 						}}
 						positioning={{ sameWidth: true }}
 						size={"sm"}
-						w="auto"
 						variant={"ghost"}
+						w="auto"
 					>
 						<Select.Control>
 							<Select.Trigger>
@@ -152,7 +153,7 @@ export const SearchPresentation = ({
 							<Select.Content>
 								<Select.ItemGroup>
 									{collection.items.map((item) => (
-										<Select.Item key={item.value} item={item}>
+										<Select.Item item={item} key={item.value}>
 											<Select.ItemText>{item.label}</Select.ItemText>
 											<Select.ItemIndicator>
 												<CheckIcon />

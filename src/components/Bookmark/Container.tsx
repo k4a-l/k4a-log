@@ -1,11 +1,13 @@
+import { MenuIcon, PinIcon, XIcon } from "lucide-react";
+
 import { HEADER_HEIGHT } from "@/app/layout";
 import { Drawer } from "@/park-ui/components/drawer";
 import { IconButton } from "@/park-ui/components/icon-button";
-import {} from "@/utils/path";
-import { MenuIcon, PinIcon, XIcon } from "lucide-react";
 import { css } from "styled-system/css";
 import { Divider, HStack, Stack } from "styled-system/jsx";
+
 import { BookmarkGroup } from "./Content";
+
 import type { BookMarkRoot } from "./type";
 
 export const BookmarkInnerPart = ({ root }: { root: BookMarkRoot }) => {
@@ -15,25 +17,25 @@ export const BookmarkInnerPart = ({ root }: { root: BookMarkRoot }) => {
 
 	return (
 		<Stack
-			w={1280 - 1000 - 10}
-			display={{
-				xl: "flex",
-				base: "none",
-			}}
 			bg="white"
-			rounded={"md"}
-			style={{
-				top: `calc(${HEADER_HEIGHT} + 8px)`,
-				maxHeight: `calc(100vh - ${HEADER_HEIGHT} - 8px)`,
-			}}
-			position={"sticky"}
-			overflowX={"hidden"}
-			overflowY={"auto"}
 			className={css({
 				px: 2,
 				py: 2,
 				gap: 2,
 			})}
+			display={{
+				xl: "flex",
+				base: "none",
+			}}
+			overflowX={"hidden"}
+			overflowY={"auto"}
+			position={"sticky"}
+			rounded={"md"}
+			style={{
+				top: `calc(${HEADER_HEIGHT} + 8px)`,
+				maxHeight: `calc(100vh - ${HEADER_HEIGHT} - 8px)`,
+			}}
+			w={1280 - 1000 - 10}
 		>
 			<HStack>
 				<PinIcon size="0.8em" />
@@ -62,7 +64,7 @@ export const BookmarkDrawer = ({ root }: { root: BookMarkRoot }) => {
 					},
 				})}
 			>
-				<IconButton size="sm" rounded={"sm"} p={1} variant={"ghost"}>
+				<IconButton p={1} rounded={"sm"} size="sm" variant={"ghost"}>
 					<MenuIcon />
 				</IconButton>
 			</Drawer.Trigger>
@@ -79,8 +81,8 @@ export const BookmarkDrawer = ({ root }: { root: BookMarkRoot }) => {
 						<Drawer.CloseTrigger
 							asChild
 							position="absolute"
-							top="1.5"
 							right="2"
+							top="1.5"
 						>
 							<IconButton variant="ghost">
 								<XIcon />

@@ -1,4 +1,5 @@
 import path from "node:path";
+
 import { BookmarkInnerPart } from "@/components/Bookmark";
 import { PageWithTransition } from "@/components/Common/pageWithTransition";
 import { FrontMatter } from "@/components/FrontMatter";
@@ -17,9 +18,9 @@ import { createParseProcessor } from "@/features/remark/processor/parse";
 import { createFileTrees } from "@/features/remark/wikilink/util";
 import { reverseObjects } from "@/utils/object";
 import { isSamePath, normalizePath } from "@/utils/path";
-import {} from "react/jsx-runtime";
 import { css } from "styled-system/css";
 import { HStack, Spacer, Stack } from "styled-system/jsx";
+
 import { Client } from "./Client";
 
 export const revalidate = 600; // 10分ごとに再検証する
@@ -87,19 +88,17 @@ export default async function Page({ params }: Props) {
 		<PageWithTransition>
 			<Client />
 			<MyHead
-				title={title}
 				description={tNote.metadata.frontmatter?.description || ""}
 				imagePath={
 					tNote.metadata.frontmatter?.thumbnailPath || tNote.thumbnailPath
 				}
-				url={notePathAbsolute}
 				keywords={[]}
+				title={title}
+				url={notePathAbsolute}
 			/>
 
 			<HStack
-				justifyContent={"center"}
 				alignItems={"start"}
-				w="100%"
 				className={`${css({
 					fontSize: { sm: "1em", base: "0.8em" },
 					"& > *": {
@@ -108,6 +107,8 @@ export default async function Page({ params }: Props) {
 					},
 				})}, `}
 				h="100%"
+				justifyContent={"center"}
+				w="100%"
 			>
 				{bookmark.items.length > 0 && <BookmarkInnerPart root={bookmark} />}
 				<Stack maxW={"max(1000px,100%)"} w={"1000px"}>
