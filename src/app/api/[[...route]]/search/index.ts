@@ -11,7 +11,7 @@ import { idParser } from "@/features/remark/frontmatter";
 import { IS_PRODUCTION } from "@/utils/env";
 import { isTestDirPath } from "@/utils/path";
 
-export type PostMeta = {
+export type NoteMeta = {
 	title: string;
 	path: string;
 	thumbnailPath?: string;
@@ -37,7 +37,7 @@ export const searchAPI = new Hono<BlankEnv, BlankInput, "/">().get(
 	): Promise<
 		ReturnType<
 			typeof c.json<{
-				posts: PostMeta[];
+				notes: NoteMeta[];
 				allNumber: number;
 			}>
 		>
@@ -58,7 +58,7 @@ export const searchAPI = new Hono<BlankEnv, BlankInput, "/">().get(
 
 		const vaultObject = getVaultObject();
 
-		const targetPosts: PostMeta[] = vaultObject.posts
+		const targets: NoteMeta[] = vaultObject.notes
 			.filter((p) => !(IS_PRODUCTION && isTestDirPath(p.path)))
 			.filter((p) => {
 				const isTagIncluded = (() => {
@@ -147,14 +147,14 @@ export const searchAPI = new Hono<BlankEnv, BlankInput, "/">().get(
 
 				return 0;
 			});
-		const postsLimited = targetPosts.slice(
+		const limited = targets.slice(
 			pageNum * pageViewLength,
 			(pageNum + 1) * pageViewLength,
 		);
 
 		return c.json({
-			posts: postsLimited,
-			allNumber: vaultObject.posts.length,
+			notes: limited,
+			allNumber: vaultObject.notes.length,
 		});
 	},
 );

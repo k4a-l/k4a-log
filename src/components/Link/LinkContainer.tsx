@@ -1,7 +1,7 @@
 import type { WikiLinkData } from "@/types/mdast";
 import type { AnchorHTMLAttributes, FC } from "react";
 
-import { postsDirPath } from "@/features/metadata/constant";
+import { notesDirPath } from "@/features/metadata/constant";
 import type { PathMap } from "@/features/metadata/type";
 import type { MetaProps } from "@/features/metadata/type";
 import {
@@ -83,7 +83,7 @@ export const EmbedLinkContainer: FC<
 	}
 
 	if (type === "link") {
-		const paths = href.split(/\\|\//).filter((p) => p !== postsDirPath);
+		const paths = href.split(/\\|\//).filter((p) => p !== notesDirPath);
 		const rootPath = path.join(assetsDirPath, rootDirPath);
 		const fileTrees = createFileTrees(rootPath);
 

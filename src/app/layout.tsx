@@ -6,7 +6,7 @@ import { BookmarkDrawer } from "@/components/Bookmark";
 import { NextLink } from "@/components/Link/NextLink";
 import { SummarizeByYM } from "@/components/Summazize";
 import { getBookmarkObject } from "@/features/file/io";
-import { postsDirPath } from "@/features/metadata/constant";
+import { notesDirPath } from "@/features/metadata/constant";
 import { Button } from "@/park-ui/components/button";
 import { Link } from "@/park-ui/components/link";
 import { GoogleAnalytics } from "@next/third-parties/google";
@@ -58,7 +58,7 @@ export default async function RootLayout({
 					>
 						<BookmarkDrawer root={bookmark} />
 						<Link asChild>
-							<NextLink href={path.join("/", postsDirPath)}>
+							<NextLink href={path.join("/", notesDirPath)}>
 								<Image
 									src="/assets/logo.png"
 									alt="logo"

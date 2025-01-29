@@ -7,7 +7,7 @@ import { PostNotFound } from "@/components/Post/NotFound";
 import { BackLinks, TwoHopLinks } from "@/components/PostLink";
 import { SideTableOfContents } from "@/components/Toc";
 import { getBookmarkObject, getVaultObject } from "@/features/file/io";
-import { assetsDirPath, postsDirPath } from "@/features/metadata/constant";
+import { assetsDirPath, notesDirPath } from "@/features/metadata/constant";
 import {
 	createRunProcessor,
 	createStringifyProcessor,
@@ -24,7 +24,7 @@ import { Client } from "./Client";
 
 export const revalidate = 600; // 10分ごとに再検証する
 
-const directoryPath = path.join(assetsDirPath, postsDirPath);
+const directoryPath = path.join(assetsDirPath, notesDirPath);
 
 type Params = Promise<{ page: string[] | undefined }>;
 
@@ -43,13 +43,13 @@ export default async function Page({ params }: Props) {
 
 	// uidに一致すればそれを使用、しなければそのまま
 	const postPath =
-		uidPathMap[normalizePath(path.join(postsDirPath, pathFromParams))]?.replace(
-			postsDirPath,
+		uidPathMap[normalizePath(path.join(notesDirPath, pathFromParams))]?.replace(
+			notesDirPath,
 			"",
 		) ?? pathFromParams;
 
-	const postPathAbsolute = path.join("/", postsDirPath, postPath);
-	const tPost = vaultObject.posts.find((p) =>
+	const postPathAbsolute = path.join("/", notesDirPath, postPath);
+	const tPost = vaultObject.notes.find((p) =>
 		isSamePath(p.path, postPathAbsolute),
 	);
 

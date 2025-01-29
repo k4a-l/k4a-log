@@ -43,7 +43,7 @@ export type PathMap = Record<string, string>;
  * 参考: https://docs.obsidian.md/Reference/TypeScript+API/CachedMetadata
  * obsidianではfileからCachedMetadataを取得するので分離されているがここでは一緒にしてしまう
  */
-export type TPostIndependence = {
+export type TNoteIndependence = {
 	/** 公式では他にnameがあるが、basename+extensionなので不要  */
 	basename: string;
 	extension: string;
@@ -59,11 +59,11 @@ export type TPostIndependence = {
 	thumbnailPath?: string;
 };
 
-type TPostLink = { path: string; title: string; thumbnailPath?: string };
-export type TPost = TPostIndependence & {
+type TNoteLink = { path: string; title: string; thumbnailPath?: string };
+export type TNote = TNoteIndependence & {
 	/** pathをキーにvaultObjectからtitleなどは取得できるが、使用時に楽なのでまとめちゃう */
-	backLinks: TPostLink[];
-	twoHopLinks: (TPostLink & { links: TPostLink[] })[];
+	backLinks: TNoteLink[];
+	twoHopLinks: (TNoteLink & { links: TNoteLink[] })[];
 };
 
 export type YMMap = {
@@ -73,9 +73,9 @@ export type YMMap = {
 };
 
 export type TVault = {
-	posts: TPost[];
+	notes: TNote[];
 	pathMap: PathMap;
 	createdMap: YMMap;
 };
 
-export type MetaProps = { vault: TVault; post: TPost };
+export type MetaProps = { vault: TVault; post: TNote };

@@ -1,5 +1,5 @@
 import path from "node:path";
-import { blogDirPath, postsDirPath } from "@/features/metadata/constant";
+import { blogDirPath, notesDirPath } from "@/features/metadata/constant";
 import { strictEntries, strictFromEntries } from "@/utils/object";
 import { normalizePath } from "@/utils/path";
 import { redirect } from "next/navigation";
@@ -43,7 +43,7 @@ const redirectMap: { [key: string]: string } = strictFromEntries(
 		...strictFromEntries(
 			oldBlogDirPaths.map((p) => [
 				p,
-				path.join("/", postsDirPath, blogDirPath, p),
+				path.join("/", notesDirPath, blogDirPath, p),
 			]),
 		),
 	} satisfies { [key: string]: string }).map(([k, v]) => [

@@ -4,7 +4,7 @@ import { css } from "styled-system/css";
 import type { BookMarkItem } from "./type";
 
 import { NextLinkButton } from "@/components/Link/NextLink";
-import { postsDirPath } from "@/features/metadata/constant";
+import { notesDirPath } from "@/features/metadata/constant";
 import path from "path-browserify";
 import { HStack, Stack } from "styled-system/jsx";
 
@@ -36,7 +36,7 @@ export const BookmarkGroup = ({ items }: { items: BookMarkItem[] }) => {
 							px={1.5}
 							py={1.5}
 							rounded={"md"}
-							href={path.join("/", postsDirPath, normalizePath(item.path))}
+							href={path.join("/", notesDirPath, normalizePath(item.path))}
 							variant={"ghost"}
 							gap={1}
 						>

@@ -12,7 +12,7 @@ import remarkFrontmatter, {
 
 import {} from "remark-extract-frontmatter";
 
-import { assetsDirPath, postsDirPath } from "@/features/metadata/constant";
+import { assetsDirPath, notesDirPath } from "@/features/metadata/constant";
 import remarkGfm from "remark-gfm";
 
 export const createParseProcessor = (
@@ -34,7 +34,7 @@ export const createParseProcessor = (
 		.use(wikiLinkPlugin, {
 			fileTrees,
 			assetPath: assetsDirPath,
-			rootPath: postsDirPath,
+			rootPath: notesDirPath,
 			parentsLinks,
 		} satisfies WikiLinkOption)
 		.use(remarkFrontmatter, [

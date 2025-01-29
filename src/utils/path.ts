@@ -1,4 +1,4 @@
-import { postsDirPath } from "@/features/metadata/constant";
+import { notesDirPath } from "@/features/metadata/constant";
 import path from "path-browserify";
 
 /**
@@ -44,5 +44,5 @@ export const hasExtensionButNotMD = (str: string): boolean => {
 };
 
 export const isTestDirPath = (str: string): boolean => {
-	return str.startsWith(normalizePath(path.join("/", postsDirPath, "test")));
+	return str.startsWith(normalizePath(path.join("/", notesDirPath, "test")));
 };

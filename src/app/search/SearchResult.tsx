@@ -25,7 +25,7 @@ export const SearchResult = ({
 			</HStack>
 		);
 	if (!data) return <div>データが取得できませんでした</div>;
-	if (data.posts.length === 0) return <div>検索結果がありません</div>;
+	if (data.notes.length === 0) return <div>検索結果がありません</div>;
 
 	return (
 		<>
@@ -37,7 +37,7 @@ export const SearchResult = ({
 					gridTemplateColumns={"repeat(auto-fill, minmax(200px, 1fr))"}
 					gap="10px"
 				>
-					{data.posts.map((r) => (
+					{data.notes.map((r) => (
 						<Link
 							asChild
 							key={r.path}

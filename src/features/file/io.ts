@@ -20,7 +20,7 @@ export const getVaultObject = (): TVault => {
 		return vaultObject;
 	} catch (error) {
 		console.error("vaultMetadataFilePathの取得でエラー", error);
-		return { posts: [], pathMap: {}, createdMap: {} };
+		return { notes: [], pathMap: {}, createdMap: {} };
 	}
 };
 

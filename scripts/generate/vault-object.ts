@@ -11,8 +11,8 @@ import type {
 	PathMap,
 	TLinkMetaData,
 	TListItemMetaData,
-	TPost,
-	TPostIndependence,
+	TNote,
+	TNoteIndependence,
 	TPostMetaData,
 	TVault,
 	YMMap,
@@ -38,7 +38,7 @@ import type { Element, ElementContent } from "hast";
 
 import { getFileDate } from "@/components/FrontMatter/util";
 import {
-	postsDirPath,
+	notesDirPath,
 	vaultMetadataFilePath,
 	withAssetsDirPath,
 } from "@/features/metadata/constant";
@@ -293,8 +293,8 @@ export const convertRootContentsToFileMetadata = (
 
 export const convertFileEntityToTPostIndependence = (
 	fileEntity: FileEntity,
-): TPostIndependence => {
-	const currentPath = normalizePath(path.join(postsDirPath, fileEntity.path));
+): TNoteIndependence => {
+	const currentPath = normalizePath(path.join(notesDirPath, fileEntity.path));
 	const [basename, extension] = fileEntity.name.split(".");
 	const metadata = convertRootContentsToFileMetadata(
 		fileEntity.root.children,
@@ -320,7 +320,7 @@ export const convertFileEntityToTPostIndependence = (
 
 	const frontmatter = fileEntity.fileData.frontmatter;
 
-	const data: TPostIndependence = {
+	const data: TNoteIndependence = {
 		basename: basename ?? fileEntity.name,
 		extension: extension ?? "",
 		path: currentPath,
@@ -341,27 +341,27 @@ export const convertFileEntityToTPostIndependence = (
 };
 
 export const injectAllLinksToTPostIndependence = (
-	iPosts: TPostIndependence[],
-): TPost[] => {
-	const posts = iPosts.map((p): TPost => {
+	iNotes: TNoteIndependence[],
+): TNote[] => {
+	const notes = iNotes.map((p): TNote => {
 		return { ...p, backLinks: [], twoHopLinks: [] };
 	});
 
 	// inject backLink
-	for (const post of iPosts) {
-		for (const link of [...post.metadata.links, ...post.metadata.embeds]) {
+	for (const note of iNotes) {
+		for (const link of [...note.metadata.links, ...note.metadata.embeds]) {
 			// .md以外の.**の場合は何もしない
 			if (hasExtensionButNotMD(link.path)) continue;
 
-			const targetIndex = posts.findIndex((p) => {
+			const targetIndex = notes.findIndex((p) => {
 				return isSamePath(dividePathAndExtension(p.path)[0], link.path);
 			});
-			const target = posts[targetIndex];
-			if (target?.backLinks.find((t) => t.path === post.path)) continue;
-			posts[targetIndex]?.backLinks.push({
-				path: post.path,
-				title: post.basename,
-				thumbnailPath: post.thumbnailPath,
+			const target = notes[targetIndex];
+			if (target?.backLinks.find((t) => t.path === note.path)) continue;
+			notes[targetIndex]?.backLinks.push({
+				path: note.path,
+				title: note.basename,
+				thumbnailPath: note.thumbnailPath,
 			});
 		}
 	}
@@ -387,14 +387,14 @@ export const injectAllLinksToTPostIndependence = (
 	 * 日本語で表すと、「同じfrontLinkを持つものを関連づけ、frontLink経由のtwoHopLinkとする」という感じ
 	 */
 
-	for (const post of posts) {
+	for (const post of notes) {
 		for (const link of [...post.metadata.links, ...post.metadata.embeds]) {
 			if (post.twoHopLinks?.find((thl) => thl.path === link.path)) continue;
 			// .md以外の.**の場合は何もしない
 			if (hasExtensionButNotMD(link.path)) continue;
 
 			// 同じlinkを持つpostをまとめる
-			const targets = posts.filter((p) => {
+			const targets = notes.filter((p) => {
 				// おおもとのファイルと同じ場合は除外
 				if (isSamePath(post.path, p.path)) {
 					return false;
@@ -430,7 +430,7 @@ export const injectAllLinksToTPostIndependence = (
 			});
 		}
 	}
-	return posts;
+	return notes;
 };
 
 /**
@@ -442,14 +442,14 @@ const createPathMap = (files: FileEntity[]): PathMap => {
 		const id = idParser(file, file.fileData.frontmatter);
 
 		if (id) {
-			const pathName = normalizePath(path.join(postsDirPath, file.path));
-			pathMap[pathName] = normalizePath(path.join(postsDirPath, id));
+			const pathName = normalizePath(path.join(notesDirPath, file.path));
+			pathMap[pathName] = normalizePath(path.join(notesDirPath, id));
 		}
 	}
 	return pathMap;
 };
 
-const createCreatedMap = (files: TPost[]): YMMap => {
+const createCreatedMap = (files: TNote[]): YMMap => {
 	const createdMap: YMMap = {};
 	for (const file of files) {
 		const { created } =
@@ -480,11 +480,11 @@ export const createVaultFile = async (): Promise<TVault> => {
 	// 	JSON.stringify(flattened[0]?.root.children),
 	// );
 
-	const tIPost = flattened.map((f) => convertFileEntityToTPostIndependence(f));
-	const tPosts = injectAllLinksToTPostIndependence(tIPost);
-	const createdMap = createCreatedMap(tPosts);
+	const tiNotes = flattened.map((f) => convertFileEntityToTPostIndependence(f));
+	const tNotes = injectAllLinksToTPostIndependence(tiNotes);
+	const createdMap = createCreatedMap(tNotes);
 
-	return { posts: tPosts, pathMap, createdMap };
+	return { notes: tNotes, pathMap, createdMap };
 };
 
 export const main = async () => {

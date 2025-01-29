@@ -20,7 +20,7 @@ export default async function Page({
 
 	const hashTagList: string[] = [
 		...new Set(
-			vault.posts
+			vault.notes
 				.filter((p) => !(IS_PRODUCTION && isTestDirPath(p.path)))
 				.flatMap((p) => p.metadata.tags.map((t) => t.tag)),
 		),

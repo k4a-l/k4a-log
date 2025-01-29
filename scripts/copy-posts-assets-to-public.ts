@@ -3,11 +3,11 @@
 import fs from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { postsDirPath } from "@/features/metadata/constant";
+import { notesDirPath } from "@/features/metadata/constant";
 
 const rootDir = dirname(dirname(fileURLToPath(import.meta.url)));
-const assetsPath = join(rootDir, "assets", postsDirPath);
-const publicPath = join(rootDir, "public", postsDirPath);
+const assetsPath = join(rootDir, "assets", notesDirPath);
+const publicPath = join(rootDir, "public", notesDirPath);
 
 // delete below file of /public/assets
 const deleteExistsFile = () => {

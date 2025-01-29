@@ -8,8 +8,8 @@ export const vaultMetadataFilePath = path.join(
 	"vault.json",
 );
 
-export const postsDirPath = "notes";
-export const withAssetsDirPath = path.join(assetsDirPath, postsDirPath);
+export const notesDirPath = "notes";
+export const withAssetsDirPath = path.join(assetsDirPath, notesDirPath);
 
 export const bookmarkFilePath = path.join(
 	assetsDirPath,

@@ -1,4 +1,4 @@
-import type { TPost } from "@/features/metadata/type";
+import type { TNote } from "@/features/metadata/type";
 import { Button } from "@/park-ui/components/button";
 import { FileIcon, Link2Icon } from "lucide-react";
 import { css } from "styled-system/css";
@@ -9,7 +9,7 @@ import { normalizePath } from "@/utils/path";
 import path from "path-browserify";
 import { Stack } from "styled-system/jsx";
 
-export const BackLinks = ({ tPost }: { tPost: TPost }) => {
+export const BackLinks = ({ tPost }: { tPost: TNote }) => {
 	return (
 		<>
 			<p
@@ -52,7 +52,7 @@ export const BackLinks = ({ tPost }: { tPost: TPost }) => {
 	);
 };
 
-export const TwoHopLinks = ({ tPost }: { tPost: TPost }) => {
+export const TwoHopLinks = ({ tPost }: { tPost: TNote }) => {
 	return (
 		<>
 			{tPost?.twoHopLinks.map((thl) => (

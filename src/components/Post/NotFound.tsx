@@ -12,7 +12,7 @@ import { css } from "styled-system/css";
 import { HStack, Spacer, Stack } from "styled-system/jsx";
 
 import path from "node:path";
-import { postsDirPath } from "@/features/metadata/constant";
+import { notesDirPath } from "@/features/metadata/constant";
 import { Link } from "@/park-ui/components/link";
 import { normalizePath } from "@/utils/path";
 import Fuse from "fuse.js";
@@ -21,7 +21,7 @@ export const PostNotFound = async ({ href: _href }: { href: string }) => {
 	const href = decodeURIComponent(_href.split(/\\|\//).join("/"));
 	const vault = getVaultObject();
 
-	const searchTargets = vault.posts.map((p) => ({
+	const searchTargets = vault.notes.map((p) => ({
 		...p,
 		title: p.metadata.frontmatter?.title ?? p.basename,
 	}));
@@ -127,7 +127,7 @@ export const PostNotFound = async ({ href: _href }: { href: string }) => {
 														(
 														{normalizePath(pathOrId)
 															.split("/")
-															.filter((p) => p !== postsDirPath)
+															.filter((p) => p !== notesDirPath)
 															.join("/")}
 														)
 													</span>
@@ -143,7 +143,7 @@ export const PostNotFound = async ({ href: _href }: { href: string }) => {
 				<Spacer />
 				<HStack>
 					<NextLinkButton
-						href={path.join("/", postsDirPath)}
+						href={path.join("/", notesDirPath)}
 						variant={"subtle"}
 					>
 						<NotebookIcon />

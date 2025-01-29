@@ -13,7 +13,7 @@ export const ReactViewTaskList = ({
 }: PropsWithChildren<MetaProps & Props>) => {
 	return (
 		<Stack>
-			{vault.posts
+			{vault.notes
 				.filter((p) => p.metadata.listItems.some((l) => l.task))
 				.map((p) => ({
 					title: p.metadata.frontmatter?.title || p.basename,

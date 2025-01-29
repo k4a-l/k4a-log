@@ -1,5 +1,5 @@
 import path from "node:path";
-import { blogDirPath, postsDirPath } from "@/features/metadata/constant";
+import { blogDirPath, notesDirPath } from "@/features/metadata/constant";
 import { strictEntries, strictFromEntries } from "@/utils/object";
 import { normalizePath } from "@/utils/path";
 import type { Result } from "mdast-util-toc";
@@ -103,7 +103,7 @@ const specialId = {
 			// TODO: postから始まるpathと、それ以降から始まるpathが混在している
 			file.path.startsWith(normalizePath(path.join("/", blogDirPath))) ||
 			file.path.startsWith(
-				normalizePath(path.join("/", postsDirPath, blogDirPath)),
+				normalizePath(path.join("/", notesDirPath, blogDirPath)),
 			),
 		parser: (file) => file.path.split(/\\|\//).slice(0, -1).join("/"),
 	},
