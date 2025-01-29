@@ -56,7 +56,7 @@ export default function NotFound() {
 						</NextLinkButton>
 						<NextLinkButton href={searchPath} variant={"subtle"}>
 							<SearchIcon />
-							ポスト検索ページ
+							検索ページ
 						</NextLinkButton>
 					</HStack>
 				</Stack>
