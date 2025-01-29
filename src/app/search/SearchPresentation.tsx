@@ -2,17 +2,20 @@
 import { NextLink } from "@/components/Link/NextLink";
 import { Button } from "@/park-ui/components/button";
 import type { PickRequired } from "@/utils/type";
-import { Hash } from "lucide-react";
+import { Hash, XIcon } from "lucide-react";
 import { css } from "styled-system/css";
 import { HStack, Stack } from "styled-system/jsx";
+import { P, match } from "ts-pattern";
 import { SearchResult } from "./SearchResult";
 import { useHonoQuery } from "./hono";
 import { type SearchQuery, getSearchPath } from "./util";
 
 import { sortByItems } from "@/app/api/[[...route]]/search/constant";
 import { Select, createListCollection } from "@/park-ui/components/select";
+import { strictEntries, strictFromEntries } from "@/utils/object";
 import { CheckIcon, ChevronsUpDownIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
+import type { ComponentProps, ReactNode } from "react";
 import { SearchBox } from "./SearchBox";
 
 interface Item {
@@ -21,23 +24,34 @@ interface Item {
 	disabled?: boolean;
 }
 
+const ButtonTag = (props: ComponentProps<typeof Button>) => (
+	<Button
+		size="sm"
+		asChild
+		py={1}
+		px={2}
+		colorPalette={"blue"}
+		h={"1.5em"}
+		textDecoration={"none"}
+		{...props}
+	/>
+);
+
 export const SearchPresentation = ({
-	query,
-	tag,
-	page,
-	created,
-	sort,
 	hashTagList,
-	hasLink,
-}: PickRequired<SearchQuery, "page"> & { hashTagList: string[] }) => {
-	const result = useHonoQuery("search", {
-		query,
-		tag,
-		created,
-		page: page.toString(),
-		sort,
-		hasLink,
-	});
+	searchQuery,
+}: {
+	hashTagList: string[];
+	searchQuery: PickRequired<SearchQuery, "page">;
+}) => {
+	const { query, tag, page, created, sort, hasLink } = searchQuery;
+
+	const result = useHonoQuery(
+		"search",
+		strictFromEntries(
+			strictEntries(searchQuery).map(([k, v]) => [k, v?.toString()]),
+		),
+	);
 
 	const router = useRouter();
 
@@ -53,6 +67,35 @@ export const SearchPresentation = ({
 		<>
 			<Stack maxW={"max(1000px,100%)"} w={"min(1000px,100%)"}>
 				<SearchBox />
+				<HStack>
+					{strictEntries(searchQuery).map(([k, v]) => {
+						return (
+							match(k)
+								.returnType<ReactNode>()
+								// 他の場所で表示するのでnull
+								.with("query", () => null)
+								.with("tag", () => null)
+								.with("includesTests", () => null)
+								.with("sort", () => null)
+								.with("page", () => null)
+								// 以下個別
+								.with(P.union("created", "hasLink"), () => (
+									<ButtonTag key={k}>
+										<NextLink
+											href={getSearchPath({
+												...searchQuery,
+												[k]: undefined,
+											})}
+										>
+											{k}:{v}
+											<XIcon />
+										</NextLink>
+									</ButtonTag>
+								))
+								.exhaustive()
+						);
+					})}
+				</HStack>
 
 				{hashTagList.length > 0 && (
 					<HStack
@@ -66,29 +109,21 @@ export const SearchPresentation = ({
 						p={2}
 					>
 						{hashTagList.map((tag) => (
-							<Button
-								size="sm"
-								asChild
-								py={1}
-								px={2}
-								colorPalette={"blue"}
+							<ButtonTag
 								key={tag}
 								variant={selectedTag === tag ? "solid" : "subtle"}
-								h={"1.5em"}
-								textDecoration={"none"}
 								gap={0}
 							>
 								<NextLink
-									href={
-										tag === selectedTag
-											? getSearchPath({ tag: "", query, page })
-											: getSearchPath({ tag, query, page })
-									}
+									href={getSearchPath({
+										...searchQuery,
+										tag: tag === selectedTag ? "" : tag,
+									})}
 								>
 									<Hash size={"1em"} />
 									{tag}
 								</NextLink>
-							</Button>
+							</ButtonTag>
 						))}
 					</HStack>
 				)}
@@ -129,7 +164,7 @@ export const SearchPresentation = ({
 						</Select.Positioner>
 					</Select.Root>
 				</HStack>
-				<SearchResult {...result} page={page} />
+				<SearchResult {...result} page={page} searchQuery={searchQuery} />
 			</Stack>
 		</>
 	);

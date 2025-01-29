@@ -38,13 +38,15 @@ export default async function Page({
 			/>
 			<Stack alignItems={"center"} w="full" h="full">
 				<SearchPresentation
-					query={query ? decodeURIComponent(query) : undefined}
-					tag={tag ? decodeURIComponent(tag) : undefined}
-					page={Number.isNaN(pageNum) ? 0 : pageNum}
-					created={created}
-					sort={sort}
+					searchQuery={{
+						query: query ? decodeURIComponent(query) : undefined,
+						tag: tag ? decodeURIComponent(tag) : undefined,
+						page: Number.isNaN(pageNum) ? 0 : pageNum,
+						created: created,
+						sort: sort,
+						hasLink: hasLink,
+					}}
 					hashTagList={hashTagList}
-					hasLink={hasLink}
 				/>
 			</Stack>
 		</PageWithTransition>

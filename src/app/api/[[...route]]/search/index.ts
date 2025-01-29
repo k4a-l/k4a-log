@@ -154,7 +154,7 @@ export const searchAPI = new Hono<BlankEnv, BlankInput, "/">().get(
 
 		return c.json({
 			notes: limited,
-			allNumber: vaultObject.notes.length,
+			allNumber: targets.length,
 		});
 	},
 );

@@ -9,14 +9,18 @@ import {} from "lucide-react";
 import { css } from "styled-system/css";
 import { HStack, Stack } from "styled-system/jsx";
 import type { useHonoQuery } from "./hono";
-import { getSearchPath } from "./util";
+import { type SearchQuery, getSearchPath } from "./util";
 
 export const SearchResult = ({
 	data,
 	error,
 	isLoading,
 	page,
-}: ReturnType<typeof useHonoQuery<"search">> & { page: number }) => {
+	searchQuery,
+}: ReturnType<typeof useHonoQuery<"search">> & {
+	page: number;
+	searchQuery: SearchQuery;
+}) => {
 	if (error) return <div>データの取得でエラーが発生しました</div>;
 	if (isLoading)
 		return (
@@ -115,6 +119,7 @@ export const SearchResult = ({
 					page={page}
 					allNumber={data.allNumber}
 					pageViewLength={pageViewLength}
+					searchQuery={searchQuery}
 				/>
 			) : null}
 		</>
@@ -125,8 +130,9 @@ const Pagination = (props: {
 	page: number;
 	allNumber: number;
 	pageViewLength: number;
+	searchQuery: SearchQuery;
 }) => {
-	const { page, allNumber, pageViewLength } = props;
+	const { page, allNumber, pageViewLength, searchQuery } = props;
 	const maxPage = Math.ceil(allNumber / pageViewLength);
 	return (
 		<HStack justifyContent={"space-between"}>
@@ -134,7 +140,7 @@ const Pagination = (props: {
 			<NextLinkButton
 				size={"sm"}
 				disabled={page < 1}
-				href={getSearchPath({ page: page - 1, query: "", tag: "" })}
+				href={getSearchPath({ ...searchQuery, page: page - 1 })}
 			>
 				前へ
 			</NextLinkButton>
@@ -142,7 +148,12 @@ const Pagination = (props: {
 			<NextLinkButton
 				size={"sm"}
 				disabled={page >= maxPage - 1}
-				href={getSearchPath({ page: page + 1, query: "", tag: "" })}
+				href={getSearchPath({
+					...searchQuery,
+					page: page + 1,
+					query: "",
+					tag: "",
+				})}
 			>
 				次へ
 			</NextLinkButton>
