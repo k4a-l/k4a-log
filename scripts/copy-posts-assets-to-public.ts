@@ -25,6 +25,9 @@ const copyFiles = (srcPath: string, destPath: string) => {
 	for (const file of files) {
 		const srcFullPath = join(srcPath, file.name);
 		const destFullPath = join(destPath, file.name);
+
+		if (file.name.startsWith(".")) continue;
+
 		if (file.isDirectory()) {
 			// ディレクトリだった場合は、再帰的に処理する
 			// .obsidianファイルは無視する
