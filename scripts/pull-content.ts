@@ -10,17 +10,21 @@ const workDir = path.resolve(__dirname, "../.cloned-repo");
 const targetDir = path.resolve(__dirname, `../assets/${notesDirPath}`);
 
 // 前処理
-// workDirを削除
-fs.rmSync(workDir, { recursive: true, force: true });
-console.log(`deleted ${workDir}`);
+// workDirが存在していたら削除
+if (fs.existsSync(workDir)) {
+	fs.rmSync(workDir, { recursive: true, force: true });
+	console.log(`deleted ${workDir}`);
+}
 
 // targetDirの中身を'tests'を除いて全て削除
-const files = fs.readdirSync(targetDir);
-for (const file of files) {
-	if (file === "tests") continue;
-	fs.rmSync(path.join(targetDir, file), { recursive: true, force: true });
+if (fs.existsSync(targetDir)) {
+	const files = fs.readdirSync(targetDir);
+	for (const file of files) {
+		if (file === "tests") continue;
+		fs.rmSync(path.join(targetDir, file), { recursive: true, force: true });
+	}
+	console.log(`deleted all files in ${targetDir}`);
 }
-console.log(`deleted all files in ${targetDir}`);
 
 try {
 	execSync(`git clone ${contentRepoUrl} ${workDir}`, { stdio: "inherit" });
