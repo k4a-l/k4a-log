@@ -4,6 +4,7 @@ import type { RootContent } from "mdast";
 import fs from "node:fs";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
+import { postsDirPath } from "@/features/metadata/constant";
 import type { TPostMetaData } from "@/features/metadata/type";
 import { expect, test } from "vitest";
 import {
@@ -20,14 +21,14 @@ const parsedJson = JSON.parse(json) as RootContent[];
 test("1", () => {
 	const result = convertRootContentsToFileMetadata(
 		parsedJson,
-		"/posts/tests/SOME.md",
+		`/${postsDirPath}/tests/SOME.md`,
 	);
 	const expected: TPostMetaData = {
 		embeds: [
 			{
 				title: "COMMON",
 				aliasTitle: "Embed link",
-				path: String.raw`/posts\tests\SYNTAX TEST\COMMON`,
+				path: String.raw`/${postsDirPath}\tests\SYNTAX TEST\COMMON`,
 			},
 		],
 		headings: [
@@ -36,7 +37,7 @@ test("1", () => {
 		],
 		links: [
 			{
-				path: String.raw`/posts\tests\SYNTAX TEST\COMMON`,
+				path: String.raw`/${postsDirPath}\tests\SYNTAX TEST\COMMON`,
 				title: "COMMON",
 				aliasTitle: "link",
 			},

@@ -1,20 +1,20 @@
 // assets配下のmd以外のファイルをpublicにコピーする
-// 実行方法: deno run --allow-read --allow-write scripts/copy-posts-assets-to-public.ts
 
 import fs from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { postsDirPath } from "@/features/metadata/constant";
 
 const rootDir = dirname(dirname(fileURLToPath(import.meta.url)));
-const assetsPath = join(rootDir, "assets", "posts");
-const publicPath = join(rootDir, "public", "posts");
+const assetsPath = join(rootDir, "assets", postsDirPath);
+const publicPath = join(rootDir, "public", postsDirPath);
 
 // delete below file of /public/assets
 const deleteExistsFile = () => {
 	fs.rmSync(publicPath, { recursive: true, force: true });
 };
 
-// copy files without '.md' extension and ignore '.obsidian' directory from './assets/posts' to /public/assets
+// copy files without '.md' extension and ignore '.obsidian' directory from './assets' to /public/assets
 // Preserve file and directory structure and recursively copy to deeper levels
 const copyFiles = (srcPath: string, destPath: string) => {
 	// srcPath配下のファイルを読み込む

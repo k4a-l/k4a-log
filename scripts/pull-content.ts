@@ -1,3 +1,5 @@
+import { postsDirPath } from "@/features/metadata/constant";
+
 const { execSync } = require("node:child_process");
 const fs = require("node:fs");
 const path = require("node:path");
@@ -5,7 +7,7 @@ const path = require("node:path");
 const contentRepoUrl = `https://${process.env.GITHUB_TOKEN}@github.com/k4a-l/k4a-log-content.git`;
 
 const workDir = path.resolve(__dirname, "../.cloned-repo");
-const targetDir = path.resolve(__dirname, "../assets/posts");
+const targetDir = path.resolve(__dirname, `../assets/${postsDirPath}`);
 
 // 前処理
 // workDirを削除

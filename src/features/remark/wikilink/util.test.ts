@@ -1,3 +1,4 @@
+import { postsDirPath } from "@/features/metadata/constant";
 import { describe, expect, test } from "vitest";
 import { type FileTree, createFileTrees, findClosest } from "./util";
 
@@ -107,7 +108,7 @@ describe("直近パス検索", () => {
 });
 
 test("ファイル一覧取得", () => {
-	const directoryPath = "./assets/posts/tests";
+	const directoryPath = `./assets/${postsDirPath}/tests`;
 	const fileTree = createFileTrees(directoryPath);
 	expect(fileTree).toStrictEqual(TEST_FILE_TREE);
 });
