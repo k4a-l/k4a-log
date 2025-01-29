@@ -9,6 +9,7 @@ import { postDirPath } from "@/constants/path";
 import { getBookmarkObject } from "@/features/file/io";
 import { Button } from "@/park-ui/components/button";
 import { Link } from "@/park-ui/components/link";
+import { GoogleAnalytics } from "@next/third-parties/google";
 import { HashIcon, SearchIcon } from "lucide-react";
 import Image from "next/image";
 import type React from "react";
@@ -17,6 +18,8 @@ import { HStack, Spacer, Stack } from "styled-system/jsx";
 
 export const HEADER_HEIGHT = "34px";
 
+// biome-ignore lint/style/noNonNullAssertion: <explanation>
+const gaId = process.env.GA_ID!;
 export default async function RootLayout({
 	children,
 }: Readonly<{
@@ -27,6 +30,7 @@ export default async function RootLayout({
 	return (
 		<html lang="ja">
 			<Scroll />
+			{process.env.NODE_ENV === "production" && <GoogleAnalytics gaId={gaId} />}
 			<body>
 				<Stack
 					w="full"
