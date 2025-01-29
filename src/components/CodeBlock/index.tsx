@@ -21,13 +21,17 @@ export const CodeBlock = (
 			<code
 				className={css({
 					bg: "gray.3",
-					p: 1,
-					borderRadius: "0.2em",
+					":not(pre) > &": {
+						p: 1,
+						borderRadius: "0.2em",
+					},
 					"pre > &": {
 						my: 2,
 						color: "gray.12",
 						p: 2,
 						display: "block",
+						w: "auto",
+						overflow: "auto",
 					},
 				})}
 			>
