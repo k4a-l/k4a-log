@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { Button } from "@/park-ui/components/button";
+import { IconButton } from "@/park-ui/components/icon-button";
 
 import type { ComponentProps } from "react";
 import type { StrictOmit } from "ts-essentials";
@@ -28,5 +29,28 @@ export const NextLinkButton = (
 		<Button fontWeight={"normal"} textDecoration={"none"} {...others} asChild>
 			<NextLink href={props.href}>{children}</NextLink>
 		</Button>
+	);
+};
+
+export const NextLinkIconButton = (
+	props: StrictOmit<ComponentProps<typeof Button>, "asChild"> & {
+		href: string;
+	},
+) => {
+	const { disabled, children, ...others } = props;
+
+	if (disabled) {
+		return <Button {...props} />;
+	}
+
+	return (
+		<IconButton
+			fontWeight={"normal"}
+			textDecoration={"none"}
+			{...others}
+			asChild
+		>
+			<NextLink href={props.href}>{children}</NextLink>
+		</IconButton>
 	);
 };

@@ -8,7 +8,7 @@ import { fromDateParamString, searchQueryKey } from "@/app/search/util";
 import { getVaultObject } from "@/features/file/io";
 import { idParser } from "@/features/remark/frontmatter";
 import { IS_PRODUCTION } from "@/utils/env";
-import { isTestDirPath } from "@/utils/path";
+import { isSamePath, isTestDirPath } from "@/utils/path";
 
 import { pageViewLength, sortStrategy } from "./constant";
 
@@ -98,9 +98,9 @@ export const searchAPI = new Hono<BlankEnv, BlankInput, "/">().get(
 
 				const isHasLinkMatch = (() => {
 					if (!hasLink) return true;
-					return [...p.metadata.links, ...p.metadata.embeds].find(
-						(l) => l.title === hasLink,
-					);
+					return [...p.metadata.links, ...p.metadata.embeds].find((l) => {
+						return l.title === hasLink || isSamePath(l.path, hasLink);
+					});
 				})();
 
 				return (

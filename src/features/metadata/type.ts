@@ -6,6 +6,7 @@ export type TLinkMetaData = {
 	title: string;
 	path: string;
 	position?: Position;
+	isTagLink: boolean;
 };
 
 type TEmbedMetaData = TLinkMetaData;

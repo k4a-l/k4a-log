@@ -1,16 +1,20 @@
 import type {} from "hast";
-import type { RootContent } from "mdast";
 
 import fs from "node:fs";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
-import { notesDirPath } from "@/features/metadata/constant";
-import type { TNoteMetaData } from "@/features/metadata/type";
+
 import { expect, test } from "vitest";
+
+import { notesDirPath } from "@/features/metadata/constant";
+
 import {
 	convertRootContentsToFileMetadata,
 	createVaultFile,
 } from "./vault-object";
+
+import type { TNoteMetaData } from "@/features/metadata/type";
+import type { RootContent } from "mdast";
 
 const json = fs.readFileSync(
 	path.join(__dirname, "root-contents.json"),
@@ -29,6 +33,7 @@ test("1", () => {
 				title: "COMMON",
 				aliasTitle: "Embed link",
 				path: String.raw`/${notesDirPath}\tests\SYNTAX TEST\COMMON`,
+				isTagLink: false,
 			},
 		],
 		headings: [
@@ -40,6 +45,7 @@ test("1", () => {
 				path: String.raw`/${notesDirPath}\tests\SYNTAX TEST\COMMON`,
 				title: "COMMON",
 				aliasTitle: "link",
+				isTagLink: false,
 			},
 		],
 		listItems: [

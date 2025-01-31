@@ -42,7 +42,7 @@ export const BackLinks = ({ tNote }: { tNote: TNote }) => {
 						variant={"ghost"}
 					>
 						<NextLink href={path.join("/", normalizePath(bl.path))}>
-							<FileIcon />
+							<FileIcon className={css({ h: "1.25em", w: "1.25em" })} />
 							{bl.title}
 						</NextLink>
 					</Button>

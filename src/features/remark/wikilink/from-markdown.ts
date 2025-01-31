@@ -2,13 +2,13 @@ import path from "node:path";
 
 import { getWikiLinkExtension, lastOfArr, pathResolver } from "./util";
 
-import type { WikiLinkContentMap, WikiLinkOption } from "./type";
 import type { WikiLink, WikiLinkData } from "@/types/mdast";
 import type {
 	CompileContext,
 	Extension as FromMarkdownExtension,
 	Token,
 } from "mdast-util-from-markdown";
+import type { WikiLinkContentMap, WikiLinkOption } from "./type";
 
 export function fromMarkdown(
 	opts: Required<WikiLinkOption>,
@@ -43,6 +43,27 @@ export function fromMarkdown(
 
 		const wikiLink = child as WikiLinkContentMap;
 
+		// TagLinkの判定
+		const before =
+			stack.children.length >= 2 ? stack.children.slice(-2)[0] : undefined;
+		let isTagLink = false;
+		if (before?.type === "text") {
+			if (before.value === "#") {
+				stack.children.splice(-2, 1);
+				isTagLink = true;
+			} else if (before.value.endsWith("#")) {
+				stack.children.splice(-2, 1, {
+					...before,
+					value: before.value.slice(0, -1),
+				});
+				isTagLink = true;
+			}
+		}
+		wikiLink.data = {
+			...wikiLink.data,
+			isTagLink,
+		} as WikiLinkContentMap["data"];
+
 		wikiLink.data = {
 			...wikiLink.data,
 			...createWikiLinkData(token, wikiLink.value, wikiLink, opts),
@@ -71,10 +92,12 @@ const createWikiLinkData = (
 		if (permalink.startsWith("#")) return permalink;
 		return `/${permalink}`;
 	};
+
 	const hrefTemplate = defaultHrefTemplate;
 	const pathValue = _pathValue.trim();
 
 	const isEmbed = Boolean(token.embed);
+	const isTagLink = Boolean(wikiLink.data?.isTagLink);
 
 	const parentsLinks = opts.parentsLinks.map((p) => decodeURIComponent(p));
 	const currentPaths: string[] =
@@ -133,6 +156,7 @@ const createWikiLinkData = (
 		{ type: "text", value: displayName },
 	];
 	const isDeadLink = _link === undefined;
+
 	const hProperties: WikiLinkData["hProperties"] = {
 		className: classNames,
 		href: isDeadLink ? link : hrefTemplate(link),
@@ -158,6 +182,7 @@ const createWikiLinkData = (
 			.map((p) => encodeURIComponent(p))
 			.join(" "),
 		isDeadLink: isDeadLink ? "true" : undefined,
+		isTagLink: isTagLink ? "true" : undefined,
 	};
 
 	return {
@@ -169,5 +194,6 @@ const createWikiLinkData = (
 		isEmbed,
 		hProperties,
 		hChildren,
+		isTagLink,
 	};
 };

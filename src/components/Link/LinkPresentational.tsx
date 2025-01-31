@@ -1,6 +1,6 @@
 "use client";
 
-import { Link as LinkIcons } from "lucide-react";
+import { Link as LinkIcons, SearchIcon } from "lucide-react";
 import path from "path-browserify";
 import {
 	type FC,
@@ -11,7 +11,7 @@ import {
 } from "react";
 
 import { getSearchPath } from "@/app/search/util";
-import { NextLink } from "@/components/Link/NextLink";
+import { NextLink, NextLinkIconButton } from "@/components/Link/NextLink";
 import { embedMarkdownClass } from "@/components/Toc";
 import { IconButton } from "@/park-ui/components/icon-button";
 import { Link } from "@/park-ui/components/link";
@@ -31,19 +31,65 @@ type LinkPresentationalType = StrictOmit<
 type MDLinkPresentationalType = PropsWithChildren<
 	LinkPresentationalType & { pathMap: PathMap }
 >;
+
+const TransitionLinkContainer: FC<
+	PropsWithChildren<
+		Pick<WikiLinkData["hProperties"], "isTagLink" | "href" | "title">
+	>
+> = ({ isTagLink, href, title, children }) => {
+	if (!isTagLink) return children;
+
+	return (
+		<HStack
+			alignItems={"stretch"}
+			bg="gray.2"
+			borderColor={"blue.5"}
+			borderRadius={"md"}
+			borderWidth={1}
+			display={"inline-flex"}
+			gap={1}
+			m={0.5}
+			pl={2}
+		>
+			{children}
+			<NextLinkIconButton
+				borderRadius={"none"}
+				className={css({ _hover: { "& > *": { transform: "scale(1.2)" } } })}
+				colorPalette={"blue"}
+				colorScheme={"blue"}
+				h="auto"
+				href={getSearchPath({ hasLink: title })}
+				minW="2em"
+				p={"0.2em"}
+				size="xs"
+				variant={"subtle"}
+			>
+				<SearchIcon
+					className={css({
+						transition: "0.2s",
+						w: "0.8em",
+						h: "0.8em",
+					})}
+				/>
+			</NextLinkIconButton>
+		</HStack>
+	);
+};
 export const TransitionLinkDead: FC<
 	PropsWithChildren<MDLinkPresentationalType>
-> = ({ href, children, pathMap, ...others }) => {
+> = ({ href, children, pathMap, isTagLink, alias, title, ...others }) => {
 	return (
-		<Link asChild color="blue.9">
-			<NextLink
-				{...others}
-				href={getSearchPath({ hasLink: href })}
-				style={{ cursor: "help" }}
-			>
-				{children}
-			</NextLink>
-		</Link>
+		<TransitionLinkContainer href={href} isTagLink={isTagLink} title={title}>
+			<Link asChild color="blue.8">
+				<NextLink
+					{...others}
+					href={getSearchPath({ hasLink: href })}
+					style={{ cursor: "help" }}
+				>
+					{children}
+				</NextLink>
+			</Link>
+		</TransitionLinkContainer>
 	);
 };
 
@@ -53,14 +99,17 @@ export const TransitionLinkExist: FC<MDLinkPresentationalType> = ({
 	alias,
 	title,
 	pathMap,
+	isTagLink,
 	...others
 }) => {
 	const pathOrId = path.join(pathMap[normalizePath(href)] ?? href);
 
 	return (
-		<Link asChild color={"blue.10"}>
-			<NextLink href={pathOrId}>{alias ?? title ?? children}</NextLink>
-		</Link>
+		<TransitionLinkContainer href={href} isTagLink={isTagLink} title={title}>
+			<Link asChild color={"blue.10"}>
+				<NextLink href={pathOrId}>{alias ?? title ?? children}</NextLink>
+			</Link>
+		</TransitionLinkContainer>
 	);
 };
 

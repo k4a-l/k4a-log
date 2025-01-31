@@ -11,9 +11,9 @@ import { strictEntries, strictFromEntries } from "@/utils/object";
 import { css } from "styled-system/css";
 import { HStack, Stack } from "styled-system/jsx";
 
-import { useHonoQuery } from "./hono";
 import { SearchBox } from "./SearchBox";
 import { SearchResult } from "./SearchResult";
+import { useHonoQuery } from "./hono";
 import { type SearchQuery, getSearchPath } from "./util";
 
 import type { PickRequired } from "@/utils/type";
@@ -29,6 +29,7 @@ const ButtonTag = (props: ComponentProps<typeof Button>) => (
 	<Button
 		asChild
 		colorPalette={"blue"}
+		fontWeight={"normal"}
 		h={"1.5em"}
 		px={2}
 		py={1}
@@ -40,9 +41,11 @@ const ButtonTag = (props: ComponentProps<typeof Button>) => (
 
 export const SearchPresentation = ({
 	hashTagList,
+	linkTagList,
 	searchQuery,
 }: {
 	hashTagList: string[];
+	linkTagList: string[];
 	searchQuery: PickRequired<SearchQuery, "page">;
 }) => {
 	const { query, tag, page, created, sort, hasLink } = searchQuery;
@@ -57,6 +60,7 @@ export const SearchPresentation = ({
 	const router = useRouter();
 
 	const selectedTag = hashTagList.find((_t) => _t === tag);
+	const selectedLinkTag = linkTagList.find((_t) => _t === hasLink);
 
 	const sortBy = sortByItems.find((i) => i.value === sort) ?? sortByItems[0];
 
@@ -79,8 +83,9 @@ export const SearchPresentation = ({
 								.with("includesTests", () => null)
 								.with("sort", () => null)
 								.with("page", () => null)
+								.with("hasLink", () => null)
 								// 以下個別
-								.with(P.union("created", "hasLink"), () => (
+								.with(P.union("created"), () => (
 									<ButtonTag key={k}>
 										<NextLink
 											href={getSearchPath({
@@ -88,7 +93,7 @@ export const SearchPresentation = ({
 												[k]: undefined,
 											})}
 										>
-											{k}:{v}
+											{k}: {v}
 											<XIcon />
 										</NextLink>
 									</ButtonTag>
@@ -97,37 +102,6 @@ export const SearchPresentation = ({
 						);
 					})}
 				</HStack>
-
-				{hashTagList.length > 0 && (
-					<HStack
-						className={css({
-							bg: "white",
-						})}
-						flexWrap={"wrap"}
-						gap={1}
-						p={2}
-						rounded={"md"}
-						w="100%"
-					>
-						{hashTagList.map((tag) => (
-							<ButtonTag
-								gap={0}
-								key={tag}
-								variant={selectedTag === tag ? "solid" : "subtle"}
-							>
-								<NextLink
-									href={getSearchPath({
-										...searchQuery,
-										tag: tag === selectedTag ? "" : tag,
-									})}
-								>
-									<Hash size={"1em"} />
-									{tag}
-								</NextLink>
-							</ButtonTag>
-						))}
-					</HStack>
-				)}
 
 				<HStack justifyContent={"end"}>
 					<Select.Root
@@ -166,6 +140,70 @@ export const SearchPresentation = ({
 					</Select.Root>
 				</HStack>
 				<SearchResult {...result} page={page} searchQuery={searchQuery} />
+
+				{hashTagList.length > 0 && (
+					<Stack bg="white" gap={2} p={2} rounded={"md"} w="100%">
+						<span
+							className={css({
+								fontSize: "0.8em",
+							})}
+						>
+							タグ
+						</span>
+						<HStack flexWrap={"wrap"} gap={1}>
+							{hashTagList.map((tag) => (
+								<ButtonTag
+									gap={0}
+									key={tag}
+									variant={selectedTag === tag ? "solid" : "subtle"}
+								>
+									<NextLink
+										href={getSearchPath({
+											...searchQuery,
+											page: 0,
+											tag: tag === selectedTag ? "" : tag,
+										})}
+									>
+										<Hash size={"1em"} />
+										{tag}
+									</NextLink>
+								</ButtonTag>
+							))}
+						</HStack>
+					</Stack>
+				)}
+
+				{linkTagList.length > 0 && (
+					<Stack bg="white" gap={2} p={2} rounded={"md"} w="100%">
+						<span
+							className={css({
+								fontSize: "0.8em",
+							})}
+						>
+							キーワード
+						</span>
+						<HStack flexWrap={"wrap"} gap={1}>
+							{linkTagList.map((lt) => (
+								<ButtonTag
+									colorPalette={"gray"}
+									gap={0}
+									key={lt}
+									variant={selectedLinkTag === lt ? "solid" : "subtle"}
+								>
+									<NextLink
+										href={getSearchPath({
+											...searchQuery,
+											page: 0,
+											hasLink: lt === selectedLinkTag ? "" : lt,
+										})}
+									>
+										{lt}
+									</NextLink>
+								</ButtonTag>
+							))}
+						</HStack>
+					</Stack>
+				)}
 			</Stack>
 		</>
 	);

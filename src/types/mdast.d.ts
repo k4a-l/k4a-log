@@ -2,6 +2,7 @@ import type { Literal } from "mdast";
 
 interface WikiLinkData extends Data {
 	isEmbed: boolean;
+	isTagLink: boolean;
 	type: "link" | "img" | "pdf" | "video" | "unknown";
 	exists: boolean;
 	alias: string;
@@ -20,6 +21,7 @@ interface WikiLinkData extends Data {
 		assetsDirPath: string;
 		// Array-like
 		parentsLinks: string;
+		isTagLink?: "true";
 		isDeadLink?: "true";
 	};
 }

@@ -26,6 +26,17 @@ export default async function Page({
 				.flatMap((p) => p.metadata.tags.map((t) => t.tag)),
 		),
 	];
+	const linkTagList: string[] = [
+		...new Set(
+			vault.notes
+				.filter((p) => !(IS_PRODUCTION && isTestDirPath(p.path)))
+				.flatMap((p) =>
+					[...p.metadata.links, ...p.metadata.embeds]
+						.filter((t) => t.isTagLink)
+						.map((l) => l.title),
+				),
+		),
+	];
 	const pageNum = page ? Number.parseInt(page) : 0;
 
 	return (
@@ -40,6 +51,7 @@ export default async function Page({
 			<Stack alignItems={"center"} h="full" w="full">
 				<SearchPresentation
 					hashTagList={hashTagList}
+					linkTagList={linkTagList}
 					searchQuery={{
 						query: query ? decodeURIComponent(query) : undefined,
 						tag: tag ? decodeURIComponent(tag) : undefined,

@@ -1,8 +1,8 @@
 "use client";
+
 import { pageViewLength } from "@/app/api/[[...route]]/search/constant";
 import { NextLink, NextLinkButton } from "@/components/Link/NextLink";
 import { Link } from "@/park-ui/components/link";
-import {} from "@/park-ui/components/select";
 import { Spinner } from "@/park-ui/components/spinner";
 import { normalizePath } from "@/utils/path";
 import { css } from "styled-system/css";
@@ -10,7 +10,23 @@ import { HStack, Stack } from "styled-system/jsx";
 
 import { type SearchQuery, getSearchPath } from "./util";
 
+import type { PropsWithChildren } from "react";
 import type { useHonoQuery } from "./hono";
+
+const IngContainer = ({ children }: PropsWithChildren) => {
+	return (
+		<div
+			className={css({
+				minH: "160px",
+				display: "flex",
+				justifyContent: "center",
+				alignItems: "center",
+			})}
+		>
+			{children}
+		</div>
+	);
+};
 
 export const SearchResult = ({
 	data,
@@ -22,15 +38,17 @@ export const SearchResult = ({
 	page: number;
 	searchQuery: SearchQuery;
 }) => {
-	if (error) return <div>データの取得でエラーが発生しました</div>;
+	if (error)
+		return <IngContainer>データの取得でエラーが発生しました</IngContainer>;
 	if (isLoading)
 		return (
-			<HStack justifyContent={"center"} p={4}>
+			<IngContainer>
 				<Spinner /> 取得中
-			</HStack>
+			</IngContainer>
 		);
-	if (!data) return <div>データが取得できませんでした</div>;
-	if (data.notes.length === 0) return <div>検索結果がありません</div>;
+	if (!data) return <IngContainer>データが取得できませんでした</IngContainer>;
+	if (data.notes.length === 0)
+		return <IngContainer>検索結果がありません</IngContainer>;
 
 	return (
 		<>
@@ -40,7 +58,7 @@ export const SearchResult = ({
 					flexDir={{ base: "column", sm: "row" }}
 					flexWrap={"wrap"}
 					gap="10px"
-					gridTemplateColumns={"repeat(auto-fill, minmax(200px, 1fr))"}
+					gridTemplateColumns={"repeat(auto-fill, minmax(160px, 1fr))"}
 				>
 					{data.notes.map((r) => (
 						<Link

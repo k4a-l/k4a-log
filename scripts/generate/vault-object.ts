@@ -1,11 +1,36 @@
 import fs, {} from "node:fs";
+import { readFile } from "node:fs/promises";
 import path from "node:path";
 
-import { readFile } from "node:fs/promises";
-
-import { createParseProcessor } from "@/features/remark/processor/parse";
-
+import { toString as mdastToString } from "mdast-util-to-string";
 import { v4 as uuid } from "uuid";
+import { VFile } from "vfile";
+
+import { getFileDate } from "@/components/FrontMatter/util";
+import {
+	notesDirPath,
+	vaultMetadataFilePath,
+	withAssetsDirPath,
+} from "@/features/metadata/constant";
+import {
+	type VFileData,
+	frontMatterKeys,
+	idParser,
+} from "@/features/remark/frontmatter";
+import { createParseProcessor } from "@/features/remark/processor/parse";
+import { createRunProcessor } from "@/features/remark/processor/run";
+import {
+	type FileTree,
+	createFileTrees,
+	imageExtensions,
+} from "@/features/remark/wikilink/util";
+import { writeFileRecursive } from "@/utils/file";
+import {
+	dividePathAndExtension,
+	hasExtensionButNotMD,
+	isSamePath,
+	normalizePath,
+} from "@/utils/path";
 
 import type {
 	PathMap,
@@ -17,40 +42,12 @@ import type {
 	TVault,
 	YMMap,
 } from "@/features/metadata/type";
-import {
-	type VFileData,
-	frontMatterKeys,
-	idParser,
-} from "@/features/remark/frontmatter";
-import { createRunProcessor } from "@/features/remark/processor/run";
-import {
-	type FileTree,
-	createFileTrees,
-	imageExtensions,
-} from "@/features/remark/wikilink/util";
+import type { WikiLinkData } from "@/types/mdast";
 import type { FindFromUnion } from "@/utils/type";
+import type { Element, ElementContent } from "hast";
 import type { Root, RootContent } from "mdast";
 import type { StrictOmit } from "ts-essentials";
 import type { Position } from "unist";
-import { VFile } from "vfile";
-
-import type { Element, ElementContent } from "hast";
-
-import { getFileDate } from "@/components/FrontMatter/util";
-import {
-	notesDirPath,
-	vaultMetadataFilePath,
-	withAssetsDirPath,
-} from "@/features/metadata/constant";
-import type { WikiLinkData } from "@/types/mdast";
-import { writeFileRecursive } from "@/utils/file";
-import {
-	dividePathAndExtension,
-	hasExtensionButNotMD,
-	isSamePath,
-	normalizePath,
-} from "@/utils/path";
-import { toString as mdastToString } from "mdast-util-to-string";
 
 // 各ファイル全部に繰り返す
 
@@ -171,6 +168,7 @@ export const convertNodeToFileMetadata = (
 						path: path,
 						aliasTitle: properties.alias,
 						position: node.position,
+						isTagLink: properties.isTagLink === "true",
 					});
 				} else {
 					r.links.push({
@@ -178,6 +176,7 @@ export const convertNodeToFileMetadata = (
 						path: path,
 						aliasTitle: properties.alias,
 						position: node.position,
+						isTagLink: properties.isTagLink === "true",
 					});
 				}
 			}
