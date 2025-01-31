@@ -169,8 +169,6 @@ const Pagination = (props: {
 				href={getSearchPath({
 					...searchQuery,
 					page: page + 1,
-					query: "",
-					tag: "",
 				})}
 				size={"sm"}
 			>
