@@ -27,7 +27,9 @@ if (fs.existsSync(targetDir)) {
 }
 
 try {
-	execSync(`git clone ${contentRepoUrl} ${workDir}`, { stdio: "inherit" });
+	execSync(`git clone --depth=1 ${contentRepoUrl} ${workDir}`, {
+		stdio: "inherit",
+	});
 	console.log("Content repository updated successfully.");
 } catch (error) {
 	console.error("Error updating content repository:", error);
