@@ -6,21 +6,13 @@ import { Hono } from "hono";
 
 import { fromDateParamString, searchQueryKey } from "@/app/search/util";
 import { getVaultObject } from "@/features/file/io";
+import { type NoteMeta, sortByCreatedNew } from "@/features/note/util";
 import { idParser } from "@/features/remark/frontmatter";
 import { isSamePath } from "@/utils/path";
 
 import { pageViewLength, sortStrategy } from "./constant";
 
 import type { BlankEnv, BlankInput } from "hono/types";
-
-export type NoteMeta = {
-	title: string;
-	path: string;
-	thumbnailPath?: string;
-	created?: string;
-	updated?: string;
-	description: string;
-};
 
 async function getFileList(path: string): Promise<string[]> {
 	try {
@@ -119,11 +111,7 @@ export const searchAPI = new Hono<BlankEnv, BlankInput, "/">().get(
 			})
 			.sort((a, b) => {
 				if (sort === "created-new") {
-					// 設定なしは常に最後
-					if (!a.created && !a.created) return 0;
-					if (!a.created) return 1;
-					if (!b.created) return -1;
-					return a.created < b.created ? 1 : -1;
+					return sortByCreatedNew(a, b);
 				}
 				if (sort === "created-old") {
 					if (!a.created && !a.created) return 0;

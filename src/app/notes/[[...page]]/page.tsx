@@ -4,11 +4,16 @@ import { BookmarkInnerPart } from "@/components/Bookmark";
 import { PageWithTransition } from "@/components/Common/pageWithTransition";
 import { FrontMatter } from "@/components/FrontMatter";
 import { MyHead } from "@/components/Head";
+import { BeforeAfterNote } from "@/components/Note/BeforeAfter";
 import { NoteNotFound } from "@/components/Note/NotFound";
 import { BackLinks, TwoHopLinks } from "@/components/NoteLink";
 import { SideTableOfContents } from "@/components/Toc";
 import { getBookmarkObject, getVaultObject } from "@/features/file/io";
-import { assetsDirPath, notesDirPath } from "@/features/metadata/constant";
+import {
+	assetsDirPath,
+	blogDirPath,
+	notesDirPath,
+} from "@/features/metadata/constant";
 import {
 	createRunProcessor,
 	createStringifyProcessor,
@@ -111,7 +116,7 @@ export default async function Page({ params }: Props) {
 				w="100%"
 			>
 				{bookmark.items.length > 0 && <BookmarkInnerPart root={bookmark} />}
-				<Stack maxW={"max(1000px,100%)"} w={"1000px"}>
+				<Stack maxW={"max(1000px,100%)"} minW={0} w={"1000px"}>
 					<Stack bg="white" p={4} rounded={"md"}>
 						<div
 							className={css({
@@ -124,9 +129,23 @@ export default async function Page({ params }: Props) {
 							{title}
 						</div>
 						{frontmatter ? <FrontMatter frontmatter={frontmatter} /> : null}
-						<div className="md-note-container">{fileData.content}</div>
+						<div
+							className={`md-note-container ${css({
+								minW: 0,
+								// w: "full",
+							})}`}
+						>
+							{fileData.content}
+						</div>
 					</Stack>
 					<Spacer h={4} />
+
+					{normalizePath(tNote.path).startsWith(
+						normalizePath(path.join(notesDirPath, blogDirPath)),
+					) ? (
+						<BeforeAfterNote note={tNote} vault={vaultObject} />
+					) : null}
+
 					{tNote?.backLinks.length ? (
 						<Stack
 							className={css({
