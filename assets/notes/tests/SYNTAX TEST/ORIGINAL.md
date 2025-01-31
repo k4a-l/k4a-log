@@ -27,6 +27,7 @@ array:
 [[#WikiLink]]
 [[COMMON#Lists]]
 [[ORIGINAL]]→自己リンク
+[[Draft]]
 
 #### 存在しない
 

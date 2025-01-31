@@ -29,6 +29,7 @@ import {
 	dividePathAndExtension,
 	hasExtensionButNotMD,
 	isSamePath,
+	isTestOnlyNote,
 	normalizePath,
 } from "@/utils/path";
 
@@ -479,7 +480,9 @@ export const createVaultFile = async (): Promise<TVault> => {
 	// 	JSON.stringify(flattened[0]?.root.children),
 	// );
 
-	const tiNotes = flattened.map((f) => convertFileEntityToTNoteIndependence(f));
+	const tiNotes = flattened
+		.map((f) => convertFileEntityToTNoteIndependence(f))
+		.filter((f) => !isTestOnlyNote(f));
 	const tNotes = injectAllLinksToTNoteIndependence(tiNotes);
 	const createdMap = createCreatedMap(tNotes);
 

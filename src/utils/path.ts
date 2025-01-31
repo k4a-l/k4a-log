@@ -2,6 +2,10 @@ import path from "path-browserify";
 
 import { notesDirPath } from "@/features/metadata/constant";
 
+import { IS_PRODUCTION } from "./env";
+
+import type { TNoteIndependence, TTagMetaData } from "@/features/metadata/type";
+
 /**
  * @see {@link normalizePath}
  */
@@ -44,6 +48,15 @@ export const hasExtensionButNotMD = (str: string): boolean => {
 	return /^(?!.*\.md$).*?\.[^.]+$/.test(str);
 };
 
-export const isTestDirPath = (str: string): boolean => {
+const isTestDirPath = (str: string): boolean => {
 	return str.startsWith(normalizePath(path.join("/", notesDirPath, "test")));
+};
+
+const hasDraftTag = (tags: TTagMetaData[]): boolean => {
+	return tags.some((t) => t.tag === "draft");
+};
+
+export const isTestOnlyNote = (note: TNoteIndependence): boolean => {
+	if (!IS_PRODUCTION) return false;
+	return hasDraftTag(note.metadata.tags) || isTestDirPath(note.path);
 };

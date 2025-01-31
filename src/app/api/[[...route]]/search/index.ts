@@ -7,8 +7,7 @@ import { Hono } from "hono";
 import { fromDateParamString, searchQueryKey } from "@/app/search/util";
 import { getVaultObject } from "@/features/file/io";
 import { idParser } from "@/features/remark/frontmatter";
-import { IS_PRODUCTION } from "@/utils/env";
-import { isSamePath, isTestDirPath } from "@/utils/path";
+import { isSamePath } from "@/utils/path";
 
 import { pageViewLength, sortStrategy } from "./constant";
 
@@ -62,7 +61,6 @@ export const searchAPI = new Hono<BlankEnv, BlankInput, "/">().get(
 		const vaultObject = getVaultObject();
 
 		const targets: NoteMeta[] = vaultObject.notes
-			.filter((p) => !(IS_PRODUCTION && isTestDirPath(p.path)))
 			.filter((p) => {
 				const isTagIncluded = (() => {
 					if (!tag) return true;

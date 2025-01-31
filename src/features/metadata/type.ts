@@ -23,7 +23,7 @@ export type TListItemMetaData = {
 	id: string;
 };
 
-type TTagMetaData = {
+export type TTagMetaData = {
 	tag: string;
 };
 

@@ -2,9 +2,7 @@ import { getSearchPath, toDateParamString } from "@/app/search/util";
 import { NextLink } from "@/components/Link/NextLink";
 import { getVaultObject } from "@/features/file/io";
 import { Link } from "@/park-ui/components/link";
-import { IS_PRODUCTION } from "@/utils/env";
 import { strictEntries } from "@/utils/object";
-import { isTestDirPath } from "@/utils/path";
 import { css } from "styled-system/css";
 import { HStack, Stack } from "styled-system/jsx";
 
@@ -34,9 +32,7 @@ export const SummarizeByYM = async () => {
 							typeof yKey === "number" ? yKey : Number.parseInt(yKey);
 
 						const yearCount = strictEntries(mValue).reduce(
-							(acc: number, v) =>
-								acc +
-								v[1].filter((p) => !(IS_PRODUCTION && isTestDirPath(p))).length,
+							(acc: number, v) => acc + v[1].length,
 							0,
 						);
 
@@ -60,10 +56,7 @@ export const SummarizeByYM = async () => {
 										const month =
 											typeof mKey === "number" ? mKey : Number.parseInt(mKey);
 
-										const monthCount = paths.filter(
-											(p) => !(IS_PRODUCTION && isTestDirPath(p)),
-										).length;
-
+										const monthCount = paths.length;
 										if (!monthCount) return;
 
 										return (
