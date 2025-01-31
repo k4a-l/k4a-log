@@ -51,5 +51,5 @@ public/notes
 assets/metadata/*
 
 # assets/notes配下のtestsフォルダ以外をignore
-assets/notes/**
+assets/notes/*
 !assets/notes/tests
