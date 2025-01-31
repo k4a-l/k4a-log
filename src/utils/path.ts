@@ -52,11 +52,21 @@ const isTestDirPath = (str: string): boolean => {
 	return str.startsWith(normalizePath(path.join("/", notesDirPath, "test")));
 };
 
+const isTemplateDirPath = (str: string): boolean => {
+	return str.startsWith(
+		normalizePath(path.join("/", notesDirPath, "template")),
+	);
+};
+
 const hasDraftTag = (tags: TTagMetaData[]): boolean => {
 	return tags.some((t) => t.tag === "draft");
 };
 
 export const isTestOnlyNote = (note: TNoteIndependence): boolean => {
 	if (!IS_PRODUCTION) return false;
-	return hasDraftTag(note.metadata.tags) || isTestDirPath(note.path);
+	return (
+		hasDraftTag(note.metadata.tags) ||
+		isTestDirPath(note.path) ||
+		isTemplateDirPath(note.path)
+	);
 };
