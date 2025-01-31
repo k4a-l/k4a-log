@@ -3,7 +3,9 @@
 import fs from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+
 import { notesDirPath } from "@/features/metadata/constant";
+import { IS_PRODUCTION } from "@/utils/env";
 
 const rootDir = dirname(dirname(fileURLToPath(import.meta.url)));
 const assetsPath = join(rootDir, "assets", notesDirPath);
@@ -37,6 +39,9 @@ const copyFiles = (srcPath: string, destPath: string) => {
 		} else if (file.name.endsWith(".md") === false) {
 			// ファイルだった場合は、ディレクトリ階層を保持してdestPath配下にコピーする
 			fs.copyFileSync(srcFullPath, destFullPath);
+			if (IS_PRODUCTION) {
+				fs.rmSync(srcFullPath, { recursive: true, force: true });
+			}
 		}
 	}
 };
