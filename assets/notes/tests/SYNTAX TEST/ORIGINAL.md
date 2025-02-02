@@ -105,6 +105,10 @@ array:
 
 > [!NOTE]- 開閉
 > コンテンツ
+>
+> - list
+
+> [!タイトル埋め込み]
 
 > [!abstract]
 > Lorem ipsum dolor sit amet

@@ -159,9 +159,17 @@
 		display: grid;
 		grid-template-rows: 0fr;
 		transition: 250ms grid-template-rows ease;
+
+		& ul,
+		& ol {
+			margin: 0;
+		}
 	}
 	[data-expanded="true"] .callout-content {
 		grid-template-rows: 1fr;
+	}
+	[data-expanded="false"] .callout-content {
+		display: none;
 	}
 	.callout-content > div {
 		overflow: hidden;

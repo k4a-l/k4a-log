@@ -123,7 +123,7 @@ const defaultConfig: Config = {
 	},
 };
 
-const REGEX = /^\[\!(\w+)\]([+-]?)/;
+const REGEX = /^\[\!(.+)\]([+-]?)/;
 
 /**
  * Check if the str is a valid callout type
@@ -252,7 +252,9 @@ const RemarkCalloutPlugin: Plugin = (
 						children: [
 							...remainingLines,
 							// これ以降はデフォルトの動作に任せる
-							{ type: "break" },
+							...(otherChildren.length
+								? ([{ type: "break" }] as PhrasingContent[])
+								: ([] as PhrasingContent[])),
 							...(otherChildren as PhrasingContent[]),
 						],
 					});
