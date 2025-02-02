@@ -11,9 +11,9 @@ import { strictEntries, strictFromEntries } from "@/utils/object";
 import { css } from "styled-system/css";
 import { HStack, Stack } from "styled-system/jsx";
 
+import { useHonoQuery } from "./hono";
 import { SearchBox } from "./SearchBox";
 import { SearchResult } from "./SearchResult";
-import { useHonoQuery } from "./hono";
 import { type SearchQuery, getSearchPath } from "./util";
 
 import type { PickRequired } from "@/utils/type";

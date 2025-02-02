@@ -10,8 +10,8 @@ import { HStack, Stack } from "styled-system/jsx";
 
 import { type SearchQuery, getSearchPath } from "./util";
 
-import type { PropsWithChildren } from "react";
 import type { useHonoQuery } from "./hono";
+import type { PropsWithChildren } from "react";
 
 const IngContainer = ({ children }: PropsWithChildren) => {
 	return (

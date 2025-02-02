@@ -2,13 +2,13 @@ import path from "node:path";
 
 import { getWikiLinkExtension, lastOfArr, pathResolver } from "./util";
 
+import type { WikiLinkContentMap, WikiLinkOption } from "./type";
 import type { WikiLink, WikiLinkData } from "@/types/mdast";
 import type {
 	CompileContext,
 	Extension as FromMarkdownExtension,
 	Token,
 } from "mdast-util-from-markdown";
-import type { WikiLinkContentMap, WikiLinkOption } from "./type";
 
 export function fromMarkdown(
 	opts: Required<WikiLinkOption>,
