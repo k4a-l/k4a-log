@@ -22,7 +22,6 @@ import { createRunProcessor } from "@/features/remark/processor/run";
 import {
 	type FileTree,
 	createFileTrees,
-	imageExtensions,
 } from "@/features/remark/wikilink/util";
 import { writeFileRecursive } from "@/utils/file";
 import {
@@ -32,6 +31,8 @@ import {
 	isTestOnlyNote,
 	normalizePath,
 } from "@/utils/path";
+
+import { getThumbnailPath } from "./util";
 
 import type {
 	PathMap,
@@ -49,19 +50,9 @@ import type { Element, ElementContent } from "hast";
 import type { Root, RootContent } from "mdast";
 import type { StrictOmit } from "ts-essentials";
 import type { Position } from "unist";
+import type { FileEntity, FileOrDirEntity } from "./type";
 
 // 各ファイル全部に繰り返す
-
-type FileEntity = {
-	type: "file";
-	name: string;
-	path: string;
-	root: Root;
-	fileData: VFileData;
-};
-type FileOrDirEntity =
-	| FileEntity
-	| { type: "dir"; name: string; children: FileOrDirEntity[] };
 
 const createParsedTree = async (
 	fileTrees: FileTree[],
@@ -293,6 +284,7 @@ export const convertRootContentsToFileMetadata = (
 
 export const convertFileEntityToTNoteIndependence = (
 	fileEntity: FileEntity,
+	fileTrees: FileTree[],
 ): TNoteIndependence => {
 	const currentPath = normalizePath(path.join(notesDirPath, fileEntity.path));
 	const [basename, extension] = fileEntity.name.split(".");
@@ -300,23 +292,8 @@ export const convertFileEntityToTNoteIndependence = (
 		fileEntity.root.children,
 		currentPath,
 	);
-	const thumbnailPath = [...metadata.embeds, ...metadata.links]
-		.sort((a, b) => {
-			if (!a.position && b.position) return 0;
-			if (!a.position) return 1;
-			if (!b.position) return -1;
-			if (a.position?.start.line < b.position?.start.line) {
-				return -1;
-			}
-			if (a.position.start.line > b.position?.start.line) {
-				return 1;
-			}
-			if (a.position.start.column < b.position?.start.column) {
-				return -1;
-			}
-			return 0;
-		})
-		.find((e) => imageExtensions.some((r) => e.path.match(r)))?.path;
+
+	const thumbnailPath = getThumbnailPath(fileEntity, metadata, fileTrees);
 
 	const frontmatter = fileEntity.fileData.frontmatter;
 
@@ -481,7 +458,7 @@ export const createVaultFile = async (): Promise<TVault> => {
 	// );
 
 	const tiNotes = flattened
-		.map((f) => convertFileEntityToTNoteIndependence(f))
+		.map((f) => convertFileEntityToTNoteIndependence(f, fileTrees))
 		.filter((f) => !isTestOnlyNote(f));
 	const tNotes = injectAllLinksToTNoteIndependence(tiNotes);
 	const createdMap = createCreatedMap(tNotes);

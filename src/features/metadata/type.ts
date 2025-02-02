@@ -1,4 +1,5 @@
-import type { VFileData } from "@/features/remark/frontmatter";
+import type { FrontMatter } from "@/features/remark/frontmatter";
+import type { StrictOmit } from "ts-essentials";
 import type { Position } from "unist";
 
 export type TLinkMetaData = {
@@ -10,8 +11,6 @@ export type TLinkMetaData = {
 };
 
 type TEmbedMetaData = TLinkMetaData;
-
-type TFrontMatterMetaData = VFileData["frontmatter"];
 
 type THeadingMetaData = { text: string; level: number };
 
@@ -29,7 +28,7 @@ export type TTagMetaData = {
 
 export type TNoteMetaData = {
 	embeds: TEmbedMetaData[];
-	frontmatter: TFrontMatterMetaData;
+	frontmatter: StrictOmit<FrontMatter, "thumbnailPath">;
 	headings: THeadingMetaData[];
 	links: TLinkMetaData[];
 	listItems: TListItemMetaData[];

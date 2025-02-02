@@ -1,5 +1,7 @@
 import path from "node:path";
 
+import { pathSplit } from "@/utils/path";
+
 import { getWikiLinkExtension, lastOfArr, pathResolver } from "./util";
 
 import type { WikiLinkContentMap, WikiLinkOption } from "./type";
@@ -100,10 +102,7 @@ const createWikiLinkData = (
 	const isTagLink = Boolean(wikiLink.data?.isTagLink);
 
 	const parentsLinks = opts.parentsLinks.map((p) => decodeURIComponent(p));
-	const currentPaths: string[] =
-		lastOfArr(parentsLinks)
-			?.split("/")
-			.filter((s) => s) ?? [];
+	const currentPaths: string[] = pathSplit(lastOfArr(parentsLinks) ?? "");
 
 	const _link = pathResolver({
 		linkName: pathValue,

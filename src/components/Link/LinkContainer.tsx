@@ -31,10 +31,6 @@ export const LinkContainer: FC<WikiLinkComponentProps & MetaProps> = (
 ) => {
 	const { href, children, "is-embed": isEmbed, alias, ...others } = props;
 
-	if (alias === "thumbnail") {
-		return;
-	}
-
 	if (isEmbed) {
 		return <EmbedLinkContainer {...props} />;
 	}

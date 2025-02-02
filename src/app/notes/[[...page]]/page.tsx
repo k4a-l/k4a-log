@@ -94,9 +94,7 @@ export default async function Page({ params }: Props) {
 			<Client />
 			<MyHead
 				description={tNote.metadata.frontmatter?.description || ""}
-				imagePath={
-					tNote.metadata.frontmatter?.thumbnailPath || tNote.thumbnailPath
-				}
+				imagePath={tNote.thumbnailPath}
 				keywords={[]}
 				title={title}
 				url={notePathAbsolute}

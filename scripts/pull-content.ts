@@ -21,6 +21,7 @@ if (fs.existsSync(targetDir)) {
 	const files = fs.readdirSync(targetDir);
 	for (const file of files) {
 		if (file === "tests") continue;
+		if (file === "Draft.md") continue;
 		fs.rmSync(path.join(targetDir, file), { recursive: true, force: true });
 	}
 	console.log(`deleted all files in ${targetDir}`);

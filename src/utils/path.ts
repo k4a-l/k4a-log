@@ -70,3 +70,8 @@ export const isTestOnlyNote = (note: TNoteIndependence): boolean => {
 		isTemplateDirPath(note.path)
 	);
 };
+
+export const pathSplit = (str: string): string[] =>
+	normalizePath(str)
+		?.split("/")
+		.filter((s) => s) ?? [];

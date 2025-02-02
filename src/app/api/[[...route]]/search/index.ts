@@ -103,7 +103,7 @@ export const searchAPI = new Hono<BlankEnv, BlankInput, "/">().get(
 				return {
 					title: frontmatter?.title || p.basename,
 					path: id || p.path,
-					thumbnailPath: frontmatter?.thumbnailPath || p.thumbnailPath,
+					thumbnailPath: p.thumbnailPath,
 					created: frontmatter?.created,
 					updated: frontmatter?.updated,
 					description: frontmatter?.description ?? "",

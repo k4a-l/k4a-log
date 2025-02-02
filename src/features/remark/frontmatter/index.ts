@@ -33,7 +33,7 @@ export const frontMatterKeys = {
 	thumbnailPath: { key: "thumbnailPath", type: "string" },
 } satisfies { [key: string]: { key: string; type: AllowedType } };
 
-type FrontMatter = Partial<
+export type FrontMatter = Partial<
 	Record<
 		keyof typeof frontMatterKeys,
 		{
