@@ -9,7 +9,7 @@ if (!NG_WORDS.includes("__CHECK")) {
 	throw new Error("NG_WORDSに__CHECKを含めてください");
 }
 
-export type PrivatePathCondition = {
+export type PrivateCondition = {
 	// perfect match
 	tags?: string[];
 	// start with match
@@ -20,7 +20,8 @@ export type PrivatePathCondition = {
 	frontmatter?: Record<string, string | string[]>;
 };
 
-export const privatePathCondition: PrivatePathCondition = {
+// これもenvにすべきだけど、面倒なのと公開しても問題のでそのまま
+export const PRIVATE_CONDITION: PrivateCondition = {
 	tags: ["private"],
 	paths: ["private", "diary"],
 	titles: ["🔐"],

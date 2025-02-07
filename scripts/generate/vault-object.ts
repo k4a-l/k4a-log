@@ -32,9 +32,10 @@ import {
 	normalizePath,
 } from "@/utils/path";
 
-import { isContainNGWords } from "./check";
+import { getThumbnailPath, loggingWithColor } from "../util";
+
+import { isContainNGWords, isPrivateFile, PRIVATE_CONDITION } from "./check";
 import { NG_WORDS } from "./check";
-import { getThumbnailPath } from "./util";
 
 import type { FileEntity, FileOrDirEntity } from "./type";
 import type {
@@ -136,6 +137,14 @@ const createParsedTree = async (
 				},
 				thumbnailPath,
 			};
+
+			// プライベートチェック
+			if (isPrivateFile(data, PRIVATE_CONDITION)) {
+				loggingWithColor("yellow", `PRIVATE FILE >>  ${currentPath}`);
+				// ファイルごと消してしまう？→一旦スキップだけで
+				// これ以降はこの関数で作った情報だけが使われるので（アセットコピーも）
+				continue;
+			}
 
 			tree.push(data);
 		}
@@ -449,7 +458,7 @@ export const createVaultFile = async (): Promise<TVault> => {
 export const main = async () => {
 	const vaultFile = await createVaultFile();
 	writeFileRecursive(vaultMetadataFilePath, JSON.stringify(vaultFile));
-	console.log(`COMPLETED!! >> ${vaultMetadataFilePath}`);
+	loggingWithColor("green", `COMPLETED!! >> ${vaultMetadataFilePath}`);
 };
 
 const [funcName] = process.argv.slice(2);

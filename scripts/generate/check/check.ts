@@ -1,6 +1,6 @@
 import { normalizePath } from "@/utils/path";
 
-import type { PrivatePathCondition } from "./constant";
+import type { PrivateCondition } from "./constant";
 import type { TNoteIndependence, TTagMetaData } from "@/features/metadata/type";
 
 export const isContainNGWords = (str: string, ngWords: string[]): boolean => {
@@ -12,7 +12,7 @@ export const isPrivateFile = (
 	note: Pick<TNoteIndependence, "basename" | "path"> & {
 		metadata: { tags: TTagMetaData[]; frontmatter: Record<string, unknown> };
 	},
-	cond: PrivatePathCondition,
+	cond: PrivateCondition,
 ): boolean => {
 	if (cond.tags?.some((tag) => note.metadata.tags.find((t) => t.tag === tag))) {
 		return true;

@@ -43,7 +43,10 @@ export const SearchResult = ({
 	if (isLoading)
 		return (
 			<IngContainer>
-				<Spinner /> 取得中
+				<HStack>
+					<Spinner />
+					取得中
+				</HStack>
 			</IngContainer>
 		);
 	if (!data) return <IngContainer>データが取得できませんでした</IngContainer>;

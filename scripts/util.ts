@@ -7,6 +7,7 @@ import {
 	pathResolver,
 } from "@/features/remark/wikilink/util";
 import { normalizePath, pathSplit } from "@/utils/path";
+import { shell_color, shell_color_reset } from "scripts/constants";
 
 import type { TNoteMetaData } from "@/features/metadata/type";
 import type { VFileData } from "@/features/remark/frontmatter";
@@ -71,4 +72,11 @@ export const getThumbnailPath = (
 	if (thumbnailPath) return thumbnailPath;
 
 	return undefined;
+};
+
+export const loggingWithColor = (
+	color: keyof typeof shell_color,
+	...args: Parameters<typeof console.log>
+) => {
+	console.log(`${shell_color[color]}`, ...args, shell_color_reset);
 };
