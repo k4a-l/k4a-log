@@ -32,6 +32,8 @@ import {
 	normalizePath,
 } from "@/utils/path";
 
+import { isContainNGWords } from "./check";
+import { NG_WORDS } from "./check";
 import { getThumbnailPath } from "./util";
 
 import type { FileEntity, FileOrDirEntity } from "./type";
@@ -83,6 +85,15 @@ const createParsedTree = async (
 		} else {
 			const fPath = path.join(path.resolve(), rootDirPath, pathOfUnderRoot);
 			const fileContent = await readFile(fPath, { encoding: "utf-8" });
+
+			// NGチェックは強制終了
+			const isNG = isContainNGWords(fileContent, NG_WORDS);
+			if (isNG) {
+				throw new Error(
+					`NGチェックに引っかかったファイル:${pathOfUnderRoot} NGワード: ${NG_WORDS}`,
+				);
+			}
+
 			const file = new VFile({
 				path: fPath,
 				value: fileContent,
@@ -95,6 +106,7 @@ const createParsedTree = async (
 			);
 			const parseResult = parseProcessor.parse(fileContent);
 			const runResult = (await runProcessor.runSync(parseResult, file)) as Root;
+			const frontmatter = (file.data as VFileData).frontmatter;
 
 			const currentPath = normalizePath(pathOfUnderRoot);
 			const [basename, extension] = entry.name.split(".");
@@ -102,7 +114,6 @@ const createParsedTree = async (
 				runResult.children,
 				normalizePath(path.join(notesDirPath, currentPath)),
 			);
-			const frontmatter = (file.data as VFileData).frontmatter;
 			const thumbnailPath = getThumbnailPath(
 				{ path: currentPath, frontmatter },
 				metadata,
