@@ -140,6 +140,8 @@ export const EmbedLinkImage: FC<PropsWithChildren<LinkPresentationalType>> = ({
 }) => {
 	const size = Number(alias);
 
+	console.log(href);
+
 	return (
 		<img
 			{...others}

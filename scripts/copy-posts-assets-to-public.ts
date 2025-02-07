@@ -9,8 +9,6 @@ import { assetsDirPath, notesDirPath } from "@/features/metadata/constant";
 import { IS_PRODUCTION } from "@/utils/env";
 import { hasExtensionButNotMD, isSamePath, normalizePath } from "@/utils/path";
 
-import { loggingWithColor } from "./util";
-
 const rootDir = dirname(dirname(fileURLToPath(import.meta.url)));
 const assetsPath = join(rootDir, "assets", notesDirPath);
 const publicPath = join(rootDir, "public", notesDirPath);
@@ -60,7 +58,7 @@ const copyFiles = (srcPath: string, destPath: string) => {
 			if (isUsed) {
 				fs.copyFileSync(srcFullPath, destFullPath);
 			} else {
-				loggingWithColor("yellow", `NOT COPIED >> ${srcFullPath}`);
+				// loggingWithColor("yellow", `NOT COPIED >> ${srcFullPath}`);
 			}
 			if (IS_PRODUCTION) {
 				fs.rmSync(srcFullPath, { recursive: true, force: true });

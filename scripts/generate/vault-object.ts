@@ -143,6 +143,16 @@ const createParsedTree = async (
 				fileTrees,
 			);
 
+			if (entry.name?.includes("HHKB")) {
+				console.log(
+					JSON.stringify(
+						metadata.embeds.map((e) => e.path),
+						null,
+						4,
+					),
+				);
+			}
+
 			const data: FileEntity = {
 				type: "file",
 				basename: basename ?? entry.name,
@@ -172,9 +182,6 @@ const createParsedTree = async (
 					`NGチェックに引っかかったファイル:${pathOfUnderRoot} NGワード: ${NG_WORDS}`,
 				);
 			}
-
-			process.stdout.write(`${entry.name}`);
-			process.stdout.write("\r");
 
 			// ファイルごと消してしまう？→一旦スキップだけで
 			// これ以降はこの関数で作った情報だけが使われるので（アセットコピーも）

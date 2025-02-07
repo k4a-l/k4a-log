@@ -33,6 +33,7 @@ export const createStringifyProcessor = ({
 		jsxs,
 		components: {
 			wikilink: (props) => {
+				console.log(props);
 				return MarkdownLink({ ...props, pathMap, ...meta });
 			},
 			"embed-link": EmbeddedLink,

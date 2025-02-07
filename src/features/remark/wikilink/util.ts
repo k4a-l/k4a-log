@@ -5,7 +5,8 @@ import GithubSlugger from "github-slugger";
 
 import type { WikiLinkData } from "@/types/mdast";
 import {} from "react/jsx-runtime";
-import { pathSplit, safeDecodeURIComponent } from "@/utils/path";
+import { isSamePath, pathSplit, safeDecodeURIComponent } from "@/utils/path";
+import { loggingWithColor } from "scripts/util";
 
 // _startPathの最後の要素に拡張子が含まれていない場合は、最後の要素に.mdを結合したあたらしい配列を作る
 // 拡張子が含まれている場合は、そのままの配列を使う
@@ -54,7 +55,11 @@ export function findClosest(
 	const start = allPaths.find(
 		(item) => JSON.stringify(item.absPaths) === JSON.stringify(startPath),
 	);
-	if (!start) return undefined; // 起点が見つからなければ終了
+	if (!start) {
+		loggingWithColor("red", "起点のファイルを見つけられません");
+		console.log(startPath, allPaths.length);
+		return undefined; // 起点が見つからなければ終了
+	}
 
 	// パス指定の場合
 	const targetNameSplit = pathSplit(targetName);
@@ -66,11 +71,25 @@ export function findClosest(
 			),
 		);
 
-		const target = allPaths.find(
-			(item) =>
-				JSON.stringify(item.absPaths.map((p) => p.replace(/\.md$/, ""))) ===
-				JSON.stringify(targetPathList),
+		const target = allPaths.find((item) =>
+			isSamePath(
+				path.join(...item.absPaths.map((p) => p.replace(/\.md$/, ""))),
+				path.join(...targetPathList),
+			),
 		);
+
+		if (!target) {
+			loggingWithColor("red", "targetがありません");
+			console.log(
+				{
+					targetPathList,
+					targetNameSplit,
+					startPath,
+				},
+				allPaths.length,
+			);
+		}
+
 		return target;
 	}
 

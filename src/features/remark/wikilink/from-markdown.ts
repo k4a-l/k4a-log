@@ -1,6 +1,6 @@
 import path from "node:path";
 
-import { pathSplit, safeDecodeURIComponent } from "@/utils/path";
+import { normalizePath, pathSplit, safeDecodeURIComponent } from "@/utils/path";
 
 import { getWikiLinkExtension, lastOfArr, pathResolver } from "./util";
 
@@ -90,9 +90,11 @@ const createWikiLinkData = (
 	wikiLink: WikiLinkContentMap,
 	opts: Required<WikiLinkOption>,
 ): WikiLinkData => {
+	const start = performance.now();
+
 	const defaultHrefTemplate = (permalink: string) => {
 		if (permalink.startsWith("#")) return permalink;
-		return `/${permalink}`;
+		return normalizePath(permalink);
 	};
 
 	const hrefTemplate = defaultHrefTemplate;
@@ -183,6 +185,23 @@ const createWikiLinkData = (
 		isDeadLink: isDeadLink ? "true" : undefined,
 		isTagLink: isTagLink ? "true" : undefined,
 	};
+
+	if (link?.includes("20201209_hhkb")) {
+		console.log(
+			{
+				_link,
+				link,
+				pathValue,
+				currentPaths,
+			},
+			JSON.stringify(hProperties, null, 4),
+			JSON.stringify(
+				opts.fileTrees.find((t) => t.name === "blog"),
+				null,
+				4,
+			),
+		);
+	}
 
 	return {
 		type,
