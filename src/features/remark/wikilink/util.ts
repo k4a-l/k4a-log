@@ -59,12 +59,12 @@ export function findClosest(
 	// パス指定の場合
 	const targetNameSplit = pathSplit(targetName);
 	if (targetNameSplit.length > 1) {
-		const targetPathList = path
-			.join(
+		const targetPathList = pathSplit(
+			path.join(
 				...(targetNameSplit[0]?.includes(".") ? startPath.slice(0, -1) : []),
 				...targetNameSplit,
-			)
-			.split(/\/|\\/);
+			),
+		);
 
 		const target = allPaths.find(
 			(item) =>
