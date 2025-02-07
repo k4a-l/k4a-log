@@ -28,7 +28,8 @@ export const SideMenuInnerPart = ({ folders }: Props) => {
 				base: "none",
 			}}
 			w="auto"
-			maxW="400px"
+			flexGrow={1}
+			maxW="300px"
 			overflowX={"hidden"}
 			overflowY={"auto"}
 			position={"sticky"}

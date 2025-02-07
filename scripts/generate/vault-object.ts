@@ -539,7 +539,7 @@ export const createVaultFile = async (): Promise<TVault> => {
 
 	return {
 		notes: tNotes,
-		assets: fileNode.map((p) => ({ name: p.name, path: p.absPath })),
+		assets: fileNode.map((p) => ({ basename: p.name, path: p.absPath })),
 		pathMap,
 		createdMap,
 	};

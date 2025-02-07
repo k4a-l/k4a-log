@@ -74,7 +74,7 @@ export type YMMap = {
 
 export type TVault = {
 	notes: TNote[];
-	assets: { name: string; path: string }[];
+	assets: { basename: string; path: string }[];
 	pathMap: PathMap;
 	createdMap: YMMap;
 };

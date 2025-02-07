@@ -89,7 +89,10 @@ export const EmbedLinkContainer: FC<
 
 		const remarkProcessor = createParseProcessor(
 			parentLinksArr,
-			vault.notes.map((p) => ({ absPath: p.path, name: p.basename })),
+			[...vault.notes, ...vault.assets].map((p) => ({
+				absPath: p.path,
+				name: p.basename,
+			})),
 		);
 		const rehypeProcessor = createRunProcessor({
 			listItems: note.metadata.listItems,

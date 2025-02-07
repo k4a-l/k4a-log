@@ -69,7 +69,7 @@ export default async function Page({ params }: Props) {
 			})),
 			...vaultObject.assets.map((p) => ({
 				absPath: p.path,
-				name: p.name,
+				name: p.basename,
 			})),
 		],
 	);

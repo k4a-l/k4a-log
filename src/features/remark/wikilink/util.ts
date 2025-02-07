@@ -36,12 +36,12 @@ export function findClosest(
 	_targetName: string,
 ): FileNode | undefined {
 	const targetName = safeDecodeURIComponent(_targetName);
-	const startPath = convertNoExtensionPathToMD(_startPath);
+	const startPath = _startPath;
 
 	// 起点と対象を検索
 	const startFile = fileMap.get(normalizePath(path.join(...startPath)));
 	if (!startFile) {
-		loggingWithColor("red", "起点のファイルを見つけられません");
+		loggingWithColor("red", "起点のファイルを見つけられません", startPath);
 		return undefined; // 起点が見つからなければ終了
 	}
 
@@ -55,10 +55,11 @@ export function findClosest(
 			),
 		);
 
-		const target = fileMap.get(normalizePath(path.join(...targetPathList)));
+		const targetPath = normalizePath(path.join(...targetPathList)).trim();
+		const target = fileMap.get(targetPath);
 
 		if (!target) {
-			loggingWithColor("red", "targetがありません");
+			loggingWithColor("red", "targetがありません", targetPath);
 		}
 
 		return target;

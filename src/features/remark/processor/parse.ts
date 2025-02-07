@@ -13,7 +13,6 @@ import type { FileNode } from "@/features/remark/wikilink/util";
 import type { Root } from "mdast";
 import type { Processor } from "unified";
 
-import {} from "remark-extract-frontmatter";
 import { normalizePath, safeDecodeURIComponent } from "@/utils/path";
 
 export const createParseProcessor = (
@@ -31,7 +30,8 @@ export const createParseProcessor = (
 
 	const fileMap: Map<string, FileNode> = new Map();
 	for (const fileNode of notes) {
-		fileMap.set(normalizePath(fileNode.absPath), fileNode);
+		const filePath = normalizePath(fileNode.absPath);
+		fileMap.set(filePath, fileNode);
 	}
 
 	const processor = remark()
