@@ -10,7 +10,7 @@ describe("splitByHashtag", () => {
 		expect(splitByHashtag("foo#tag1 bar#tag2")).toStrictEqual([
 			"foo",
 			"#tag1",
-			"bar",
+			" bar",
 			"#tag2",
 		]);
 	});

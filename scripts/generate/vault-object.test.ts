@@ -1,105 +1,10 @@
 import type {} from "hast";
-
-import fs from "node:fs";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 
 import { expect, test } from "vitest";
 
-import { notesDirPath } from "@/features/metadata/constant";
-
-import {
-	convertRootContentsToFileMetadata,
-	createVaultFile,
-} from "./vault-object";
-
-import type { TNoteMetaData } from "@/features/metadata/type";
-import type { RootContent } from "mdast";
-
-const json = fs.readFileSync(
-	path.join(__dirname, "root-contents.json"),
-	"utf-8",
-);
-const parsedJson = JSON.parse(json) as RootContent[];
-
-test("1", () => {
-	const result = convertRootContentsToFileMetadata(
-		parsedJson,
-		`/${notesDirPath}/tests/SOME.md`,
-	);
-	const expected: TNoteMetaData = {
-		embeds: [
-			{
-				title: "COMMON",
-				aliasTitle: "Embed link",
-				path: String.raw`/${notesDirPath}\tests\SYNTAX TEST\COMMON`,
-				isTagLink: false,
-			},
-		],
-		headings: [
-			{ level: 1, text: "HEADING1" },
-			{ level: 2, text: "HEADING2" },
-		],
-		links: [
-			{
-				path: String.raw`/${notesDirPath}\tests\SYNTAX TEST\COMMON`,
-				title: "COMMON",
-				aliasTitle: "link",
-				isTagLink: false,
-			},
-		],
-		listItems: [
-			{
-				text: "list-A",
-				parentLineNumber: -1,
-				lineNumber: 12,
-				id: expect.anything(),
-			},
-			{
-				text: "list-B",
-				parentLineNumber: 12,
-				lineNumber: 13,
-				id: expect.anything(),
-			},
-			{
-				text: "list-A-1",
-				parentLineNumber: 12,
-				lineNumber: 14,
-				id: expect.anything(),
-			},
-			{
-				text: "list-A-2",
-				parentLineNumber: 14,
-				lineNumber: 15,
-				id: expect.anything(),
-			},
-			{
-				text: "list-1",
-				parentLineNumber: -1,
-				lineNumber: 16,
-				id: expect.anything(),
-			},
-			{
-				task: " ",
-				text: "uncompleted",
-				parentLineNumber: 16,
-				lineNumber: 17,
-				id: expect.anything(),
-			},
-			{
-				task: "x",
-				text: "completed",
-				parentLineNumber: 16,
-				lineNumber: 18,
-				id: expect.anything(),
-			},
-		],
-		tags: [{ tag: "tag" }],
-		frontmatter: {},
-	};
-
-	expect(result).toStrictEqual(expected);
-});
+import { createVaultFile } from "./vault-object";
 
 test("ゴールデンマスターテスト", async () => {
 	const masterData = JSON.parse(

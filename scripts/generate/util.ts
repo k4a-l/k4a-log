@@ -8,8 +8,8 @@ import {
 } from "@/features/remark/wikilink/util";
 import { normalizePath, pathSplit } from "@/utils/path";
 
-import type { FileEntity } from "./type";
 import type { TNoteMetaData } from "@/features/metadata/type";
+import type { VFileData } from "@/features/remark/frontmatter";
 
 /**
  * [["str"]] => "str"
@@ -29,15 +29,16 @@ export const pickWikilinkLikeArrayStr = (
 };
 
 export const getThumbnailPath = (
-	file: FileEntity,
+	file: {
+		path: string;
+		frontmatter: VFileData["frontmatter"];
+	},
 	metadata: TNoteMetaData,
 	fileTrees: FileTree[],
 ): string | undefined => {
 	const thumbnailWikilinkPath = pickWikilinkLikeArrayStr(
-		file.fileData.frontmatter?.thumbnailPath,
+		file.frontmatter?.thumbnailPath,
 	);
-
-	console.log(thumbnailWikilinkPath, file.fileData.frontmatter);
 
 	if (thumbnailWikilinkPath) {
 		const result = pathResolver({
@@ -45,8 +46,6 @@ export const getThumbnailPath = (
 			currentPaths: pathSplit(file.path),
 			fileTrees,
 		});
-
-		console.log(result);
 
 		if (result) return path.join("/", notesDirPath, normalizePath(result));
 	}

@@ -34,6 +34,7 @@ import {
 
 import { getThumbnailPath } from "./util";
 
+import type { FileEntity, FileOrDirEntity } from "./type";
 import type {
 	PathMap,
 	TLinkMetaData,
@@ -45,12 +46,10 @@ import type {
 	YMMap,
 } from "@/features/metadata/type";
 import type { WikiLinkData } from "@/types/mdast";
-import type { FindFromUnion } from "@/utils/type";
 import type { Element, ElementContent } from "hast";
 import type { Root, RootContent } from "mdast";
 import type { StrictOmit } from "ts-essentials";
 import type { Position } from "unist";
-import type { FileEntity, FileOrDirEntity } from "./type";
 
 // 各ファイル全部に繰り返す
 
@@ -58,7 +57,7 @@ const createParsedTree = async (
 	fileTrees: FileTree[],
 	rootDirPath: string,
 	dirPath: string,
-) => {
+): Promise<FileOrDirEntity[]> => {
 	const tree: FileOrDirEntity[] = [];
 	const entries = fs.readdirSync(path.join(rootDirPath, dirPath), {
 		withFileTypes: true,
@@ -89,9 +88,7 @@ const createParsedTree = async (
 				value: fileContent,
 			});
 
-			const parseProcessor = createParseProcessor(fileTrees, [
-				path.join(pathOfUnderRoot),
-			]);
+			const parseProcessor = createParseProcessor(fileTrees, [pathOfUnderRoot]);
 			const runProcessor = createRunProcessor(
 				{ listItems: [] },
 				{ excludeToc: true },
@@ -99,23 +96,52 @@ const createParsedTree = async (
 			const parseResult = parseProcessor.parse(fileContent);
 			const runResult = (await runProcessor.runSync(parseResult, file)) as Root;
 
-			tree.push({
+			const currentPath = normalizePath(pathOfUnderRoot);
+			const [basename, extension] = entry.name.split(".");
+			const metadata = createNoteMetaData(
+				runResult.children,
+				normalizePath(path.join(notesDirPath, currentPath)),
+			);
+			const frontmatter = (file.data as VFileData).frontmatter;
+			const thumbnailPath = getThumbnailPath(
+				{ path: currentPath, frontmatter },
+				metadata,
+				fileTrees,
+			);
+
+			const data: FileEntity = {
 				type: "file",
-				name: entry.name,
-				path: normalizePath(pathOfUnderRoot),
-				root: runResult,
-				fileData: file.data as VFileData,
-			});
+				basename: basename ?? entry.name,
+				extension: extension ?? "",
+				path: currentPath,
+				metadata: {
+					...metadata,
+					frontmatter: {
+						...frontmatter,
+						[frontMatterKeys.description.key]:
+							frontmatter?.description ||
+							mdastToString(runResult).substring(0, 150).replaceAll("\n", " "),
+					},
+				},
+				thumbnailPath,
+			};
+
+			tree.push(data);
 		}
 	}
 
 	return tree;
 };
 
-const flattenParsedTree = (tree: FileOrDirEntity[]): FileEntity[] => {
-	const result: FindFromUnion<FileOrDirEntity, "type", "file">[] = tree.flatMap(
-		(t) => (t.type === "dir" ? flattenParsedTree(t.children) : t),
-	);
+const flattenParsedTree = (tree: FileOrDirEntity[]): TNoteIndependence[] => {
+	const result: TNoteIndependence[] = tree.flatMap((t) => {
+		if (t.type === "file") {
+			const { type, ...others } = t;
+			return others;
+		}
+		return flattenParsedTree(t.children);
+	});
+
 	return result;
 };
 
@@ -218,25 +244,6 @@ export const convertNodeToFileMetadata = (
 			r.tags.push({ tag: mdastToString(node) });
 		}
 
-		// if (node.tagName === "input") {
-		// 	console.log(node);
-		// 	const text = mdastToString(
-		// 		node.children.find((c) => c.type === "element"),
-		// 	);
-		// 	const regExp = /^\[(.*)\] /;
-		// 	const task: TListItemMetaData["task"] = node.properties.checked
-		// 		? "x"
-		// 		: " ";
-
-		// 	r.listItems.push({
-		// 		parentLineNumber: parentPosition?.start.line ?? -1,
-		// 		text: text.replace(regExp, ""),
-		// 		lineNumber: node.position?.start.line ?? -1,
-		// 		...(task ? { task } : {}),
-		// 	});
-		// 	parentPositionNext = node.position;
-		// }
-
 		const children = node.children.map((c) =>
 			convertNodeToFileMetadata(
 				c,
@@ -257,7 +264,7 @@ export const convertNodeToFileMetadata = (
 	return r;
 };
 
-export const convertRootContentsToFileMetadata = (
+export const createNoteMetaData = (
 	contents: RootContent[],
 	currentPath: string,
 ): TNoteMetaData => {
@@ -280,41 +287,6 @@ export const convertRootContentsToFileMetadata = (
 		tags: children.flatMap((c) => c.tags),
 		frontmatter: {},
 	};
-};
-
-export const convertFileEntityToTNoteIndependence = (
-	fileEntity: FileEntity,
-	fileTrees: FileTree[],
-): TNoteIndependence => {
-	const currentPath = normalizePath(path.join(notesDirPath, fileEntity.path));
-	const [basename, extension] = fileEntity.name.split(".");
-	const metadata = convertRootContentsToFileMetadata(
-		fileEntity.root.children,
-		currentPath,
-	);
-
-	const thumbnailPath = getThumbnailPath(fileEntity, metadata, fileTrees);
-
-	const frontmatter = fileEntity.fileData.frontmatter;
-
-	const data: TNoteIndependence = {
-		basename: basename ?? fileEntity.name,
-		extension: extension ?? "",
-		path: currentPath,
-		metadata: {
-			...metadata,
-			frontmatter: {
-				...frontmatter,
-				[frontMatterKeys.description.key]:
-					frontmatter?.description ||
-					mdastToString(fileEntity.root)
-						.substring(0, 150)
-						.replaceAll("\n", " "),
-			},
-		},
-		thumbnailPath,
-	};
-	return data;
 };
 
 export const injectAllLinksToTNoteIndependence = (
@@ -413,10 +385,10 @@ export const injectAllLinksToTNoteIndependence = (
 /**
  * key: 元の名前、value: uid
  */
-const createPathMap = (files: FileEntity[]): PathMap => {
+const createPathMap = (files: TNoteIndependence[]): PathMap => {
 	const pathMap: PathMap = {};
 	for (const file of files) {
-		const id = idParser(file, file.fileData.frontmatter);
+		const id = idParser(file, file.metadata.frontmatter);
 
 		if (id) {
 			const pathName = normalizePath(path.join(notesDirPath, file.path));
@@ -451,15 +423,12 @@ export const createVaultFile = async (): Promise<TVault> => {
 	const flattened = flattenParsedTree(parsed);
 	const pathMap = createPathMap(flattened);
 
-	// テスト用MDを変更した場合は、testオブジェクトを出力してテストに使う
-	// fs.writeFileSync(
-	// 	path.join(__dirname, "root-contents.json"),
-	// 	JSON.stringify(flattened[0]?.root.children),
-	// );
-
 	const tiNotes = flattened
-		.map((f) => convertFileEntityToTNoteIndependence(f, fileTrees))
-		.filter((f) => !isTestOnlyNote(f));
+		.filter((f) => !isTestOnlyNote(f))
+		.map((f) => ({
+			...f,
+			path: normalizePath(path.join(notesDirPath, f.path)),
+		}));
 	const tNotes = injectAllLinksToTNoteIndependence(tiNotes);
 	const createdMap = createCreatedMap(tNotes);
 

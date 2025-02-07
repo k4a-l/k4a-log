@@ -134,5 +134,5 @@ export const idParser = (
 
 	const idParsed = idParser ? idParser(file) : id;
 
-	return normalizePath(path.join(idParsed));
+	return normalizePath(idParsed);
 };

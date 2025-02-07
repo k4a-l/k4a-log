@@ -1,12 +1,7 @@
-import type { VFileData } from "@/features/remark/frontmatter";
-import type { Root } from "node_modules/remark-parse/lib";
+import type { TNoteIndependence } from "@/features/metadata/type";
 
-export type FileEntity = {
+export type FileEntity = TNoteIndependence & {
 	type: "file";
-	name: string;
-	path: string;
-	root: Root;
-	fileData: VFileData;
 };
 export type FileOrDirEntity =
 	| FileEntity
