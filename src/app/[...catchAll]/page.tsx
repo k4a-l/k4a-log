@@ -46,7 +46,13 @@ const redirectMap: { [key: string]: string } = strictFromEntries(
 		...strictFromEntries(
 			oldBlogDirPaths.map((p) => [
 				p,
-				path.join("/", notesDirPath, blogDirPath, p),
+				path.join(
+					"/",
+					notesDirPath,
+					blogDirPath,
+					p.match(/^(\d){4}/)?.[0] ?? "",
+					p,
+				),
 			]),
 		),
 	} satisfies { [key: string]: string }).map(([k, v]) => [

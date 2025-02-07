@@ -1,2 +1,5 @@
 export * from "./constant";
-export { isContainNGWords, isPrivateFile } from "./check";
+export {
+	isContainNGWords,
+	isMatchNodeCondition,
+} from "./check";

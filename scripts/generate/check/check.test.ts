@@ -1,7 +1,7 @@
 import { produce } from "immer";
 import { describe, expect, test } from "vitest";
 
-import { isContainNGWords, isPrivateFile } from "./check";
+import { isContainNGWords, isMatchNodeCondition } from "./check";
 
 describe("isContainNGWords", () => {
 	test("TRUE", () => {
@@ -30,7 +30,7 @@ describe("isContainNGWords", () => {
 });
 
 describe("isPrivateFile", () => {
-	const baseData: Parameters<typeof isPrivateFile>[0] = {
+	const baseData: Parameters<typeof isMatchNodeCondition>[0] = {
 		basename: "タイトル",
 		path: "/path/to/file",
 		metadata: { tags: [], frontmatter: {} },
@@ -38,7 +38,7 @@ describe("isPrivateFile", () => {
 	describe("TAG", () => {
 		test("TRUE", () => {
 			expect(
-				isPrivateFile(
+				isMatchNodeCondition(
 					produce(baseData, (draft) => {
 						draft.metadata.tags = [
 							{ tag: "value0" },
@@ -53,7 +53,7 @@ describe("isPrivateFile", () => {
 
 		test("FALSE", () => {
 			expect(
-				isPrivateFile(
+				isMatchNodeCondition(
 					produce(baseData, (draft) => {
 						draft.metadata.tags = [
 							{ tag: "value0" },
@@ -70,7 +70,7 @@ describe("isPrivateFile", () => {
 	describe("TITLE", () => {
 		test("TRUE", () => {
 			expect(
-				isPrivateFile(
+				isMatchNodeCondition(
 					produce(baseData, (draft) => {
 						draft.basename = "ti🔐tle";
 					}),
@@ -81,7 +81,7 @@ describe("isPrivateFile", () => {
 
 		test("FALSE", () => {
 			expect(
-				isPrivateFile(
+				isMatchNodeCondition(
 					produce(baseData, (draft) => {
 						draft.basename = "ti🔐 🔐tle";
 					}),
@@ -94,7 +94,7 @@ describe("isPrivateFile", () => {
 	describe("PATH", () => {
 		test("TRUE", () => {
 			expect(
-				isPrivateFile(
+				isMatchNodeCondition(
 					produce(baseData, (draft) => {
 						draft.path = "/private/path/to/file";
 					}),
@@ -102,7 +102,7 @@ describe("isPrivateFile", () => {
 				),
 			).toBe(true);
 			expect(
-				isPrivateFile(
+				isMatchNodeCondition(
 					produce(baseData, (draft) => {
 						draft.path = "/private/path/to/file";
 					}),
@@ -113,7 +113,7 @@ describe("isPrivateFile", () => {
 
 		test("FALSE", () => {
 			expect(
-				isPrivateFile(
+				isMatchNodeCondition(
 					produce(baseData, (draft) => {
 						draft.path = "/path/private/to/file";
 					}),
@@ -126,7 +126,7 @@ describe("isPrivateFile", () => {
 	describe("FRONTMATTER", () => {
 		test("TRUE", () => {
 			expect(
-				isPrivateFile(
+				isMatchNodeCondition(
 					produce(baseData, (draft) => {
 						draft.metadata.frontmatter = { publish: false };
 					}),
@@ -135,7 +135,7 @@ describe("isPrivateFile", () => {
 			).toBe(true);
 
 			expect(
-				isPrivateFile(
+				isMatchNodeCondition(
 					produce(baseData, (draft) => {
 						draft.metadata.frontmatter = { publish: "false" };
 					}),
@@ -144,7 +144,7 @@ describe("isPrivateFile", () => {
 			).toBe(true);
 
 			expect(
-				isPrivateFile(
+				isMatchNodeCondition(
 					produce(baseData, (draft) => {
 						draft.metadata.frontmatter = { publish: [false] };
 					}),
@@ -155,7 +155,7 @@ describe("isPrivateFile", () => {
 
 		test("FALSE", () => {
 			expect(
-				isPrivateFile(
+				isMatchNodeCondition(
 					produce(baseData, (draft) => {
 						draft.metadata.frontmatter = { publish: undefined };
 					}),
@@ -164,7 +164,7 @@ describe("isPrivateFile", () => {
 			).toBe(false);
 
 			expect(
-				isPrivateFile(
+				isMatchNodeCondition(
 					produce(baseData, (draft) => {
 						draft.metadata.frontmatter = { publish: "false_" };
 					}),
@@ -173,7 +173,7 @@ describe("isPrivateFile", () => {
 			).toBe(false);
 
 			expect(
-				isPrivateFile(
+				isMatchNodeCondition(
 					produce(baseData, (draft) => {
 						draft.metadata.frontmatter = {};
 					}),

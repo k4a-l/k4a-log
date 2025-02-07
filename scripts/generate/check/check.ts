@@ -1,18 +1,17 @@
-import { normalizePath } from "@/utils/path";
-
-import type { PrivateCondition } from "./constant";
 import type { TNoteIndependence, TTagMetaData } from "@/features/metadata/type";
+import type { NoteCondition } from "./constant";
+import { normalizePath } from "@/utils/path";
 
 export const isContainNGWords = (str: string, ngWords: string[]): boolean => {
 	return ngWords.some((word) => str.match(word));
 };
 
 // https://github.com/k4a-l/obsidian-dymamic-classname/blob/a5cca4615a6736010e7859ecff63dc065f59be2c/main.ts#L120
-export const isPrivateFile = (
+export const isMatchNodeCondition = (
 	note: Pick<TNoteIndependence, "basename" | "path"> & {
 		metadata: { tags: TTagMetaData[]; frontmatter: Record<string, unknown> };
 	},
-	cond: PrivateCondition,
+	cond: NoteCondition,
 ): boolean => {
 	if (cond.tags?.some((tag) => note.metadata.tags.find((t) => t.tag === tag))) {
 		return true;

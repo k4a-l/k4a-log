@@ -34,6 +34,13 @@ export function buildFileTree(
 
 				pathMap.set(currentPath, node);
 				currentLevel.push(node);
+				currentLevel.sort((a, b) =>
+					a.type === "folder" && b.type === "file"
+						? -1
+						: a.type === "file" && b.type === "folder"
+							? 1
+							: 0,
+				);
 			}
 
 			if (node.type === "folder") {

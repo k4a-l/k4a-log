@@ -35,7 +35,11 @@ import {
 
 import { getThumbnailPath, loggingWithColor } from "../util";
 
-import { isContainNGWords, isPrivateFile, PRIVATE_CONDITION } from "./check";
+import {
+	isContainNGWords,
+	isMatchNodeCondition,
+	PUBLIC_CONDITION,
+} from "./check";
 import { NG_WORDS } from "./check";
 import { buildFileTree, type Folder } from "./folder";
 
@@ -141,7 +145,7 @@ const createParsedTree = async (
 			};
 
 			// プライベートチェック
-			if (isPrivateFile(data, PRIVATE_CONDITION)) {
+			if (!isMatchNodeCondition(data, PUBLIC_CONDITION)) {
 				loggingWithColor("yellow", `PRIVATE FILE >>  ${currentPath}`);
 				// ファイルごと消してしまう？→一旦スキップだけで
 				// これ以降はこの関数で作った情報だけが使われるので（アセットコピーも）

@@ -14,13 +14,13 @@ import { usePathname } from "next/navigation";
 
 const RenderFolder = ({
 	folder,
-}: { folder: FindFromUnion<Folder, "type", "folder"> }) => {
+	depth,
+}: { folder: FindFromUnion<Folder, "type", "folder">; depth: number }) => {
 	const pathname = usePathname();
+	const pathnameSplit = pathSplit(pathname);
+	const targetPath = pathnameSplit.slice(0, depth - pathnameSplit.length + 2);
 	const [isOpen, setIsOpen] = useState(
-		isSamePath(
-			pathSplit(folder.path).join("/"),
-			pathSplit(pathname).slice(0, -1).join("/"),
-		),
+		isSamePath(pathSplit(folder.path).join("/"), targetPath.join("/")),
 	);
 
 	return (
@@ -70,7 +70,7 @@ const RenderFolder = ({
 			</Button>
 			{isOpen && (
 				<Box borderLeftColor={"gray.3"} borderLeftWidth={1} ml={4}>
-					<FolderContent folders={folder.children} />
+					<FolderContentRecursive folders={folder.children} depth={depth + 1} />
 				</Box>
 			)}
 		</Stack>
@@ -117,7 +117,10 @@ const RenderFile = ({
 	);
 };
 
-export const FolderContent = ({ folders }: { folders: Folder[] }) => {
+const FolderContentRecursive = ({
+	folders,
+	depth,
+}: { folders: Folder[]; depth: number }) => {
 	return (
 		<Stack gap={0}>
 			{folders.map((f) => (
@@ -128,7 +131,7 @@ export const FolderContent = ({ folders }: { folders: Folder[] }) => {
 					key={f.path}
 				>
 					{f.type === "folder" ? (
-						<RenderFolder folder={f} />
+						<RenderFolder folder={f} depth={depth} />
 					) : (
 						<RenderFile folder={f} />
 					)}
@@ -136,4 +139,8 @@ export const FolderContent = ({ folders }: { folders: Folder[] }) => {
 			))}
 		</Stack>
 	);
+};
+
+export const FolderContent = ({ folders }: { folders: Folder[] }) => {
+	return <FolderContentRecursive depth={0} folders={folders} />;
 };

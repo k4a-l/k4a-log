@@ -23,13 +23,13 @@ test("ゴールデンマスターテスト", async () => {
 			...p,
 			metadata: {
 				...p.metadata,
-				listItems: p.metadata.listItems.map((l) => ({
+				listItems: p.metadata.listItems.map(({ id, ...l }) => ({
 					...l,
-					id: expect.anything(),
+					id: expect.any(String),
 				})),
 			},
 		})),
 	} satisfies typeof createdData;
 
-	expect(createDataIDOmitted).toStrictEqual(masterData);
+	expect(masterData).toStrictEqual(createDataIDOmitted);
 });
