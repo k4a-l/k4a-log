@@ -57,10 +57,13 @@ export function findClosest(
 	if (!start) return undefined; // 起点が見つからなければ終了
 
 	// パス指定の場合
-	const targetNameSplit = targetName.split("/");
+	const targetNameSplit = pathSplit(targetName);
 	if (targetNameSplit.length > 1) {
 		const targetPathList = path
-			.join(...startPath.slice(0, -1), ...targetNameSplit)
+			.join(
+				...(targetNameSplit[0]?.includes(".") ? startPath.slice(0, -1) : []),
+				...targetNameSplit,
+			)
 			.split(/\/|\\/);
 
 		const target = allPaths.find(
