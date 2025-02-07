@@ -80,6 +80,21 @@ const createParsedTree = async (
 		const pathOfUnderRoot = path.join(dirPath, entry.name);
 
 		if (entry.isDirectory()) {
+			// 公開対象じゃなければスキップ
+			if (
+				!isMatchNodeCondition(
+					{
+						basename: entry.name,
+						path: pathOfUnderRoot,
+						metadata: { frontmatter: {}, tags: [] },
+					},
+					PUBLIC_CONDITION,
+				)
+			) {
+				loggingWithColor("yellow", `PRIVATE DIR >>  ${pathOfUnderRoot}`);
+				continue;
+			}
+
 			tree.push({
 				type: "dir",
 				name: entry.name,
@@ -93,20 +108,15 @@ const createParsedTree = async (
 			const fPath = path.join(path.resolve(), rootDirPath, pathOfUnderRoot);
 			const fileContent = await readFile(fPath, { encoding: "utf-8" });
 
-			// NGチェックは強制終了
-			const isNG = isContainNGWords(fileContent, NG_WORDS);
-			if (isNG) {
-				throw new Error(
-					`NGチェックに引っかかったファイル:${pathOfUnderRoot} NGワード: ${NG_WORDS}`,
-				);
-			}
-
 			const file = new VFile({
 				path: fPath,
 				value: fileContent,
 			});
 
-			const parseProcessor = createParseProcessor(fileTrees, [pathOfUnderRoot]);
+			const parseProcessor = createParseProcessor(
+				fileTrees,
+				[pathOfUnderRoot].map((p) => encodeURIComponent(p)),
+			);
 			const runProcessor = createRunProcessor(
 				{ listItems: [] },
 				{ excludeToc: true },
@@ -144,14 +154,24 @@ const createParsedTree = async (
 				thumbnailPath,
 			};
 
-			// プライベートチェック
+			// 公開対象じゃなければスキップ
 			if (!isMatchNodeCondition(data, PUBLIC_CONDITION)) {
 				loggingWithColor("yellow", `PRIVATE FILE >>  ${currentPath}`);
-				// ファイルごと消してしまう？→一旦スキップだけで
-				// これ以降はこの関数で作った情報だけが使われるので（アセットコピーも）
 				continue;
 			}
+			// NGチェックは強制終了
+			const isNG = isContainNGWords(fileContent, NG_WORDS);
+			if (isNG) {
+				throw new Error(
+					`NGチェックに引っかかったファイル:${pathOfUnderRoot} NGワード: ${NG_WORDS}`,
+				);
+			}
 
+			process.stdout.write(`${entry.name}`);
+			process.stdout.write("\r");
+
+			// ファイルごと消してしまう？→一旦スキップだけで
+			// これ以降はこの関数で作った情報だけが使われるので（アセットコピーも）
 			tree.push(data);
 		}
 	}
@@ -322,8 +342,12 @@ export const injectAllLinksToTNoteIndependence = (
 		return { ...p, backLinks: [], twoHopLinks: [] };
 	});
 
+	loggingWithColor("cyan", "backlink");
 	// inject backLink
 	for (const note of iNotes) {
+		process.stdout.write(`${note.basename}`);
+		process.stdout.write("\r");
+
 		for (const link of [...note.metadata.links, ...note.metadata.embeds]) {
 			// .md以外の.**の場合は何もしない
 			if (hasExtensionButNotMD(link.path)) continue;
@@ -459,9 +483,13 @@ const createFolderFile = async (vault: TVault): Promise<void> => {
 };
 
 export const createVaultFile = async (): Promise<TVault> => {
+	loggingWithColor("cyan", "createFileTrees start");
 	const fileTrees = createFileTrees(withAssetsDirPath);
+	loggingWithColor("cyan", "createParsedTree start");
 	const parsed = await createParsedTree(fileTrees, withAssetsDirPath, "");
+	loggingWithColor("cyan", "flattenParsedTree start");
 	const flattened = flattenParsedTree(parsed);
+	loggingWithColor("cyan", "createPathMap start");
 	const pathMap = createPathMap(flattened);
 
 	const tiNotes = flattened
@@ -470,7 +498,9 @@ export const createVaultFile = async (): Promise<TVault> => {
 			...f,
 			path: normalizePath(path.join(notesDirPath, f.path)),
 		}));
+	loggingWithColor("cyan", "injectAllLinksToTNoteIndependence start");
 	const tNotes = injectAllLinksToTNoteIndependence(tiNotes);
+	loggingWithColor("cyan", "createCreatedMap start");
 	const createdMap = createCreatedMap(tNotes);
 
 	return { notes: tNotes, pathMap, createdMap };
