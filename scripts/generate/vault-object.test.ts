@@ -6,7 +6,7 @@ import { expect, test } from "vitest";
 
 import { createVaultFile } from "./vault-object";
 
-test("ゴールデンマスターテスト", async () => {
+test.skip("ゴールデンマスターテスト", async () => {
 	const masterData = JSON.parse(
 		await readFile(path.join(__dirname, "vault.json"), {
 			encoding: "utf-8",

@@ -385,50 +385,53 @@ export const injectAllLinksToTNoteIndependence = (
 	 *
 	 * 日本語で表すと、「同じfrontLinkを持つものを関連づけ、frontLink経由のtwoHopLinkとする」という感じ
 	 */
+	// TODO: 重すぎ...
+	// loggingWithColor("cyan", "2hoplink");
+	// for (const note of notes) {
+	// 	process.stdout.write(`${note.basename}`);
+	// 	process.stdout.write("\r");
+	// 	for (const link of [...note.metadata.links, ...note.metadata.embeds]) {
+	// 		if (note.twoHopLinks?.find((thl) => thl.path === link.path)) continue;
+	// 		// .md以外の.**の場合は何もしない
+	// 		if (hasExtensionButNotMD(link.path)) continue;
 
-	for (const note of notes) {
-		for (const link of [...note.metadata.links, ...note.metadata.embeds]) {
-			if (note.twoHopLinks?.find((thl) => thl.path === link.path)) continue;
-			// .md以外の.**の場合は何もしない
-			if (hasExtensionButNotMD(link.path)) continue;
+	// 		// 同じlinkを持つものをまとめる
+	// 		const targets = notes.filter((p) => {
+	// 			// おおもとのファイルと同じ場合は除外
+	// 			if (isSamePath(note.path, p.path)) {
+	// 				return false;
+	// 			}
+	// 			return [...p.metadata.links, ...p.metadata.embeds].find((l) => {
+	// 				// おおもとのファイルと同じ場合は除外
+	// 				if (isSamePath(note.path, l.path)) {
+	// 					return false;
+	// 				}
+	// 				// backLinkに含まれていたら除外
+	// 				if (note.backLinks.some((bl) => isSamePath(bl.path, l.path))) {
+	// 					return false;
+	// 				}
+	// 				// 画像なども除外
+	// 				if (hasExtensionButNotMD(link.path)) {
+	// 					return false;
+	// 				}
+	// 				return isSamePath(l.path, link.path);
+	// 			});
+	// 		});
 
-			// 同じlinkを持つものをまとめる
-			const targets = notes.filter((p) => {
-				// おおもとのファイルと同じ場合は除外
-				if (isSamePath(note.path, p.path)) {
-					return false;
-				}
-				return [...p.metadata.links, ...p.metadata.embeds].find((l) => {
-					// おおもとのファイルと同じ場合は除外
-					if (isSamePath(note.path, l.path)) {
-						return false;
-					}
-					// backLinkに含まれていたら除外
-					if (note.backLinks.some((bl) => isSamePath(bl.path, l.path))) {
-						return false;
-					}
-					// 画像なども除外
-					if (hasExtensionButNotMD(link.path)) {
-						return false;
-					}
-					return isSamePath(l.path, link.path);
-				});
-			});
+	// 		// twoHopLinksが空ならそもそも追加しない
+	// 		if (!targets.length) continue;
 
-			// twoHopLinksが空ならそもそも追加しない
-			if (!targets.length) continue;
-
-			note.twoHopLinks.push({
-				links: targets.map((t) => ({
-					path: t.path,
-					title: t.basename,
-					thumbnailPath: t.thumbnailPath,
-				})),
-				path: link.path,
-				title: link.title,
-			});
-		}
-	}
+	// 		note.twoHopLinks.push({
+	// 			links: targets.map((t) => ({
+	// 				path: t.path,
+	// 				title: t.basename,
+	// 				thumbnailPath: t.thumbnailPath,
+	// 			})),
+	// 			path: link.path,
+	// 			title: link.title,
+	// 		});
+	// 	}
+	// }
 	return notes;
 };
 
