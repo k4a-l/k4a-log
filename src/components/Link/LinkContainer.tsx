@@ -22,6 +22,7 @@ import {
 import type { MetaProps, PathMap } from "@/features/metadata/type";
 import type { WikiLinkData } from "@/types/mdast";
 import type { AnchorHTMLAttributes, FC } from "react";
+import { safeDecodeURIComponent } from "@/utils/path";
 
 type WikiLinkComponentProps = AnchorHTMLAttributes<HTMLAnchorElement> &
 	WikiLinkData["hProperties"] & { pathMap: PathMap };
@@ -86,7 +87,7 @@ export const EmbedLinkContainer: FC<
 
 		const parentLinksArr = parentsLinks
 			.split(" ")
-			.map((p) => decodeURIComponent(p));
+			.map((p) => safeDecodeURIComponent(p));
 
 		const remarkProcessor = createParseProcessor(fileTrees, parentLinksArr);
 		const rehypeProcessor = createRunProcessor({

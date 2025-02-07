@@ -17,6 +17,7 @@ import type { ReactProcessor } from ".";
 import type { Heading, Root } from "mdast";
 import type { ReactElement } from "react";
 import type { Processor } from "unified";
+import { safeDecodeURIComponent } from "@/utils/path";
 
 export const getFileContent = (
 	paths: string[],
@@ -49,7 +50,7 @@ export const getFileContent = (
 
 	// `.`以外にマッチする正規表現
 
-	const title = decodeURIComponent(
+	const title = safeDecodeURIComponent(
 		lastOfArr(paths)?.replace(/\.(md)/, "") ?? "",
 	);
 

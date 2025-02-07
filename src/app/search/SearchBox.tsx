@@ -9,6 +9,7 @@ import { css } from "styled-system/css";
 import { HStack } from "styled-system/jsx";
 
 import { getSearchPath } from "./util";
+import { safeDecodeURIComponent } from "@/utils/path";
 
 export const SearchBox = () => {
 	const searchParams = useSearchParams();
@@ -18,11 +19,11 @@ export const SearchBox = () => {
 	const router = useRouter();
 
 	const [searchQuery, setSearchQuery] = useState(
-		query ? decodeURIComponent(query) : undefined,
+		query ? safeDecodeURIComponent(query) : undefined,
 	);
 
 	useEffect(() => {
-		setSearchQuery(query ? decodeURIComponent(query) : undefined);
+		setSearchQuery(query ? safeDecodeURIComponent(query) : undefined);
 	}, [query]);
 
 	const search = () => {

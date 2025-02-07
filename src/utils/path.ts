@@ -19,7 +19,7 @@ export const isSamePath = (path1: string, path2: string): boolean => {
  * 末尾/を削除
  */
 export const normalizePath = (str: string): string => {
-	return decodeURIComponent(
+	return safeDecodeURIComponent(
 		path
 			.join(
 				"/",
@@ -75,3 +75,11 @@ export const pathSplit = (str: string): string[] =>
 	normalizePath(str)
 		?.split("/")
 		.filter((s) => s) ?? [];
+
+export const safeDecodeURIComponent = (str: string) => {
+	try {
+		return decodeURIComponent(str);
+	} catch (error) {
+		return str;
+	}
+};

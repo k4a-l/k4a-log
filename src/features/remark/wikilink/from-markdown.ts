@@ -1,6 +1,6 @@
 import path from "node:path";
 
-import { pathSplit } from "@/utils/path";
+import { pathSplit, safeDecodeURIComponent } from "@/utils/path";
 
 import { getWikiLinkExtension, lastOfArr, pathResolver } from "./util";
 
@@ -101,7 +101,7 @@ const createWikiLinkData = (
 	const isEmbed = Boolean(token.embed);
 	const isTagLink = Boolean(wikiLink.data?.isTagLink);
 
-	const parentsLinks = opts.parentsLinks.map((p) => decodeURIComponent(p));
+	const parentsLinks = opts.parentsLinks.map((p) => safeDecodeURIComponent(p));
 	const currentPaths: string[] = pathSplit(lastOfArr(parentsLinks) ?? "");
 
 	const _link = pathResolver({
@@ -143,7 +143,7 @@ const createWikiLinkData = (
 
 	const isCirclerReference = [...parentsLinks].some((p) => {
 		return (
-			decodeURIComponent(
+			safeDecodeURIComponent(
 				_link?.replace(/\.md$/, "").replace(/\\/g, "/") ?? "",
 			) === p
 		);

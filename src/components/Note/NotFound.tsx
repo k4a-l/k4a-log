@@ -14,12 +14,12 @@ import { NextLink, NextLinkButton } from "@/components/Link/NextLink";
 import { getVaultObject } from "@/features/file/io";
 import { notesDirPath } from "@/features/metadata/constant";
 import { Link } from "@/park-ui/components/link";
-import { normalizePath } from "@/utils/path";
+import { normalizePath, safeDecodeURIComponent } from "@/utils/path";
 import { css } from "styled-system/css";
 import { HStack, Spacer, Stack } from "styled-system/jsx";
 
 export const NoteNotFound = async ({ href: _href }: { href: string }) => {
-	const href = decodeURIComponent(_href.split(/\\|\//).join("/"));
+	const href = safeDecodeURIComponent(_href.split(/\\|\//).join("/"));
 	const vault = getVaultObject();
 
 	const searchTargets = vault.notes.map((p) => ({

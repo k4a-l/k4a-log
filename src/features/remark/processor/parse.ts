@@ -14,13 +14,14 @@ import type { Root } from "mdast";
 import type { Processor } from "unified";
 
 import {} from "remark-extract-frontmatter";
+import { safeDecodeURIComponent } from "@/utils/path";
 
 export const createParseProcessor = (
 	fileTrees: FileTree[],
 	_parentsLinks: string[],
 ): Processor<Root, undefined, undefined, Root, string> => {
 	const parentsLinks = _parentsLinks
-		.map((p) => decodeURIComponent(p))
+		.map((p) => safeDecodeURIComponent(p))
 		.map((p) =>
 			p
 				.replace(/\\+/g, "/")

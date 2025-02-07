@@ -5,6 +5,7 @@ import { Stack } from "styled-system/jsx";
 
 import { SearchPresentation } from "./SearchPresentation";
 import { type SearchQuery, searchPath } from "./util";
+import { safeDecodeURIComponent } from "@/utils/path";
 
 export type SearchParams = Promise<SearchQuery>;
 
@@ -45,8 +46,8 @@ export default async function Page({
 					hashTagList={hashTagList}
 					linkTagList={linkTagList}
 					searchQuery={{
-						query: query ? decodeURIComponent(query) : undefined,
-						tag: tag ? decodeURIComponent(tag) : undefined,
+						query: query ? safeDecodeURIComponent(query) : undefined,
+						tag: tag ? safeDecodeURIComponent(tag) : undefined,
 						page: Number.isNaN(pageNum) ? 0 : pageNum,
 						created: created,
 						sort: sort,

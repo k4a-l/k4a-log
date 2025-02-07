@@ -5,6 +5,7 @@ import GithubSlugger from "github-slugger";
 
 import type { WikiLinkData } from "@/types/mdast";
 import {} from "react/jsx-runtime";
+import { pathSplit, safeDecodeURIComponent } from "@/utils/path";
 
 // _startPathの最後の要素に拡張子が含まれていない場合は、最後の要素に.mdを結合したあたらしい配列を作る
 // 拡張子が含まれている場合は、そのままの配列を使う
@@ -20,7 +21,7 @@ export const convertNoExtensionPathToMD = (_path: string[]): string[] => {
 		path.push(`${last}.md`);
 	}
 	return path.map((p) => {
-		return decodeURIComponent(p);
+		return safeDecodeURIComponent(p);
 	});
 };
 
@@ -33,7 +34,7 @@ export function findClosest(
 	// ツリー全体を探索し、すべてのパスを記録する
 	const allPaths: FileNode[] = [];
 
-	const targetName = decodeURIComponent(_targetName);
+	const targetName = safeDecodeURIComponent(_targetName);
 	const startPath = convertNoExtensionPathToMD(_startPath);
 
 	function traverse(tree: FileTree[], currentPath: string[] = []) {
