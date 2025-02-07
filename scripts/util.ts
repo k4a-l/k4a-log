@@ -2,7 +2,7 @@ import path from "node:path";
 
 import { notesDirPath } from "@/features/metadata/constant";
 import {
-	type FileTree,
+	type FileNode,
 	imageExtensions,
 	pathResolver,
 } from "@/features/remark/wikilink/util";
@@ -35,17 +35,23 @@ export const getThumbnailPath = (
 		frontmatter: VFileData["frontmatter"];
 	},
 	metadata: TNoteMetaData,
-	fileTrees: FileTree[],
+	fileNodes: FileNode[],
 ): string | undefined => {
 	const thumbnailWikilinkPath = pickWikilinkLikeArrayStr(
 		file.frontmatter?.thumbnailPath,
 	);
 
+	const fileMap: Map<string, FileNode> = new Map();
+	for (const fileNode of fileNodes) {
+		fileMap.set(normalizePath(fileNode.absPath), fileNode);
+	}
+
 	if (thumbnailWikilinkPath) {
 		const result = pathResolver({
 			linkName: thumbnailWikilinkPath,
 			currentPaths: pathSplit(file.path),
-			fileTrees,
+			fileNodes,
+			fileMap,
 		});
 
 		if (result) return path.join("/", notesDirPath, normalizePath(result));

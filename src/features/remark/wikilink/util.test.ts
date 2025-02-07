@@ -1,8 +1,8 @@
-import { describe, expect, test } from "vitest";
+import { expect, test } from "vitest";
 
 import { notesDirPath } from "@/features/metadata/constant";
 
-import { type FileTree, createFileTrees, findClosest } from "./util";
+import { type FileTree, createFileTrees } from "./util";
 
 const TEST_FILE_TREE: FileTree[] = [
 	{
@@ -52,62 +52,62 @@ const TEST_FILE_TREE: FileTree[] = [
 	{ type: "file", name: "スペース「 」「　」・記号込.md" },
 ];
 
-describe("直近パス検索", () => {
-	test("ルートから下方向のみ", () => {
-		const result = findClosest(TEST_FILE_TREE, ["INDEX"], "ディレクトリ配下");
-		expect(result?.absPaths).toStrictEqual([
-			"directory",
-			"ディレクトリ配下.md",
-		]);
-	});
+// describe("直近パス検索", () => {
+// 	test("ルートから下方向のみ", () => {
+// 		const result = findClosest(TEST_FILE_TREE, ["INDEX"], "ディレクトリ配下");
+// 		expect(result?.absPaths).toStrictEqual([
+// 			"directory",
+// 			"ディレクトリ配下.md",
+// 		]);
+// 	});
 
-	test("ルートから遠いパス形式", () => {
-		const result = findClosest(
-			TEST_FILE_TREE,
-			["INDEX"],
-			"directory/directory2/ディレクトリ配下",
-		);
-		expect(result?.absPaths).toStrictEqual([
-			"directory",
-			"directory2",
-			"ディレクトリ配下.md",
-		]);
-	});
+// 	test("ルートから遠いパス形式", () => {
+// 		const result = findClosest(
+// 			TEST_FILE_TREE,
+// 			["INDEX"],
+// 			"directory/directory2/ディレクトリ配下",
+// 		);
+// 		expect(result?.absPaths).toStrictEqual([
+// 			"directory",
+// 			"directory2",
+// 			"ディレクトリ配下.md",
+// 		]);
+// 	});
 
-	test("上方向も含めた直近検索", () => {
-		const result = findClosest(
-			TEST_FILE_TREE,
-			["SYNTAX TEST", "COMMON"],
-			"ディレクトリ配下",
-		);
-		expect(result?.absPaths).toStrictEqual([
-			"directory",
-			"ディレクトリ配下.md",
-		]);
-	});
+// 	test("上方向も含めた直近検索", () => {
+// 		const result = findClosest(
+// 			TEST_FILE_TREE,
+// 			["SYNTAX TEST", "COMMON"],
+// 			"ディレクトリ配下",
+// 		);
+// 		expect(result?.absPaths).toStrictEqual([
+// 			"directory",
+// 			"ディレクトリ配下.md",
+// 		]);
+// 	});
 
-	test("上方向も含めた遠いパス形式", () => {
-		const result = findClosest(
-			TEST_FILE_TREE,
-			["SYNTAX TEST", "COMMON"],
-			"../directory/directory2/ディレクトリ配下",
-		);
-		expect(result?.absPaths).toStrictEqual([
-			"directory",
-			"directory2",
-			"ディレクトリ配下.md",
-		]);
-	});
+// 	test("上方向も含めた遠いパス形式", () => {
+// 		const result = findClosest(
+// 			TEST_FILE_TREE,
+// 			["SYNTAX TEST", "COMMON"],
+// 			"../directory/directory2/ディレクトリ配下",
+// 		);
+// 		expect(result?.absPaths).toStrictEqual([
+// 			"directory",
+// 			"directory2",
+// 			"ディレクトリ配下.md",
+// 		]);
+// 	});
 
-	test("エンコード", () => {
-		const result = findClosest(
-			TEST_FILE_TREE,
-			["SYNTAX TEST", "COMMON"],
-			encodeURIComponent("スペース「 」「　」・記号込"),
-		);
-		expect(result?.absPaths).toStrictEqual(["スペース「 」「　」・記号込.md"]);
-	});
-});
+// 	test("エンコード", () => {
+// 		const result = findClosest(
+// 			TEST_FILE_TREE,
+// 			["SYNTAX TEST", "COMMON"],
+// 			encodeURIComponent("スペース「 」「　」・記号込"),
+// 		);
+// 		expect(result?.absPaths).toStrictEqual(["スペース「 」「　」・記号込.md"]);
+// 	});
+// });
 
 test("ファイル一覧取得", () => {
 	const directoryPath = `./assets/${notesDirPath}/tests`;

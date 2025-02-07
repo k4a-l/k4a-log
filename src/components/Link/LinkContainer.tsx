@@ -7,7 +7,6 @@ import {
 } from "@/features/remark/processor";
 import { getFileContent } from "@/features/remark/processor/getContent";
 import { createParseProcessor } from "@/features/remark/processor/parse";
-import { createFileTrees } from "@/features/remark/wikilink/util";
 import { css } from "styled-system/css";
 
 import {
@@ -83,13 +82,15 @@ export const EmbedLinkContainer: FC<
 	if (type === "link") {
 		const paths = href.split(/\\|\//).filter((p) => p !== notesDirPath);
 		const rootPath = path.join(assetsDirPath, rootDirPath);
-		const fileTrees = createFileTrees(rootPath);
 
 		const parentLinksArr = parentsLinks
 			.split(" ")
 			.map((p) => safeDecodeURIComponent(p));
 
-		const remarkProcessor = createParseProcessor(fileTrees, parentLinksArr);
+		const remarkProcessor = createParseProcessor(
+			parentLinksArr,
+			vault.notes.map((p) => ({ absPath: p.path, name: p.basename })),
+		);
 		const rehypeProcessor = createRunProcessor({
 			listItems: note.metadata.listItems,
 		});

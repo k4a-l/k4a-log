@@ -22,12 +22,11 @@ const wikiLinkPlugin: Plugin<
 		else data[field] = [value];
 	}
 
-	if (!options?.fileTrees) {
+	if (!options) {
 		throw new Error("fileTreesを設定してください");
 	}
 
 	const opts: Required<WikiLinkOption> = {
-		fileTrees: [],
 		classNames: {
 			deadLink: "dead",
 			wikiLink: "wikiLink",

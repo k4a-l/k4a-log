@@ -62,7 +62,9 @@ export const getFileContent = (
 			value: fileContent,
 		});
 
+		const start = performance.now();
 		const parseResult = parseProcessor.parse(file);
+		console.log("parseResult", performance.now() - start);
 
 		if (header) {
 			const targetHeaderIndex = parseResult.children.findIndex(
@@ -88,6 +90,7 @@ export const getFileContent = (
 		const tocResult = toc(parseResult);
 
 		const rehypeResult = runProcessor.runSync(parseResult, file);
+
 		const stringifyResult = stringifyProcessor.stringify(rehypeResult);
 
 		const frontmatterRaw: Record<string, unknown> = (

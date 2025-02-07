@@ -21,6 +21,7 @@ import {
 import { createParseProcessor } from "@/features/remark/processor/parse";
 import { createRunProcessor } from "@/features/remark/processor/run";
 import {
+	type FileNode,
 	type FileTree,
 	createFileTrees,
 } from "@/features/remark/wikilink/util";
@@ -64,6 +65,7 @@ import type { Position } from "unist";
 
 const createParsedTree = async (
 	fileTrees: FileTree[],
+	fileNode: FileNode[],
 	rootDirPath: string,
 	dirPath: string,
 ): Promise<FileOrDirEntity[]> => {
@@ -106,6 +108,7 @@ const createParsedTree = async (
 				name: entry.name,
 				children: await createParsedTree(
 					fileTrees,
+					fileNode,
 					rootDirPath,
 					pathOfUnderRoot,
 				),
@@ -120,8 +123,8 @@ const createParsedTree = async (
 			});
 
 			const parseProcessor = createParseProcessor(
-				fileTrees,
 				[pathOfUnderRoot].map((p) => encodeURIComponent(p)),
+				fileNode,
 			);
 			const runProcessor = createRunProcessor(
 				{ listItems: [] },
@@ -140,18 +143,8 @@ const createParsedTree = async (
 			const thumbnailPath = getThumbnailPath(
 				{ path: currentPath, frontmatter },
 				metadata,
-				fileTrees,
+				fileNode,
 			);
-
-			if (entry.name?.includes("HHKB")) {
-				console.log(
-					JSON.stringify(
-						metadata.embeds.map((e) => e.path),
-						null,
-						4,
-					),
-				);
-			}
 
 			const data: FileEntity = {
 				type: "file",
@@ -501,8 +494,33 @@ const createFolderFile = async (vault: TVault): Promise<void> => {
 export const createVaultFile = async (): Promise<TVault> => {
 	loggingWithColor("cyan", "createFileTrees start");
 	const fileTrees = createFileTrees(withAssetsDirPath);
+
+	const fileNode: FileNode[] = [];
+	function traverse(tree: FileTree[], currentPath: string[] = []) {
+		for (const file of tree) {
+			// TODO: ここおもそう？
+			const newPath = [...currentPath, file.name];
+			fileNode.push({
+				name: file.name,
+				absPath: normalizePath(
+					path.join(...newPath.map((p) => p.replace(/\.md$/, ""))),
+				),
+			});
+
+			if (file.type === "dir" && file.children) {
+				traverse(file.children, newPath);
+			}
+		}
+	}
+	traverse(fileTrees);
+
 	loggingWithColor("cyan", "createParsedTree start");
-	const parsed = await createParsedTree(fileTrees, withAssetsDirPath, "");
+	const parsed = await createParsedTree(
+		fileTrees,
+		fileNode,
+		withAssetsDirPath,
+		"",
+	);
 	loggingWithColor("cyan", "flattenParsedTree start");
 	const flattened = flattenParsedTree(parsed);
 	loggingWithColor("cyan", "createPathMap start");
@@ -519,7 +537,12 @@ export const createVaultFile = async (): Promise<TVault> => {
 	loggingWithColor("cyan", "createCreatedMap start");
 	const createdMap = createCreatedMap(tNotes);
 
-	return { notes: tNotes, pathMap, createdMap };
+	return {
+		notes: tNotes,
+		assets: fileNode.map((p) => ({ name: p.name, path: p.absPath })),
+		pathMap,
+		createdMap,
+	};
 };
 
 export const main = async () => {

@@ -90,8 +90,6 @@ const createWikiLinkData = (
 	wikiLink: WikiLinkContentMap,
 	opts: Required<WikiLinkOption>,
 ): WikiLinkData => {
-	const start = performance.now();
-
 	const defaultHrefTemplate = (permalink: string) => {
 		if (permalink.startsWith("#")) return permalink;
 		return normalizePath(permalink);
@@ -106,10 +104,12 @@ const createWikiLinkData = (
 	const parentsLinks = opts.parentsLinks.map((p) => safeDecodeURIComponent(p));
 	const currentPaths: string[] = pathSplit(lastOfArr(parentsLinks) ?? "");
 
+	// ここスキップすると軽くなる
 	const _link = pathResolver({
 		linkName: pathValue,
 		currentPaths: currentPaths,
-		fileTrees: opts.fileTrees,
+		fileNodes: opts.notes,
+		fileMap: opts.fileMap,
 	});
 
 	const extensionInfo = getWikiLinkExtension(wikiLink.value);
@@ -185,23 +185,6 @@ const createWikiLinkData = (
 		isDeadLink: isDeadLink ? "true" : undefined,
 		isTagLink: isTagLink ? "true" : undefined,
 	};
-
-	if (link?.includes("20201209_hhkb")) {
-		console.log(
-			{
-				_link,
-				link,
-				pathValue,
-				currentPaths,
-			},
-			JSON.stringify(hProperties, null, 4),
-			JSON.stringify(
-				opts.fileTrees.find((t) => t.name === "blog"),
-				null,
-				4,
-			),
-		);
-	}
 
 	return {
 		type,

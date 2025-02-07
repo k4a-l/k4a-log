@@ -5,7 +5,7 @@ import GithubSlugger from "github-slugger";
 
 import type { WikiLinkData } from "@/types/mdast";
 import {} from "react/jsx-runtime";
-import { isSamePath, pathSplit, safeDecodeURIComponent } from "@/utils/path";
+import { normalizePath, pathSplit, safeDecodeURIComponent } from "@/utils/path";
 import { loggingWithColor } from "scripts/util";
 
 // _startPathの最後の要素に拡張子が含まれていない場合は、最後の要素に.mdを結合したあたらしい配列を作る
@@ -26,38 +26,22 @@ export const convertNoExtensionPathToMD = (_path: string[]): string[] => {
 	});
 };
 
-type FileNode = { absPaths: string[]; file: FileTree };
+export type FileNode = { name: string; absPath: string };
+
+export type FileMap = Map<string, FileNode>;
 export function findClosest(
-	fileTrees: FileTree[],
+	fileNodes: FileNode[],
+	fileMap: FileMap,
 	_startPath: string[],
 	_targetName: string,
 ): FileNode | undefined {
-	// ツリー全体を探索し、すべてのパスを記録する
-	const allPaths: FileNode[] = [];
-
 	const targetName = safeDecodeURIComponent(_targetName);
 	const startPath = convertNoExtensionPathToMD(_startPath);
 
-	function traverse(tree: FileTree[], currentPath: string[] = []) {
-		for (const file of tree) {
-			const newPath = [...currentPath, file.name];
-			allPaths.push({ absPaths: newPath, file });
-
-			if (file.type === "dir" && file.children) {
-				traverse(file.children, newPath);
-			}
-		}
-	}
-
-	traverse(fileTrees);
-
 	// 起点と対象を検索
-	const start = allPaths.find(
-		(item) => JSON.stringify(item.absPaths) === JSON.stringify(startPath),
-	);
-	if (!start) {
+	const startFile = fileMap.get(normalizePath(path.join(...startPath)));
+	if (!startFile) {
 		loggingWithColor("red", "起点のファイルを見つけられません");
-		console.log(startPath, allPaths.length);
 		return undefined; // 起点が見つからなければ終了
 	}
 
@@ -71,30 +55,17 @@ export function findClosest(
 			),
 		);
 
-		const target = allPaths.find((item) =>
-			isSamePath(
-				path.join(...item.absPaths.map((p) => p.replace(/\.md$/, ""))),
-				path.join(...targetPathList),
-			),
-		);
+		const target = fileMap.get(normalizePath(path.join(...targetPathList)));
 
 		if (!target) {
 			loggingWithColor("red", "targetがありません");
-			console.log(
-				{
-					targetPathList,
-					targetNameSplit,
-					startPath,
-				},
-				allPaths.length,
-			);
 		}
 
 		return target;
 	}
 
-	const targetCandidates = allPaths.filter(
-		(item) => item.file.name.replace(/\.md$/, "") === targetName,
+	const targetCandidates = fileNodes.filter(
+		(item) => item.name.replace(/\.md$/, "") === targetName,
 	);
 	if (targetCandidates.length === 0) return undefined; // 対象が見つからなければ終了
 
@@ -102,7 +73,7 @@ export function findClosest(
 	let closest: ({ distance: number } & FileNode) | null = null;
 
 	for (const candidate of targetCandidates) {
-		const targetPath = candidate.absPaths;
+		const targetPath = pathSplit(candidate.absPath);
 
 		// 共通部分を求める（距離計算のため）
 		let commonLength = 0;
@@ -120,8 +91,8 @@ export function findClosest(
 		if (!closest || distance < closest.distance) {
 			closest = {
 				distance,
-				file: candidate.file,
-				absPaths: candidate.absPaths,
+				name: candidate.name,
+				absPath: candidate.absPath,
 			};
 		}
 	}
@@ -132,11 +103,13 @@ export function findClosest(
 export const pathResolver = ({
 	linkName: _linkName,
 	currentPaths,
-	fileTrees,
+	fileNodes: fileNode,
+	fileMap,
 }: {
 	linkName: string;
 	currentPaths: string[];
-	fileTrees: FileTree[];
+	fileNodes: FileNode[];
+	fileMap: FileMap;
 }): string | undefined => {
 	if (!_linkName) return undefined;
 
@@ -155,14 +128,13 @@ export const pathResolver = ({
 		link = link.replace(`#${headingContent}`, "");
 	}
 
-	const file = findClosest(fileTrees, currentPaths, link);
+	const file = findClosest(fileNode, fileMap, currentPaths, link);
 
 	if (file) {
-		const absPath = path.join(...file.absPaths);
 		if (headingContent) {
-			return `${absPath}#${toHeadingSlug(headingContent)}`;
+			return `${file.absPath}#${toHeadingSlug(headingContent)}`;
 		}
-		return absPath;
+		return file.absPath;
 	}
 
 	return undefined;

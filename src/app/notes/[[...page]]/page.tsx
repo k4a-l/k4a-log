@@ -19,7 +19,6 @@ import {
 } from "@/features/remark/processor";
 import { getFileContent } from "@/features/remark/processor/getContent";
 import { createParseProcessor } from "@/features/remark/processor/parse";
-import { createFileTrees } from "@/features/remark/wikilink/util";
 import { reverseObjects } from "@/utils/object";
 import { isSamePath, normalizePath } from "@/utils/path";
 import { css } from "styled-system/css";
@@ -61,8 +60,19 @@ export default async function Page({ params }: Props) {
 	if (!tNote) return <NoteNotFound href={pathFromParams} />;
 
 	// このファイルの事前準備
-	const fileTrees = createFileTrees(directoryPath);
-	const parseProcessor = createParseProcessor(fileTrees, [notePath]);
+	const parseProcessor = createParseProcessor(
+		[notePath],
+		[
+			...vaultObject.notes.map((p) => ({
+				absPath: p.path,
+				name: p.basename,
+			})),
+			...vaultObject.assets.map((p) => ({
+				absPath: p.path,
+				name: p.name,
+			})),
+		],
+	);
 	const runProcessor = createRunProcessor({
 		listItems: tNote.metadata.listItems,
 	});
@@ -71,7 +81,7 @@ export default async function Page({ params }: Props) {
 		meta: { vault: vaultObject, note: tNote },
 	});
 
-	// 実行
+	// 実行→やっぱここが重い？
 	const fileData = getFileContent(
 		notePath.split(/\\|\//),
 		directoryPath,

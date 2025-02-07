@@ -9,16 +9,16 @@ import { assetsDirPath, notesDirPath } from "@/features/metadata/constant";
 import wikiLinkPlugin from "@/features/remark/wikilink";
 
 import type { WikiLinkOption } from "@/features/remark/wikilink/type";
-import type { FileTree } from "@/features/remark/wikilink/util";
+import type { FileNode } from "@/features/remark/wikilink/util";
 import type { Root } from "mdast";
 import type { Processor } from "unified";
 
 import {} from "remark-extract-frontmatter";
-import { safeDecodeURIComponent } from "@/utils/path";
+import { normalizePath, safeDecodeURIComponent } from "@/utils/path";
 
 export const createParseProcessor = (
-	fileTrees: FileTree[],
 	_parentsLinks: string[],
+	notes: FileNode[],
 ): Processor<Root, undefined, undefined, Root, string> => {
 	const parentsLinks = _parentsLinks
 		.map((p) => safeDecodeURIComponent(p))
@@ -29,14 +29,20 @@ export const createParseProcessor = (
 				.replace(/#([^.]*)/, ""),
 		);
 
+	const fileMap: Map<string, FileNode> = new Map();
+	for (const fileNode of notes) {
+		fileMap.set(normalizePath(fileNode.absPath), fileNode);
+	}
+
 	const processor = remark()
 		.use(remarkParse)
 		.use(remarkGfm)
 		.use(wikiLinkPlugin, {
-			fileTrees,
 			assetPath: assetsDirPath,
 			rootPath: notesDirPath,
 			parentsLinks,
+			notes,
+			fileMap,
 		} satisfies WikiLinkOption)
 		.use(remarkFrontmatter, [
 			{
