@@ -98,7 +98,7 @@ describe("isPrivateFile", () => {
 					produce(baseData, (draft) => {
 						draft.path = "/private/path/to/file";
 					}),
-					{ paths: ["private"] },
+					{ paths: ["hoge", "private"] },
 				),
 			).toBe(true);
 			expect(
@@ -106,7 +106,7 @@ describe("isPrivateFile", () => {
 					produce(baseData, (draft) => {
 						draft.path = "/private/path/to/file";
 					}),
-					{ paths: ["/private"] },
+					{ paths: ["hoge", "/private"] },
 				),
 			).toBe(true);
 		});
@@ -117,7 +117,7 @@ describe("isPrivateFile", () => {
 					produce(baseData, (draft) => {
 						draft.path = "/path/private/to/file";
 					}),
-					{ paths: ["private"] },
+					{ paths: ["hoge", "private"] },
 				),
 			).toBe(false);
 		});
