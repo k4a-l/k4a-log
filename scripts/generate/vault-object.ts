@@ -73,6 +73,12 @@ const createParsedTree = async (
 	});
 
 	for (const entry of entries) {
+		// bytesize
+		if (new Blob([entry.name]).size > 254) {
+			loggingWithColor("red", entry.name);
+			throw new Error("bytesize over 255");
+		}
+
 		if (entry.name === ".obsidian") continue;
 		// `.md`以外の拡張子を持っていたらスキップ（ディレクトリでもない）
 		if (entry.name.match(/^(?!.*\.md$).*\..*$/)) continue;
