@@ -8,6 +8,7 @@ import { VFile } from "vfile";
 
 import { getFileDate } from "@/components/FrontMatter/util";
 import {
+	folderFilePath,
 	notesDirPath,
 	vaultMetadataFilePath,
 	withAssetsDirPath,
@@ -36,6 +37,7 @@ import { getThumbnailPath, loggingWithColor } from "../util";
 
 import { isContainNGWords, isPrivateFile, PRIVATE_CONDITION } from "./check";
 import { NG_WORDS } from "./check";
+import { buildFileTree, type Folder } from "./folder";
 
 import type { FileEntity, FileOrDirEntity } from "./type";
 import type {
@@ -437,6 +439,17 @@ const createCreatedMap = (files: TNote[]): YMMap => {
 	return createdMap;
 };
 
+const createFolderFile = async (vault: TVault): Promise<void> => {
+	const folders = buildFileTree(
+		vault.notes.map((n) => ({ path: n.path, title: n.basename })),
+	);
+	const foldersUnderNotes: Folder[] =
+		folders[0]?.type === "folder" ? folders[0].children : [];
+
+	await writeFileRecursive(folderFilePath, JSON.stringify(foldersUnderNotes));
+	loggingWithColor("green", `COMPLETED!! >> ${folderFilePath}`);
+};
+
 export const createVaultFile = async (): Promise<TVault> => {
 	const fileTrees = createFileTrees(withAssetsDirPath);
 	const parsed = await createParsedTree(fileTrees, withAssetsDirPath, "");
@@ -459,6 +472,8 @@ export const main = async () => {
 	const vaultFile = await createVaultFile();
 	writeFileRecursive(vaultMetadataFilePath, JSON.stringify(vaultFile));
 	loggingWithColor("green", `COMPLETED!! >> ${vaultMetadataFilePath}`);
+
+	await createFolderFile(vaultFile);
 };
 
 const [funcName] = process.argv.slice(2);

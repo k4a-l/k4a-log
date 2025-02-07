@@ -7,11 +7,11 @@ import Image from "next/image";
 import path from "path-browserify";
 
 import { getSearchPath } from "@/app/search/util";
-import { BookmarkDrawer } from "@/components/Bookmark";
 import Scroll from "@/components/Hook/Scroll";
 import { NextLink } from "@/components/Link/NextLink";
+import { SideMenuDrawer } from "@/components/SideMenu";
 import { SummarizeByYM } from "@/components/Summazize";
-import { getBookmarkObject } from "@/features/file/io";
+import { getBookmarkObject, getFolderObject } from "@/features/file/io";
 import { notesDirPath } from "@/features/metadata/constant";
 import { Button } from "@/park-ui/components/button";
 import { Link } from "@/park-ui/components/link";
@@ -30,6 +30,7 @@ export default async function RootLayout({
 	children: React.ReactNode;
 }>) {
 	const bookmark = getBookmarkObject();
+	const folders = getFolderObject();
 
 	return (
 		<html lang="ja">
@@ -59,7 +60,7 @@ export default async function RootLayout({
 						})}
 						justifyContent={"space-between"}
 					>
-						<BookmarkDrawer root={bookmark} />
+						<SideMenuDrawer bookmark={bookmark} folders={folders} />
 						<Link asChild>
 							<NextLink href={path.join("/", notesDirPath)}>
 								<Image

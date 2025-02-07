@@ -16,5 +16,10 @@ export const bookmarkFilePath = path.join(
 	"metadata",
 	"bookmarks.json",
 );
+export const folderFilePath = path.join(
+	assetsDirPath,
+	"metadata",
+	"folders.json",
+);
 
 export const blogDirPath = "blog";

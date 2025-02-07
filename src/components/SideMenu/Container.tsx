@@ -6,12 +6,16 @@ import { IconButton } from "@/park-ui/components/icon-button";
 import { css } from "styled-system/css";
 import { Divider, HStack, Stack } from "styled-system/jsx";
 
-import { BookmarkGroup } from "./Content";
+import { BookmarkGroup, type BookMarkRoot } from "../Bookmark";
 
-import type { BookMarkRoot } from "./type";
+import { FolderContent } from "./Content";
 
-export const BookmarkInnerPart = ({ root }: { root: BookMarkRoot }) => {
-	if (root.items.length === 0) {
+import type { Folder } from "scripts/generate/folder";
+
+type Props = { bookmark: BookMarkRoot; folders: Folder[] };
+
+export const SideMenuInnerPart = ({ bookmark, folders }: Props) => {
+	if (bookmark.items.length === 0) {
 		return null;
 	}
 
@@ -24,7 +28,7 @@ export const BookmarkInnerPart = ({ root }: { root: BookMarkRoot }) => {
 				gap: 2,
 			})}
 			display={{
-				xl: "flex",
+				"2xl": "flex",
 				base: "none",
 			}}
 			overflowX={"hidden"}
@@ -37,29 +41,28 @@ export const BookmarkInnerPart = ({ root }: { root: BookMarkRoot }) => {
 			}}
 			w={1280 - 1000 - 10}
 		>
+			<FolderContent folders={folders} />
 			<HStack>
 				<PinIcon size="0.8em" />
 			</HStack>
 			<Divider />
-			<BookmarkGroup items={root.items} />
+			<BookmarkGroup items={bookmark.items} />
 		</Stack>
 	);
 };
 
-export const BookmarkDrawer = ({ root }: { root: BookMarkRoot }) => {
+export const SideMenuDrawer = ({ bookmark: root, folders }: Props) => {
 	if (root.items.length === 0) {
 		return null;
 	}
 
-	const props: Drawer.RootProps = { variant: "left" };
-
 	return (
-		<Drawer.Root variant={"left"}>
+		<Drawer.Root defaultOpen variant={"left"}>
 			<Drawer.Trigger
 				asChild
 				className={css({
 					display: {
-						xl: "none",
+						"2xl": "none",
 						base: "flex",
 					},
 				})}
@@ -89,8 +92,9 @@ export const BookmarkDrawer = ({ root }: { root: BookMarkRoot }) => {
 							</IconButton>
 						</Drawer.CloseTrigger>
 					</Drawer.Header>
-					<Drawer.Body h="full">
+					<Drawer.Body h="full" padding={1}>
 						<Stack h="full" overflowX={"hidden"} overflowY={"auto"}>
+							<FolderContent folders={folders} />
 							<BookmarkGroup items={root.items} />
 						</Stack>
 					</Drawer.Body>

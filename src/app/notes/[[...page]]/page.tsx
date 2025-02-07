@@ -1,14 +1,18 @@
 import path from "node:path";
 
-import { BookmarkInnerPart } from "@/components/Bookmark";
 import { PageWithTransition } from "@/components/Common/pageWithTransition";
 import { FrontMatter } from "@/components/FrontMatter";
 import { MyHead } from "@/components/Head";
 import { BeforeAfterNote } from "@/components/Note/BeforeAfter";
 import { NoteNotFound } from "@/components/Note/NotFound";
 import { BackLinks, TwoHopLinks } from "@/components/NoteLink";
+import { SideMenuInnerPart } from "@/components/SideMenu";
 import { SideTableOfContents } from "@/components/Toc";
-import { getBookmarkObject, getVaultObject } from "@/features/file/io";
+import {
+	getBookmarkObject,
+	getFolderObject,
+	getVaultObject,
+} from "@/features/file/io";
 import {
 	assetsDirPath,
 	blogDirPath,
@@ -88,6 +92,7 @@ export default async function Page({ params }: Props) {
 	const title: string = frontmatter?.title || fileData.title;
 
 	const bookmark = getBookmarkObject();
+	const folders = getFolderObject();
 
 	return (
 		<PageWithTransition>
@@ -113,7 +118,9 @@ export default async function Page({ params }: Props) {
 				justifyContent={"center"}
 				w="100%"
 			>
-				{bookmark.items.length > 0 && <BookmarkInnerPart root={bookmark} />}
+				{bookmark.items.length > 0 && (
+					<SideMenuInnerPart bookmark={bookmark} folders={folders} />
+				)}
 				<Stack maxW={"max(1000px,100%)"} minW={0} w={"1000px"}>
 					<Stack bg="white" p={4} rounded={"md"}>
 						<div

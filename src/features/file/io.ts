@@ -3,8 +3,10 @@ import { readFileSync } from "fs";
 
 import {
 	bookmarkFilePath,
+	folderFilePath,
 	vaultMetadataFilePath,
 } from "@/features/metadata/constant";
+import type { Folder } from "scripts/generate/folder";
 
 import type { BookMarkRoot } from "@/components/Bookmark";
 import type { TVault } from "@/features/metadata/type";
@@ -38,5 +40,20 @@ export const getBookmarkObject = (): BookMarkRoot => {
 	} catch (error) {
 		console.error("bookmarkFilePathの取得でエラー", error);
 		return { items: [] };
+	}
+};
+
+export const getFolderObject = (): Folder[] => {
+	// metadataの取得
+	// TODO: エラーハンドリンク
+	try {
+		const content = readFileSync(folderFilePath, {
+			encoding: "utf-8",
+		});
+		const object: Folder[] = JSON.parse(content);
+		return object;
+	} catch (error) {
+		console.error("folderFilePathの取得でエラー", error);
+		return [];
 	}
 };
