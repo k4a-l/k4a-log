@@ -1,4 +1,4 @@
-export type Folder = { name: string; path: string } & (
+export type Folder = { title: string; path: string } & (
 	| {
 			type: "folder";
 			children: Folder[];
@@ -26,7 +26,7 @@ export function buildFileTree(
 
 			if (!node) {
 				node = {
-					name: part,
+					title: index === parts.length - 1 ? file.title : part,
 					path: currentPath,
 					type: index === parts.length - 1 ? "file" : "folder",
 					...(index === parts.length - 1 ? {} : { children: [] }),

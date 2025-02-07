@@ -1,6 +1,10 @@
 import path from "node:path";
 
-import { blogDirPath, notesDirPath } from "@/features/metadata/constant";
+import {
+	blogDirPath,
+	notesDirPath,
+	workDirPath,
+} from "@/features/metadata/constant";
 import { strictEntries, strictFromEntries } from "@/utils/object";
 import { normalizePath } from "@/utils/path";
 
@@ -106,6 +110,10 @@ const specialId = {
 			file.path.startsWith(normalizePath(path.join("/", blogDirPath))) ||
 			file.path.startsWith(
 				normalizePath(path.join("/", notesDirPath, blogDirPath)),
+			) ||
+			file.path.startsWith(normalizePath(path.join("/", workDirPath))) ||
+			file.path.startsWith(
+				normalizePath(path.join("/", workDirPath, blogDirPath)),
 			),
 		parser: (file) => file.path.split(/\\|\//).slice(0, -1).join("/"),
 	},

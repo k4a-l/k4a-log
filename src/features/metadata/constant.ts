@@ -23,3 +23,5 @@ export const folderFilePath = path.join(
 );
 
 export const blogDirPath = "blog";
+
+export const workDirPath = "work";

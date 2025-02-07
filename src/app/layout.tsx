@@ -9,9 +9,9 @@ import path from "path-browserify";
 import { getSearchPath } from "@/app/search/util";
 import Scroll from "@/components/Hook/Scroll";
 import { NextLink } from "@/components/Link/NextLink";
-import { SideMenuDrawer } from "@/components/SideMenu";
+import { SideMenuDrawer, SideMenuInnerPart } from "@/components/SideMenu";
 import { SummarizeByYM } from "@/components/Summazize";
-import { getBookmarkObject, getFolderObject } from "@/features/file/io";
+import { getFolderObject } from "@/features/file/io";
 import { notesDirPath } from "@/features/metadata/constant";
 import { Button } from "@/park-ui/components/button";
 import { Link } from "@/park-ui/components/link";
@@ -29,7 +29,6 @@ export default async function RootLayout({
 }: Readonly<{
 	children: React.ReactNode;
 }>) {
-	const bookmark = getBookmarkObject();
 	const folders = getFolderObject();
 
 	return (
@@ -45,6 +44,7 @@ export default async function RootLayout({
 					h="auto"
 					minH="full"
 					w="full"
+					gap={0}
 				>
 					<HStack
 						className={css({
@@ -60,7 +60,7 @@ export default async function RootLayout({
 						})}
 						justifyContent={"space-between"}
 					>
-						<SideMenuDrawer bookmark={bookmark} folders={folders} />
+						<SideMenuDrawer folders={folders} />
 						<Link asChild>
 							<NextLink href={path.join("/", notesDirPath)}>
 								<Image
@@ -71,9 +71,7 @@ export default async function RootLayout({
 								/>
 							</NextLink>
 						</Link>
-
 						<Spacer />
-
 						<Button
 							asChild
 							gap={0}
@@ -91,17 +89,36 @@ export default async function RootLayout({
 						</Button>
 					</HStack>
 					<Stack flex={1} h="auto" minH="full" w="full">
-						<Stack
-							alignItems={"center"}
-							flex={1}
-							h="auto"
-							justifyContent={"start"}
-							minH="full"
-							p={4}
-							w="full"
-						>
-							{children}
-						</Stack>
+						<HStack alignItems={"space-between"}>
+							<SideMenuInnerPart folders={folders} />
+							<Stack
+								alignItems={"center"}
+								flex={1}
+								h="auto"
+								justifyContent={"start"}
+								minH="full"
+								w="full"
+							>
+								<HStack
+									flex={1}
+									alignItems={"start"}
+									className={`${css({
+										fontSize: { sm: "1em", base: "0.8em" },
+										"& > *": {
+											wordBreak: "break-all",
+											minW: 0,
+										},
+									})}, `}
+									h="100%"
+									justifyContent={"center"}
+									w="100%"
+									p={2}
+									flexBasis={"1000px"}
+								>
+									{children}
+								</HStack>
+							</Stack>
+						</HStack>
 						<HStack
 							className={css({
 								bg: "white",

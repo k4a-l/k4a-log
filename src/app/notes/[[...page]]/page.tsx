@@ -6,13 +6,8 @@ import { MyHead } from "@/components/Head";
 import { BeforeAfterNote } from "@/components/Note/BeforeAfter";
 import { NoteNotFound } from "@/components/Note/NotFound";
 import { BackLinks, TwoHopLinks } from "@/components/NoteLink";
-import { SideMenuInnerPart } from "@/components/SideMenu";
 import { SideTableOfContents } from "@/components/Toc";
-import {
-	getBookmarkObject,
-	getFolderObject,
-	getVaultObject,
-} from "@/features/file/io";
+import { getVaultObject } from "@/features/file/io";
 import {
 	assetsDirPath,
 	blogDirPath,
@@ -28,7 +23,7 @@ import { createFileTrees } from "@/features/remark/wikilink/util";
 import { reverseObjects } from "@/utils/object";
 import { isSamePath, normalizePath } from "@/utils/path";
 import { css } from "styled-system/css";
-import { HStack, Spacer, Stack } from "styled-system/jsx";
+import { Spacer, Stack } from "styled-system/jsx";
 
 import { Client } from "./Client";
 
@@ -91,11 +86,8 @@ export default async function Page({ params }: Props) {
 
 	const title: string = frontmatter?.title || fileData.title;
 
-	const bookmark = getBookmarkObject();
-	const folders = getFolderObject();
-
 	return (
-		<PageWithTransition>
+		<>
 			<Client />
 			<MyHead
 				description={tNote.metadata.frontmatter?.description || ""}
@@ -104,24 +96,13 @@ export default async function Page({ params }: Props) {
 				title={title}
 				url={notePathAbsolute}
 			/>
-
-			<HStack
-				alignItems={"start"}
-				className={`${css({
-					fontSize: { sm: "1em", base: "0.8em" },
-					"& > *": {
-						wordBreak: "break-all",
-						minW: 0,
-					},
-				})}, `}
-				h="100%"
-				justifyContent={"center"}
-				w="100%"
+			<Stack
+				maxW={"max(1000px,100%)"}
+				minW={0}
+				w={{ base: "100%", lg: "700px", xl: "1000px" }}
+				flexShrink={1}
 			>
-				{bookmark.items.length > 0 && (
-					<SideMenuInnerPart bookmark={bookmark} folders={folders} />
-				)}
-				<Stack maxW={"max(1000px,100%)"} minW={0} w={"1000px"}>
+				<PageWithTransition>
 					<Stack bg="white" p={4} rounded={"md"}>
 						<div
 							className={css({
@@ -137,49 +118,48 @@ export default async function Page({ params }: Props) {
 						<div
 							className={`md-note-container ${css({
 								minW: 0,
-								// w: "full",
 							})}`}
 						>
 							{fileData.content}
 						</div>
 					</Stack>
-					<Spacer h={4} />
+				</PageWithTransition>
+				<Spacer h={4} />
 
-					{normalizePath(tNote.path).startsWith(
-						normalizePath(path.join(notesDirPath, blogDirPath)),
-					) ? (
-						<BeforeAfterNote note={tNote} vault={vaultObject} />
-					) : null}
-
-					{tNote?.backLinks.length ? (
-						<Stack
-							className={css({
-								bg: "white",
-								p: 2,
-								rounded: "md",
-								gap: 2,
-							})}
-						>
-							<BackLinks tNote={tNote} />
-						</Stack>
-					) : null}
-					{tNote?.twoHopLinks.length ? (
-						<Stack
-							className={css({
-								bg: "white",
-								p: 2,
-								rounded: "md",
-								gap: 2,
-							})}
-						>
-							<TwoHopLinks tNote={tNote} />
-						</Stack>
-					) : null}
-				</Stack>
-				{fileData.data.toc?.children.length ? (
-					<SideTableOfContents toc={fileData.data.toc} />
+				{normalizePath(tNote.path).startsWith(
+					normalizePath(path.join(notesDirPath, blogDirPath)),
+				) ? (
+					<BeforeAfterNote note={tNote} vault={vaultObject} />
 				) : null}
-			</HStack>
-		</PageWithTransition>
+
+				{tNote?.backLinks.length ? (
+					<Stack
+						className={css({
+							bg: "white",
+							p: 2,
+							rounded: "md",
+							gap: 2,
+						})}
+					>
+						<BackLinks tNote={tNote} />
+					</Stack>
+				) : null}
+				{tNote?.twoHopLinks.length ? (
+					<Stack
+						className={css({
+							bg: "white",
+							p: 2,
+							rounded: "md",
+							gap: 2,
+						})}
+					>
+						<TwoHopLinks tNote={tNote} />
+					</Stack>
+				) : null}
+			</Stack>
+			{fileData.data.toc?.children.length ? (
+				<SideTableOfContents toc={fileData.data.toc} />
+			) : null}
+		</>
 	);
 }

@@ -1,24 +1,20 @@
-import { MenuIcon, PinIcon, XIcon } from "lucide-react";
+import { MenuIcon, XIcon } from "lucide-react";
 
 import { HEADER_HEIGHT } from "@/app/layout";
 import { Drawer } from "@/park-ui/components/drawer";
 import { IconButton } from "@/park-ui/components/icon-button";
 import { css } from "styled-system/css";
-import { Divider, HStack, Stack } from "styled-system/jsx";
+import { Stack } from "styled-system/jsx";
 
-import { BookmarkGroup, type BookMarkRoot } from "../Bookmark";
+import {} from "../Bookmark";
 
 import { FolderContent } from "./Content";
 
 import type { Folder } from "scripts/generate/folder";
 
-type Props = { bookmark: BookMarkRoot; folders: Folder[] };
+type Props = { folders: Folder[] };
 
-export const SideMenuInnerPart = ({ bookmark, folders }: Props) => {
-	if (bookmark.items.length === 0) {
-		return null;
-	}
-
+export const SideMenuInnerPart = ({ folders }: Props) => {
 	return (
 		<Stack
 			bg="white"
@@ -28,41 +24,37 @@ export const SideMenuInnerPart = ({ bookmark, folders }: Props) => {
 				gap: 2,
 			})}
 			display={{
-				"2xl": "flex",
+				lg: "flex",
 				base: "none",
 			}}
+			w="auto"
+			maxW="400px"
 			overflowX={"hidden"}
 			overflowY={"auto"}
 			position={"sticky"}
-			rounded={"md"}
 			style={{
 				top: `calc(${HEADER_HEIGHT} + 8px)`,
 				maxHeight: `calc(100vh - ${HEADER_HEIGHT} - 8px)`,
 			}}
-			w={1280 - 1000 - 10}
+			rounded={"md"}
+			scrollbarWidth={"thin"}
 		>
 			<FolderContent folders={folders} />
-			<HStack>
-				<PinIcon size="0.8em" />
-			</HStack>
-			<Divider />
-			<BookmarkGroup items={bookmark.items} />
+
+			{/* <Divider /> */}
+			{/* <BookmarkGroup items={bookmark.items} /> */}
 		</Stack>
 	);
 };
 
-export const SideMenuDrawer = ({ bookmark: root, folders }: Props) => {
-	if (root.items.length === 0) {
-		return null;
-	}
-
+export const SideMenuDrawer = ({ folders }: Props) => {
 	return (
-		<Drawer.Root defaultOpen variant={"left"}>
+		<Drawer.Root variant={"left"}>
 			<Drawer.Trigger
 				asChild
 				className={css({
 					display: {
-						"2xl": "none",
+						lg: "none",
 						base: "flex",
 					},
 				})}
@@ -71,15 +63,8 @@ export const SideMenuDrawer = ({ bookmark: root, folders }: Props) => {
 					<MenuIcon />
 				</IconButton>
 			</Drawer.Trigger>
-			<Drawer.Positioner>
-				<Drawer.Content
-					className={css({
-						display: {
-							xl: "none",
-							base: "block",
-						},
-					})}
-				>
+			<Drawer.Positioner zIndex={"banner"}>
+				<Drawer.Content>
 					<Drawer.Header>
 						<Drawer.CloseTrigger
 							asChild
@@ -95,7 +80,8 @@ export const SideMenuDrawer = ({ bookmark: root, folders }: Props) => {
 					<Drawer.Body h="full" padding={1}>
 						<Stack h="full" overflowX={"hidden"} overflowY={"auto"}>
 							<FolderContent folders={folders} />
-							<BookmarkGroup items={root.items} />
+							{/* <Divider /> */}
+							{/* <BookmarkGroup items={bookmark.items} /> */}
 						</Stack>
 					</Drawer.Body>
 				</Drawer.Content>

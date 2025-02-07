@@ -165,7 +165,7 @@ export const SideTableOfContents = ({
 			})}
 			display={{
 				// 1280px
-				xl: "flex",
+				"2xl": "flex",
 				base: "none",
 			}}
 			overflowX={"hidden"}
@@ -176,7 +176,7 @@ export const SideTableOfContents = ({
 				top: `calc(${HEADER_HEIGHT} + 8px)`,
 				maxHeight: `calc(100vh - ${HEADER_HEIGHT} - 8px)`,
 			}}
-			w={1280 - 1000 - 10}
+			w={1280 - 1000 - 40}
 		>
 			<RecursiveList activeId={activeId ?? ""} list={toc} />
 		</Stack>

@@ -440,9 +440,13 @@ const createCreatedMap = (files: TNote[]): YMMap => {
 };
 
 const createFolderFile = async (vault: TVault): Promise<void> => {
-	const folders = buildFileTree(
-		vault.notes.map((n) => ({ path: n.path, title: n.basename })),
-	);
+	const notes: {
+		path: string;
+		title: string;
+	}[] = vault.notes.map((n) => {
+		return { path: vault.pathMap[n.path] ?? n.path, title: n.basename };
+	});
+	const folders = buildFileTree(notes);
 	const foldersUnderNotes: Folder[] =
 		folders[0]?.type === "folder" ? folders[0].children : [];
 

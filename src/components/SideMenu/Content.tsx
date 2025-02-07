@@ -4,17 +4,24 @@ import { useState } from "react";
 
 import { NextLinkButton } from "@/components/Link/NextLink";
 import { Button } from "@/park-ui/components/button";
-import { normalizePath } from "@/utils/path";
+import { isSamePath, normalizePath, pathSplit } from "@/utils/path";
 import { css } from "styled-system/css";
 import { Box, Stack } from "styled-system/jsx";
 
 import type { FindFromUnion } from "@/utils/type";
 import type { Folder } from "scripts/generate/folder";
+import { usePathname } from "next/navigation";
 
 const RenderFolder = ({
 	folder,
 }: { folder: FindFromUnion<Folder, "type", "folder"> }) => {
-	const [isOpen, setIsOpen] = useState(false);
+	const pathname = usePathname();
+	const [isOpen, setIsOpen] = useState(
+		isSamePath(
+			pathSplit(folder.path).join("/"),
+			pathSplit(pathname).slice(0, -1).join("/"),
+		),
+	);
 
 	return (
 		<Stack gap={0}>
@@ -58,7 +65,7 @@ const RenderFolder = ({
 						textWrap: "nowrap",
 					})}
 				>
-					{folder.name}
+					{folder.title}
 				</span>
 			</Button>
 			{isOpen && (
@@ -71,21 +78,23 @@ const RenderFolder = ({
 };
 
 const RenderFile = ({
-	folder,
+	folder: file,
 }: { folder: FindFromUnion<Folder, "type", "file"> }) => {
+	const pathname = usePathname();
+	const isMatch = pathname === file.path;
 	return (
 		<NextLinkButton
 			display={"flex"}
 			fontWeight={"normal"}
 			gap={1}
 			h="auto"
-			href={normalizePath(folder.path)}
+			href={normalizePath(file.path)}
 			justifyContent={"start"}
 			px={1.5}
 			py={1.5}
 			rounded={"md"}
 			textDecoration={"none"}
-			variant={"ghost"}
+			variant={isMatch ? "solid" : "ghost"}
 			w="auto"
 		>
 			<FileIcon
@@ -102,7 +111,7 @@ const RenderFile = ({
 					textOverflow: "ellipsis",
 				})}
 			>
-				{folder.name}
+				{file.title}
 			</span>
 		</NextLinkButton>
 	);
