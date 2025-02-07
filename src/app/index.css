@@ -353,4 +353,10 @@
 			}
 		}
 	}
+
+	.mermaid-container {
+		& svg {
+			height: auto !important;
+		}
+	}
 }

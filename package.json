@@ -32,6 +32,7 @@
 		"lucide-react": "^0.469.0",
 		"mdast-util-toc": "^7.1.0",
 		"mdast-util-wiki-link": "^0.1.2",
+		"mermaid": "^11.4.1",
 		"meta-fetcher": "^3.1.1",
 		"micromark-extension-wiki-link": "^0.0.4",
 		"next": "15.1.3",

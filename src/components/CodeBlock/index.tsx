@@ -5,6 +5,7 @@ import { docco } from "react-syntax-highlighter/dist/esm/styles/hljs";
 import { css } from "styled-system/css";
 
 import { DynamicK4aReactCode, DynamicReactCode } from "./DynamicReactCode";
+import { Mermaid } from "./Mermaid";
 
 import type { MetaProps } from "@/features/metadata/type";
 import type { PropsWithChildren } from "react";
@@ -89,6 +90,10 @@ export const CodeBlock = (
 				/>
 			</div>
 		);
+	}
+
+	if (language === "mermaid") {
+		return <Mermaid code={children as string} />;
 	}
 
 	return (
