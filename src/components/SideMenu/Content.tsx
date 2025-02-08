@@ -11,7 +11,7 @@ import { Box, Stack } from "styled-system/jsx";
 import type { FindFromUnion } from "@/utils/type";
 import type { Folder } from "scripts/generate/folder";
 import { usePathname } from "next/navigation";
-import { toNoteHref } from "@/features/metadata/constant";
+import { notesDirPath, toNoteHref } from "@/features/metadata/constant";
 
 const RenderFolder = ({
 	folder,
@@ -19,7 +19,7 @@ const RenderFolder = ({
 }: { folder: FindFromUnion<Folder, "type", "folder">; depth: number }) => {
 	const pathname = usePathname();
 	const pathnameSplit = pathSplit(pathname);
-	const targetPath = pathnameSplit.slice(0, depth - pathnameSplit.length + 2);
+	const targetPath = pathnameSplit.slice(1, depth - pathnameSplit.length + 2);
 	const [isOpen, setIsOpen] = useState(
 		isSamePath(pathSplit(folder.path).join("/"), targetPath.join("/")),
 	);
@@ -82,7 +82,7 @@ const RenderFile = ({
 	folder: file,
 }: { folder: FindFromUnion<Folder, "type", "file"> }) => {
 	const pathname = usePathname();
-	const isMatch = pathname === file.path;
+	const isMatch = isSamePath(pathname.replace(notesDirPath, ""), file.path);
 	return (
 		<NextLinkButton
 			display={"flex"}
