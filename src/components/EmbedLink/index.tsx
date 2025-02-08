@@ -1,16 +1,14 @@
 import { YouTubeEmbed } from "@next/third-parties/google";
-import metaFetcher from "meta-fetcher";
 import { ErrorBoundary } from "react-error-boundary";
 
 import { css } from "styled-system/css";
 import { Stack } from "styled-system/jsx";
 
-import {
-	EmbeddedCardError,
-	EmbeddedCardPresentational,
-} from "./Presentational";
+import { EmbeddedCardError } from "./Presentational";
 
 import type { AnchorHTMLAttributes, PropsWithChildren } from "react";
+import { Link } from "@/park-ui/components/link";
+import { NextLink } from "@/components/Link/NextLink";
 
 const EmbeddedLinkWithBoundary = async ({
 	href,
@@ -26,7 +24,7 @@ const EmbeddedLinkWithBoundary = async ({
 	);
 };
 
-const EmbeddedLink = async ({
+const EmbeddedLink = ({
 	url,
 	children,
 }: PropsWithChildren<{ url: string }>) => {
@@ -53,18 +51,24 @@ const EmbeddedLink = async ({
 		}
 	}
 
-	const metadata = await metaFetcher(url);
+	// const metadata = await metaFetcher(url);
 
 	return (
-		<EmbeddedCardPresentational
-			banner={metadata.metadata.banner}
-			description={metadata.metadata.description}
-			favicons={metadata.favicons}
-			title={metadata.metadata.title}
-			url={url}
-			website={metadata.metadata.website}
-		/>
+		<Link asChild color={"blue.10"}>
+			<NextLink href={url}>{url}</NextLink>
+		</Link>
 	);
+
+	// return (
+	// 	<EmbeddedCardPresentational
+	// 		banner={metadata.metadata.banner}
+	// 		description={metadata.metadata.description}
+	// 		favicons={metadata.favicons}
+	// 		title={metadata.metadata.title}
+	// 		url={url}
+	// 		website={metadata.metadata.website}
+	// 	/>
+	// );
 };
 
 export { EmbeddedLinkWithBoundary as EmbeddedLink };
