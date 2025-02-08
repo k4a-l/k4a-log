@@ -54,7 +54,10 @@ const copyFiles = (srcPath: string, destPath: string) => {
 			const relativePath = normalizePath(
 				srcFullPath.split(assetsDirPath)[1] ?? "",
 			);
-			const isUsed = allAssetPathList.some((p) => isSamePath(p, relativePath));
+			const isUsed = allAssetPathList.some((p) =>
+				isSamePath(p, relativePath.replace("/notes", "")),
+			);
+
 			if (isUsed) {
 				fs.copyFileSync(srcFullPath, destFullPath);
 			} else {
