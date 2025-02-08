@@ -19,14 +19,19 @@ export const isSamePath = (path1: string, path2: string): boolean => {
  * 末尾/を削除
  */
 export const normalizePath = (str: string): string => {
-	return safeDecodeURIComponent(
-		path
-			.join(
-				"/",
-				str.replace(/\\\\/g, "/").replace(/\\/g, "/").replace(/\.md/, ""),
-			)
-			.replace(/\/$/, ""),
-	);
+	return path.join("/", str.replace(/\.md/, "").replace(/\\\\|\\/g, "/"));
+
+	// path
+	// 	.join(
+	// 		"/",
+	// 		str
+	// 			// .replace(/\\\\|\\/g, "/")
+	// 			// .replace(/\\/g, "/")
+	// 			.replace(/\.md/, ""),
+	// 	)
+	// 	.replace(/\\\\|\\/g, "/")
+	// 	.replace(/\\/g, "/")
+	// 	.replace(/\/$/, ""),
 };
 
 /**

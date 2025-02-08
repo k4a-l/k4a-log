@@ -20,7 +20,11 @@ import {
 import { getFileContent } from "@/features/remark/processor/getContent";
 import { createParseProcessor } from "@/features/remark/processor/parse";
 import { reverseObjects } from "@/utils/object";
-import { isSamePath, normalizePath } from "@/utils/path";
+import {
+	isSamePath,
+	normalizePath,
+	safeDecodeURIComponent,
+} from "@/utils/path";
 import { css } from "styled-system/css";
 import { Spacer, Stack } from "styled-system/jsx";
 
@@ -46,13 +50,16 @@ export default async function Page({ params }: Props) {
 	const uidPathMap = reverseObjects(vaultObject.pathMap);
 
 	// uidに一致すればそれを使用、しなければそのまま
-	const notePath =
+	const notePath = safeDecodeURIComponent(
 		uidPathMap[normalizePath(path.join(notesDirPath, pathFromParams))]?.replace(
 			notesDirPath,
 			"",
-		) ?? pathFromParams;
+		) ?? pathFromParams,
+	);
 
-	const notePathAbsolute = path.join("/", notesDirPath, notePath);
+	const notePathAbsolute = safeDecodeURIComponent(
+		path.join("/", notesDirPath, notePath),
+	);
 	const tNote = vaultObject.notes.find((p) =>
 		isSamePath(p.path, notePathAbsolute),
 	);
