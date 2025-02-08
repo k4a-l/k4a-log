@@ -145,9 +145,11 @@ const createWikiLinkData = (
 
 	const isCirclerReference = [...parentsLinks].some((p) => {
 		return (
-			safeDecodeURIComponent(
-				_link?.replace(/\.md$/, "").replace(/\\/g, "/") ?? "",
-			) === p
+			normalizePath(
+				safeDecodeURIComponent(
+					_link?.replace(/\.md$/, "").replace(/\\/g, "/") ?? "",
+				),
+			) === normalizePath(p)
 		);
 	});
 
