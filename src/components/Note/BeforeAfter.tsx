@@ -2,7 +2,7 @@ import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 import path from "path-browserify";
 
 import { NextLink } from "@/components/Link/NextLink";
-import { blogDirPath } from "@/features/metadata/constant";
+import { blogDirPath, toNoteHref } from "@/features/metadata/constant";
 import { sortByCreatedNew } from "@/features/note/util";
 import { Link } from "@/park-ui/components/link";
 import { isSamePath, normalizePath } from "@/utils/path";
@@ -40,7 +40,7 @@ export const BeforeAfterNote = ({
 					justifyContent={"start"}
 					maxW={"full"}
 				>
-					<NextLink href={beforeNote.path}>
+					<NextLink href={toNoteHref(beforeNote.path)}>
 						<ChevronLeftIcon />
 						<span
 							className={css({
@@ -62,7 +62,7 @@ export const BeforeAfterNote = ({
 					maxW={"full"}
 					textAlign={"end"}
 				>
-					<NextLink href={afterNote.path}>
+					<NextLink href={toNoteHref(afterNote.path)}>
 						<span
 							className={css({
 								overflow: "hidden",
