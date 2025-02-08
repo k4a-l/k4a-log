@@ -38,6 +38,8 @@ export default async function Page({ params }: Props) {
 	const pathFromParams = path.join(...pathsFromParams);
 
 	// metadataの取得
+	const start = performance.now();
+	// TODOファイルごとに分割
 	const vaultObject = getVaultObject();
 
 	// uid→pathの検索
@@ -77,13 +79,17 @@ export default async function Page({ params }: Props) {
 		meta: { vault: vaultObject, note: tNote },
 	});
 
+	console.log("getFileContent start", performance.now() - start);
+
 	// 実行→やっぱここが重い？
+	// parseが割と軽くなったのでやっぱここ
 	const fileData = getFileContent(
 		notePath.split(/\\|\//),
 		parseProcessor,
 		runProcessor,
 		stringifyProcessor,
 	);
+	console.log(" getFileContent end", performance.now() - start);
 
 	if (!fileData) return <NoteNotFound href={pathFromParams} />;
 	// データ加工

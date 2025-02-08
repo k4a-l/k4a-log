@@ -90,6 +90,7 @@ export const getFileContent = (
 		const tocResult = toc(parseResult);
 
 		const rehypeResult = runProcessor.runSync(parseResult, file);
+		console.log("rehypeResult", performance.now() - start);
 
 		const stringifyResult = stringifyProcessor.stringify(rehypeResult);
 

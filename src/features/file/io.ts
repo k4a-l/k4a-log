@@ -16,10 +16,14 @@ export const getVaultObject = (): TVault => {
 	try {
 		// metadataの取得
 		// TODO: エラーハンドリンク
+		const start = performance.now();
 		const vaultFileContent = readFileSync(vaultMetadataFilePath, {
 			encoding: "utf-8",
 		});
+		console.log("readFileSync", performance.now() - start);
+
 		const vaultObject: TVault = JSON.parse(vaultFileContent);
+		console.log("parse", performance.now() - start);
 
 		return vaultObject;
 	} catch (error) {
