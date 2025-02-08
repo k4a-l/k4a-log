@@ -15,7 +15,7 @@ export default function Scroll() {
 	useEffect(() => {
 		// ヘッダーリンクの場合はスクロールしない
 		if (window.location.hash) return;
-		window.scroll(0, 0);
+		document.body.scroll(0, 0);
 	}, [pathname]);
 	return <></>;
 }
