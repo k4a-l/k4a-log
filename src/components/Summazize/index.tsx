@@ -51,7 +51,7 @@ export const SummarizeByYM = async () => {
 										</NextLink>
 									</Link>
 								</li>
-								<HStack>
+								<HStack flexWrap={"wrap"} columnGap={1} rowGap={1}>
 									{strictEntries(mValue).map(([mKey, paths], i) => {
 										const month =
 											typeof mKey === "number" ? mKey : Number.parseInt(mKey);
@@ -60,19 +60,18 @@ export const SummarizeByYM = async () => {
 										if (!monthCount) return;
 
 										return (
-											<span key={month}>
-												<Link asChild>
+											<HStack key={month} gap={0} alignItems={"end"}>
+												<Link asChild textWrap={"nowrap"}>
 													<NextLink
 														href={getSearchPath({
 															created: toDateParamString({ year: year, month }),
 														})}
 													>
-														{month}月(
-														{monthCount})
+														{month}月({monthCount})
 													</NextLink>
 												</Link>
 												{i !== strictEntries(mValue).length - 1 && ","}
-											</span>
+											</HStack>
 										);
 									})}
 								</HStack>
