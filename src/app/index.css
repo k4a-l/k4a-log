@@ -164,6 +164,9 @@
 		& ol {
 			margin: 0;
 		}
+		& li {
+			height: auto;
+		}
 	}
 	[data-expanded="true"] .callout-content {
 		grid-template-rows: 1fr;
