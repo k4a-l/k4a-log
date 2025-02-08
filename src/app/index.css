@@ -159,14 +159,6 @@
 		display: grid;
 		grid-template-rows: 0fr;
 		transition: 250ms grid-template-rows ease;
-
-		& ul,
-		& ol {
-			margin: 0;
-		}
-		& li {
-			height: auto;
-		}
 	}
 	[data-expanded="true"] .callout-content {
 		grid-template-rows: 1fr;
@@ -207,6 +199,15 @@
 
 		display: grid;
 		grid-template-rows: 0fr;
+
+		& ul,
+		& ol {
+			margin: 0;
+		}
+
+		& li {
+			height: auto;
+		}
 	}
 
 	blockquote:not([data-callout]) {
