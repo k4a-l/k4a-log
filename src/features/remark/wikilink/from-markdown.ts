@@ -117,7 +117,7 @@ const createWikiLinkData = (
 	const link = _link
 		? wikiLink.value.startsWith("#")
 			? _link
-			: path.join(opts.rootPath, _link.replace(".md", ""))
+			: path.join(_link.replace(".md", ""))
 		: pathValue;
 
 	const classNames = `${opts.classNames.wikiLink} ${link === undefined ? `${opts.classNames.deadLink}` : ""}`;
@@ -164,7 +164,6 @@ const createWikiLinkData = (
 		className: classNames,
 		href: isDeadLink ? link : hrefTemplate(link),
 		title: displayName,
-		rootDirPath: opts.rootPath,
 		assetsDirPath: opts.assetPath,
 		"is-embed": isCirclerReference ? undefined : isEmbed ? "true" : undefined,
 		...(type === "unknown"

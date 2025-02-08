@@ -17,7 +17,6 @@ interface WikiLinkData extends Data {
 		type: WikiLinkData["type"];
 		"is-embed"?: "true";
 		size?: number;
-		rootDirPath: string;
 		assetsDirPath: string;
 		// Array-like
 		parentsLinks: string;

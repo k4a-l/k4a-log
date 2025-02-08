@@ -11,6 +11,7 @@ import { Box, Stack } from "styled-system/jsx";
 import type { FindFromUnion } from "@/utils/type";
 import type { Folder } from "scripts/generate/folder";
 import { usePathname } from "next/navigation";
+import { toNoteHref } from "@/features/metadata/constant";
 
 const RenderFolder = ({
 	folder,
@@ -88,7 +89,7 @@ const RenderFile = ({
 			fontWeight={"normal"}
 			gap={1}
 			h="auto"
-			href={normalizePath(file.path)}
+			href={toNoteHref(normalizePath(file.path))}
 			justifyContent={"start"}
 			px={1.5}
 			py={1.5}

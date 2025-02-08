@@ -22,10 +22,11 @@ import { HStack, Stack } from "styled-system/jsx";
 import type { PathMap } from "@/features/metadata/type";
 import type { WikiLinkData } from "@/types/mdast";
 import type { StrictOmit } from "ts-essentials";
+import { toNoteHref } from "@/features/metadata/constant";
 
 type LinkPresentationalType = StrictOmit<
 	WikiLinkData["hProperties"],
-	"rootDirPath" | "assetsDirPath" | "type" | "parentsLinks"
+	"assetsDirPath" | "type" | "parentsLinks"
 >;
 
 type MDLinkPresentationalType = PropsWithChildren<
@@ -33,10 +34,8 @@ type MDLinkPresentationalType = PropsWithChildren<
 >;
 
 const TransitionLinkContainer: FC<
-	PropsWithChildren<
-		Pick<WikiLinkData["hProperties"], "isTagLink" | "href" | "title">
-	>
-> = ({ isTagLink, href, title, children }) => {
+	PropsWithChildren<Pick<WikiLinkData["hProperties"], "isTagLink" | "title">>
+> = ({ isTagLink, title, children }) => {
 	if (!isTagLink) return children;
 
 	return (
@@ -79,7 +78,7 @@ export const TransitionLinkDead: FC<
 	PropsWithChildren<MDLinkPresentationalType>
 > = ({ href, children, pathMap, isTagLink, alias, title, ...others }) => {
 	return (
-		<TransitionLinkContainer href={href} isTagLink={isTagLink} title={title}>
+		<TransitionLinkContainer isTagLink={isTagLink} title={title}>
 			<Link asChild color="blue.8">
 				<NextLink
 					{...others}
@@ -102,10 +101,10 @@ export const TransitionLinkExist: FC<MDLinkPresentationalType> = ({
 	isTagLink,
 	...others
 }) => {
-	const pathOrId = path.join(pathMap[normalizePath(href)] ?? href);
+	const pathOrId = toNoteHref(pathMap[normalizePath(href)] ?? href);
 
 	return (
-		<TransitionLinkContainer href={href} isTagLink={isTagLink} title={title}>
+		<TransitionLinkContainer isTagLink={isTagLink} title={title}>
 			<Link asChild color={"blue.10"}>
 				<NextLink href={pathOrId}>{alias ?? title ?? children}</NextLink>
 			</Link>
@@ -262,7 +261,7 @@ export const EmbedLinkMarkdown: FC<MDLinkPresentationalType> = ({
 					{alias ?? title}
 				</span>
 				<IconButton asChild color="blue.10" size="sm" variant={"ghost"}>
-					<NextLink href={pathOrId}>
+					<NextLink href={toNoteHref(pathOrId)}>
 						<LinkIcons size={"1em"} />
 					</NextLink>
 				</IconButton>

@@ -1,6 +1,4 @@
 import path from "node:path";
-
-import { notesDirPath } from "@/features/metadata/constant";
 import {
 	type FileNode,
 	imageExtensions,
@@ -54,7 +52,7 @@ export const getThumbnailPath = (
 			fileMap,
 		});
 
-		if (result) return path.join("/", notesDirPath, normalizePath(result));
+		if (result) return path.join("/", normalizePath(result));
 	}
 
 	const thumbnailPath = [...metadata.embeds, ...metadata.links]

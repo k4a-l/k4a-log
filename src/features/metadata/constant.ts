@@ -11,6 +11,9 @@ export const vaultMetadataFilePath = path.join(
 export const notesDirPath = "notes";
 export const withAssetsDirPath = path.join(assetsDirPath, notesDirPath);
 
+export const toNoteHref = (...str: string[]) =>
+	path.join("/", notesDirPath, ...str);
+
 export const bookmarkFilePath = path.join(
 	assetsDirPath,
 	"metadata",

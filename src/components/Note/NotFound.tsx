@@ -125,12 +125,7 @@ export const NoteNotFound = async ({ href: _href }: { href: string }) => {
 															lineHeight: "1.8em",
 														})}
 													>
-														(
-														{normalizePath(pathOrId)
-															.split("/")
-															.filter((p) => p !== notesDirPath)
-															.join("/")}
-														)
+														({normalizePath(pathOrId).split("/").join("/")})
 													</span>
 												</NextLink>
 											</Link>

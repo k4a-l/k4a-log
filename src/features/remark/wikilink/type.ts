@@ -3,7 +3,6 @@ import type { WikiLink } from "@/types/mdast";
 
 export type WikiLinkOption = {
 	assetPath: string;
-	rootPath: string;
 	notes: FileNode[];
 	fileMap: FileMap;
 	/** 循環参照を防ぐためのもの */

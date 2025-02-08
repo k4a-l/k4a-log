@@ -12,6 +12,7 @@ import { type SearchQuery, getSearchPath } from "./util";
 
 import type { useHonoQuery } from "./hono";
 import type { PropsWithChildren } from "react";
+import { toNoteHref } from "@/features/metadata/constant";
 
 const IngContainer = ({ children }: PropsWithChildren) => {
 	return (
@@ -72,7 +73,7 @@ export const SearchResult = ({
 							overflow={"hidden"}
 							textDecoration="none"
 						>
-							<NextLink href={normalizePath(r.path)}>
+							<NextLink href={toNoteHref(normalizePath(r.path))}>
 								<Stack
 									boxShadow={"sm"}
 									className={css({
@@ -110,12 +111,12 @@ export const SearchResult = ({
 
 										{r.thumbnailPath ? (
 											<img
-												alt={r.thumbnailPath}
+												alt={toNoteHref(r.thumbnailPath)}
 												className={css({
 													// alt用
 													fontSize: "0.5em",
 												})}
-												src={r.thumbnailPath}
+												src={toNoteHref(r.thumbnailPath)}
 											/>
 										) : (
 											<span

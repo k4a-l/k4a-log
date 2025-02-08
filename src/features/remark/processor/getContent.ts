@@ -18,10 +18,10 @@ import type { Heading, Root } from "mdast";
 import type { ReactElement } from "react";
 import type { Processor } from "unified";
 import { safeDecodeURIComponent } from "@/utils/path";
+import { withAssetsDirPath } from "@/features/metadata/constant";
 
 export const getFileContent = (
 	paths: string[],
-	directoryPath: string,
 	parseProcessor: Processor<Root, undefined, undefined, Root, string>,
 	runProcessor: Processor,
 	stringifyProcessor: ReactProcessor,
@@ -36,7 +36,7 @@ export const getFileContent = (
 
 	const fPath = path.join(
 		path.resolve(),
-		directoryPath,
+		withAssetsDirPath,
 		...convertNoExtensionPathToMD(paths).map((p) => {
 			// ヘッダー付きリンクの整形
 			const matched = p.match(/^.+#([^.]*).*$/);

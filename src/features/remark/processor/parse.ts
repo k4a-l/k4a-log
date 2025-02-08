@@ -5,7 +5,7 @@ import remarkFrontmatter, {
 import remarkGfm from "remark-gfm";
 import remarkParse from "remark-parse";
 
-import { assetsDirPath, notesDirPath } from "@/features/metadata/constant";
+import { assetsDirPath } from "@/features/metadata/constant";
 import wikiLinkPlugin from "@/features/remark/wikilink";
 
 import type { WikiLinkOption } from "@/features/remark/wikilink/type";
@@ -14,6 +14,7 @@ import type { Root } from "mdast";
 import type { Processor } from "unified";
 
 import { normalizePath, safeDecodeURIComponent } from "@/utils/path";
+import path from "node:path";
 
 export const createParseProcessor = (
 	_parentsLinks: string[],
@@ -30,7 +31,7 @@ export const createParseProcessor = (
 
 	const fileMap: Map<string, FileNode> = new Map();
 	for (const fileNode of notes) {
-		const filePath = normalizePath(fileNode.absPath);
+		const filePath = normalizePath(path.join(fileNode.absPath));
 		fileMap.set(filePath, fileNode);
 	}
 
@@ -39,7 +40,6 @@ export const createParseProcessor = (
 		.use(remarkGfm)
 		.use(wikiLinkPlugin, {
 			assetPath: assetsDirPath,
-			rootPath: notesDirPath,
 			parentsLinks,
 			notes,
 			fileMap,

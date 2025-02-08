@@ -8,11 +8,7 @@ import { NoteNotFound } from "@/components/Note/NotFound";
 import { BackLinks, TwoHopLinks } from "@/components/NoteLink";
 import { SideTableOfContents } from "@/components/Toc";
 import { getVaultObject } from "@/features/file/io";
-import {
-	assetsDirPath,
-	blogDirPath,
-	notesDirPath,
-} from "@/features/metadata/constant";
+import { blogDirPath } from "@/features/metadata/constant";
 import {
 	createRunProcessor,
 	createStringifyProcessor,
@@ -32,8 +28,6 @@ import { Client } from "./Client";
 
 export const revalidate = 600; // 10分ごとに再検証する
 
-const directoryPath = path.join(assetsDirPath, notesDirPath);
-
 type Params = Promise<{ page: string[] | undefined }>;
 
 type Props = { params: Params };
@@ -51,15 +45,10 @@ export default async function Page({ params }: Props) {
 
 	// uidに一致すればそれを使用、しなければそのまま
 	const notePath = safeDecodeURIComponent(
-		uidPathMap[normalizePath(path.join(notesDirPath, pathFromParams))]?.replace(
-			notesDirPath,
-			"",
-		) ?? pathFromParams,
+		uidPathMap[normalizePath(path.join(pathFromParams))] ?? pathFromParams,
 	);
 
-	const notePathAbsolute = safeDecodeURIComponent(
-		path.join("/", notesDirPath, notePath),
-	);
+	const notePathAbsolute = safeDecodeURIComponent(path.join("/", notePath));
 	const tNote = vaultObject.notes.find((p) =>
 		isSamePath(p.path, notePathAbsolute),
 	);
@@ -91,7 +80,6 @@ export default async function Page({ params }: Props) {
 	// 実行→やっぱここが重い？
 	const fileData = getFileContent(
 		notePath.split(/\\|\//),
-		directoryPath,
 		parseProcessor,
 		runProcessor,
 		stringifyProcessor,
@@ -144,7 +132,7 @@ export default async function Page({ params }: Props) {
 				<Spacer h={4} />
 
 				{normalizePath(tNote.path).startsWith(
-					normalizePath(path.join(notesDirPath, blogDirPath)),
+					normalizePath(path.join(blogDirPath)),
 				) ? (
 					<BeforeAfterNote note={tNote} vault={vaultObject} />
 				) : null}

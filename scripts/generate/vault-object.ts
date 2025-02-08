@@ -9,7 +9,6 @@ import { VFile } from "vfile";
 import { getFileDate } from "@/components/FrontMatter/util";
 import {
 	folderFilePath,
-	notesDirPath,
 	vaultMetadataFilePath,
 	withAssetsDirPath,
 } from "@/features/metadata/constant";
@@ -42,7 +41,7 @@ import {
 	PUBLIC_CONDITION,
 } from "./check";
 import { NG_WORDS } from "./check";
-import { buildFileTree, type Folder } from "./folder";
+import { buildFileTree } from "./folder";
 
 import type { FileEntity, FileOrDirEntity } from "./type";
 import type {
@@ -138,7 +137,7 @@ const createParsedTree = async (
 			const [basename, extension] = entry.name.split(".");
 			const metadata = createNoteMetaData(
 				runResult.children,
-				normalizePath(path.join(notesDirPath, currentPath)),
+				normalizePath(path.join(currentPath)),
 			);
 			const thumbnailPath = getThumbnailPath(
 				{ path: currentPath, frontmatter },
@@ -450,8 +449,8 @@ const createPathMap = (files: TNoteIndependence[]): PathMap => {
 		const id = idParser(file, file.metadata.frontmatter);
 
 		if (id) {
-			const pathName = normalizePath(path.join(notesDirPath, file.path));
-			pathMap[pathName] = normalizePath(path.join(notesDirPath, id));
+			const pathName = normalizePath(path.join(file.path));
+			pathMap[pathName] = normalizePath(path.join(id));
 		}
 	}
 	return pathMap;
@@ -484,10 +483,8 @@ const createFolderFile = async (vault: TVault): Promise<void> => {
 		return { path: vault.pathMap[n.path] ?? n.path, title: n.basename };
 	});
 	const folders = buildFileTree(notes);
-	const foldersUnderNotes: Folder[] =
-		folders[0]?.type === "folder" ? folders[0].children : [];
 
-	await writeFileRecursive(folderFilePath, JSON.stringify(foldersUnderNotes));
+	await writeFileRecursive(folderFilePath, JSON.stringify(folders));
 	loggingWithColor("green", `COMPLETED!! >> ${folderFilePath}`);
 };
 
@@ -530,7 +527,7 @@ export const createVaultFile = async (): Promise<TVault> => {
 		.filter((f) => !isTestOnlyNote(f))
 		.map((f) => ({
 			...f,
-			path: normalizePath(path.join(notesDirPath, f.path)),
+			path: normalizePath(path.join(f.path)),
 		}));
 	loggingWithColor("cyan", "injectAllLinksToTNoteIndependence start");
 	const tNotes = injectAllLinksToTNoteIndependence(tiNotes);
@@ -539,7 +536,12 @@ export const createVaultFile = async (): Promise<TVault> => {
 
 	return {
 		notes: tNotes,
-		assets: fileNode.map((p) => ({ basename: p.name, path: p.absPath })),
+		assets: fileNode
+			.filter((f) => hasExtensionButNotMD(f.absPath))
+			.map((p) => ({
+				basename: p.name,
+				path: path.join(p.absPath),
+			})),
 		pathMap,
 		createdMap,
 	};

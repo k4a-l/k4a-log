@@ -1,5 +1,4 @@
 import { FileIcon, Link2Icon } from "lucide-react";
-import path from "path-browserify";
 
 import { NextLink } from "@/components/Link/NextLink";
 import { Button } from "@/park-ui/components/button";
@@ -8,6 +7,7 @@ import { css } from "styled-system/css";
 import { Stack } from "styled-system/jsx";
 
 import type { TNote } from "@/features/metadata/type";
+import { toNoteHref } from "@/features/metadata/constant";
 
 export const BackLinks = ({ tNote }: { tNote: TNote }) => {
 	return (
@@ -41,7 +41,7 @@ export const BackLinks = ({ tNote }: { tNote: TNote }) => {
 						textWrap={"wrap"}
 						variant={"ghost"}
 					>
-						<NextLink href={path.join("/", normalizePath(bl.path))}>
+						<NextLink href={toNoteHref(normalizePath(bl.path))}>
 							<FileIcon className={css({ h: "1.25em", w: "1.25em" })} />
 							{bl.title}
 						</NextLink>
@@ -74,7 +74,7 @@ export const TwoHopLinks = ({ tNote }: { tNote: TNote }) => {
 						textWrap={"wrap"}
 						variant={"ghost"}
 					>
-						<NextLink href={path.join("/", normalizePath(thl.path))}>
+						<NextLink href={toNoteHref(normalizePath(thl.path))}>
 							<FileIcon />
 							{thl.title}
 						</NextLink>
@@ -94,7 +94,7 @@ export const TwoHopLinks = ({ tNote }: { tNote: TNote }) => {
 							textWrap={"wrap"}
 							variant={"ghost"}
 						>
-							<NextLink href={path.join("/", normalizePath(l.path))}>
+							<NextLink href={toNoteHref(normalizePath(l.path))}>
 								<Link2Icon />
 								{l.title}
 							</NextLink>

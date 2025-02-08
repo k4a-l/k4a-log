@@ -1,6 +1,3 @@
-import path from "path-browserify";
-
-import { notesDirPath } from "@/features/metadata/constant";
 import {
 	createRunProcessor,
 	createStringifyProcessor,
@@ -22,6 +19,7 @@ import type { MetaProps, PathMap } from "@/features/metadata/type";
 import type { WikiLinkData } from "@/types/mdast";
 import type { AnchorHTMLAttributes, FC } from "react";
 import { safeDecodeURIComponent } from "@/utils/path";
+import { toNoteHref } from "@/features/metadata/constant";
 
 type WikiLinkComponentProps = AnchorHTMLAttributes<HTMLAnchorElement> &
 	WikiLinkData["hProperties"] & { pathMap: PathMap };
@@ -39,7 +37,6 @@ export const LinkContainer: FC<WikiLinkComponentProps & MetaProps> = (
 };
 
 export const TransitionLinkContainer: FC<WikiLinkComponentProps> = ({
-	rootDirPath,
 	assetsDirPath,
 	parentsLinks,
 	isDeadLink,
@@ -55,7 +52,6 @@ export const TransitionLinkContainer: FC<WikiLinkComponentProps> = ({
 export const EmbedLinkContainer: FC<
 	WikiLinkComponentProps & MetaProps
 > = async ({
-	rootDirPath,
 	assetsDirPath,
 	parentsLinks,
 	isDeadLink,
@@ -67,21 +63,22 @@ export const EmbedLinkContainer: FC<
 }) => {
 	const { href, children, title, alias, ...others } = props;
 
+	const withNoteHref = toNoteHref(href);
+
 	if (type === "img") {
-		return <EmbedLinkImage {...props} />;
+		return <EmbedLinkImage {...props} href={withNoteHref} />;
 	}
 
 	if (type === "video") {
-		return <EmbedLinkVideo {...props} />;
+		return <EmbedLinkVideo {...props} href={withNoteHref} />;
 	}
 
 	if (type === "pdf") {
-		return <EmbedLinkPdf {...props} />;
+		return <EmbedLinkPdf {...props} href={withNoteHref} />;
 	}
 
 	if (type === "link") {
-		const paths = href.split(/\\|\//).filter((p) => p !== notesDirPath);
-		const rootPath = path.join(assetsDirPath, rootDirPath);
+		const paths = href.split(/\\|\//);
 
 		const parentLinksArr = parentsLinks
 			.split(" ")
@@ -106,7 +103,6 @@ export const EmbedLinkContainer: FC<
 		});
 		const data = getFileContent(
 			paths,
-			rootPath,
 			remarkProcessor,
 			rehypeProcessor,
 			stringifyProcessor,

@@ -2,7 +2,7 @@ import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 import path from "path-browserify";
 
 import { NextLink } from "@/components/Link/NextLink";
-import { blogDirPath, notesDirPath } from "@/features/metadata/constant";
+import { blogDirPath } from "@/features/metadata/constant";
 import { sortByCreatedNew } from "@/features/note/util";
 import { Link } from "@/park-ui/components/link";
 import { isSamePath, normalizePath } from "@/utils/path";
@@ -16,9 +16,7 @@ export const BeforeAfterNote = ({
 	vault,
 }: { note: TNote; vault: TVault }) => {
 	const noteSorted = vault.notes
-		.filter((n) =>
-			n.path.startsWith(normalizePath(path.join(notesDirPath, blogDirPath))),
-		)
+		.filter((n) => n.path.startsWith(normalizePath(path.join(blogDirPath))))
 		.sort((a, b) =>
 			sortByCreatedNew(
 				{ created: a.metadata.frontmatter?.created },
