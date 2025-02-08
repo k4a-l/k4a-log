@@ -113,7 +113,7 @@ export default async function RootLayout({
 									justifyContent={"center"}
 									w="100%"
 									p={2}
-									flexBasis={"1000px"}
+									// flexBasis={"1000px"}
 								>
 									{children}
 								</HStack>
