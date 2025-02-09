@@ -24,9 +24,29 @@ export type ReactProcessor = Processor<
 >;
 
 export const createStringifyProcessor = ({
-	pathMap,
-	meta,
+	pathMap: _p,
+	meta: _m,
 }: { pathMap: PathMap; meta: MetaProps }): ReactProcessor => {
+	const meta: MetaProps = {
+		note: {
+			backLinks: [],
+			basename: "",
+			extension: "",
+			metadata: {
+				embeds: [],
+				frontmatter: {},
+				links: [],
+				headings: [],
+				listItems: [],
+				tags: [],
+			},
+			path: "",
+			twoHopLinks: [],
+		},
+		vault: { assets: [], createdMap: {}, notes: [], pathMap: {} },
+	};
+	const pathMap: PathMap = {};
+
 	return remark().use(rehypeReact, {
 		Fragment,
 		jsx,
