@@ -34,16 +34,13 @@ export const SideMenuInnerPart = ({ folders }: Props) => {
 			overflowY={"auto"}
 			position={"sticky"}
 			style={{
-				top: `calc(${HEADER_HEIGHT} + 8px)`,
+				top: `calc(${HEADER_HEIGHT})`,
 				maxHeight: `calc(100vh - ${HEADER_HEIGHT} - 8px)`,
 			}}
 			rounded={"md"}
 			scrollbarWidth={"thin"}
 		>
 			<FolderContent folders={folders} />
-
-			{/* <Divider /> */}
-			{/* <BookmarkGroup items={bookmark.items} /> */}
 		</Stack>
 	);
 };
