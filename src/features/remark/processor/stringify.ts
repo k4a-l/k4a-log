@@ -10,7 +10,7 @@ import { MarkdownLink } from "@/components/Link";
 import { ParagraphWrap } from "@/components/ParagraphWrap";
 
 import type { MetaProps, PathMap } from "@/features/metadata/type";
-import type { ReactElement } from "react";
+import type { ComponentProps, ReactElement } from "react";
 import type { Processor } from "unified";
 
 import {} from "@/features/remark/hashtag";
@@ -24,43 +24,27 @@ export type ReactProcessor = Processor<
 >;
 
 export const createStringifyProcessor = ({
-	pathMap: _p,
-	meta: _m,
+	pathMap,
+	meta,
 }: { pathMap: PathMap; meta: MetaProps }): ReactProcessor => {
-	const meta: MetaProps = {
-		note: {
-			backLinks: [],
-			basename: "",
-			extension: "",
-			metadata: {
-				embeds: [],
-				frontmatter: {},
-				links: [],
-				headings: [],
-				listItems: [],
-				tags: [],
-			},
-			path: "",
-			twoHopLinks: [],
-		},
-		vault: { assets: [], createdMap: {}, notes: [], pathMap: {} },
+	const Wikilink = (props: ComponentProps<typeof MarkdownLink>) => {
+		return MarkdownLink({ ...props, pathMap, ...meta });
 	};
-	const pathMap: PathMap = {};
+	const Code = (props: ComponentProps<typeof CodeBlock>) =>
+		CodeBlock({ ...props, ...meta });
 
 	return remark().use(rehypeReact, {
 		Fragment,
 		jsx,
 		jsxs,
 		components: {
-			wikilink: (props) => {
-				return MarkdownLink({ ...props, pathMap, ...meta });
-			},
+			wikilink: Wikilink,
 			"embed-link": EmbeddedLink,
 			hashtag: Hashtag,
 			"paragraph-wrap": ParagraphWrap,
 			blockquote: Callout,
 			pre: Pre,
-			code: (props) => CodeBlock({ ...props, ...meta }),
+			code: Code,
 		},
 	} satisfies RehypeReactOptions);
 };
