@@ -40,7 +40,9 @@ export const BeforeAfterNote = ({
 					justifyContent={"start"}
 					maxW={"full"}
 				>
-					<NextLink href={toNoteHref(beforeNote.path)}>
+					<NextLink
+						href={toNoteHref(vault.pathMap[beforeNote.path] ?? beforeNote.path)}
+					>
 						<ChevronLeftIcon />
 						<span
 							className={css({
@@ -62,7 +64,9 @@ export const BeforeAfterNote = ({
 					maxW={"full"}
 					textAlign={"end"}
 				>
-					<NextLink href={toNoteHref(afterNote.path)}>
+					<NextLink
+						href={toNoteHref(vault.pathMap[afterNote.path] ?? afterNote.path)}
+					>
 						<span
 							className={css({
 								overflow: "hidden",

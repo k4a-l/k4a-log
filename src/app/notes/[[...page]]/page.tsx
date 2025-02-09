@@ -32,6 +32,8 @@ type Params = Promise<{ page: string[] | undefined }>;
 
 type Props = { params: Params };
 
+const vaultObject = getVaultObject();
+
 export default async function Page({ params }: Props) {
 	// 生の値取得→noteDirはついてない
 	const pathsFromParams = (await params).page ?? ["Index"];
@@ -40,7 +42,6 @@ export default async function Page({ params }: Props) {
 	// metadataの取得
 	const start = performance.now();
 	// TODOファイルごとに分割
-	const vaultObject = getVaultObject();
 
 	// uid→pathの検索
 	const uidPathMap = reverseObjects(vaultObject.pathMap);

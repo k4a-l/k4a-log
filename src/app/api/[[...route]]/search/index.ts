@@ -24,6 +24,8 @@ async function getFileList(path: string): Promise<string[]> {
 	}
 }
 
+const vaultObject = getVaultObject();
+
 export const searchAPI = new Hono<BlankEnv, BlankInput, "/">().get(
 	"/",
 	async (
@@ -50,7 +52,7 @@ export const searchAPI = new Hono<BlankEnv, BlankInput, "/">().get(
 		const pageStr = c.req.query(searchQueryKey.page);
 		const pageNum = pageStr ? Number.parseInt(pageStr) : 0;
 
-		const vaultObject = getVaultObject();
+		// const vaultObject = getVaultObject();
 
 		const targets: NoteMeta[] = vaultObject.notes
 			.filter((p) => {
