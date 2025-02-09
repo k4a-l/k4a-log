@@ -255,12 +255,12 @@ export const EmbedLinkMarkdown: FC<MDLinkPresentationalType> = ({
 				<span
 					className={css({
 						fontWeight: "bold",
-						fontSize: "lg",
+						fontSize: "1em",
 					})}
 				>
 					{alias ?? title}
 				</span>
-				<IconButton asChild color="blue.10" size="sm" variant={"ghost"}>
+				<IconButton asChild color="blue.10" size="xs" variant={"ghost"}>
 					<NextLink href={toNoteHref(pathOrId)}>
 						<LinkIcons size={"1em"} />
 					</NextLink>
@@ -273,6 +273,7 @@ export const EmbedLinkMarkdown: FC<MDLinkPresentationalType> = ({
 					scrollbarWidth: "thin",
 					px: 2,
 					pb: 1,
+					fontWeight: "normal",
 				})}
 			>
 				{children}

@@ -358,4 +358,8 @@
 			height: auto !important;
 		}
 	}
+
+	h3:has(div) {
+		font-size: inherit;
+	}
 }
