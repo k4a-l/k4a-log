@@ -3,10 +3,11 @@ import path from "path-browserify";
 import { NextLink, NextLinkButton } from "@/components/Link/NextLink";
 import { Link } from "@/park-ui/components/link";
 import { normalizePath } from "@/utils/path";
-import { HStack, Stack } from "styled-system/jsx";
+import { Stack } from "styled-system/jsx";
 
 import type { MetaProps } from "@/features/metadata/type";
 import type { PropsWithChildren } from "react";
+import { css } from "styled-system/css";
 
 type Props = { tag: string[] };
 
@@ -45,10 +46,14 @@ export const ReactViewTaskList = ({
 								textDecoration={"none"}
 								variant={"ghost"}
 							>
-								<HStack gap={2}>
+								<span
+									className={css({
+										textWrap: "wrap",
+									})}
+								>
 									<input checked={t.task === "x"} readOnly type="checkbox" />{" "}
 									{t.text}
-								</HStack>
+								</span>
 							</NextLinkButton>
 						))}
 					</Stack>

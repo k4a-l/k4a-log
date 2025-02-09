@@ -257,7 +257,11 @@ export const convertNodeToFileMetadata = (
 				? node.properties.className
 				: [node.properties.className];
 			if (className?.includes("task-list-item")) {
-				const text = mdastToString(node.children).replace(/\n/g, "");
+				const text = mdastToString(
+					node.children.find(
+						(c) => c.type === "element" && c.tagName === "span",
+					),
+				).replace(/\n/g, "");
 				const task: TListItemMetaData["task"] = node.children.some(
 					(c) =>
 						c.type === "element" &&
