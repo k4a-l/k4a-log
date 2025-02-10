@@ -22,11 +22,7 @@ export const BackLinks = ({ tNote }: { tNote: TNote }) => {
 			>
 				関連
 			</p>
-			<Stack
-				className={css({
-					gap: 0,
-				})}
-			>
+			<Stack gap={0}>
 				{tNote?.backLinks.map((bl) => (
 					<Button
 						asChild
@@ -56,12 +52,7 @@ export const TwoHopLinks = ({ tNote }: { tNote: TNote }) => {
 	return (
 		<>
 			{tNote?.twoHopLinks.map((thl) => (
-				<Stack
-					className={css({
-						gap: 0,
-					})}
-					key={thl.path}
-				>
+				<Stack gap={0} key={thl.path}>
 					<Button
 						asChild
 						height={"auto"}
