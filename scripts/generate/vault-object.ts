@@ -501,7 +501,6 @@ export const createVaultFile = async (): Promise<TVault> => {
 	const fileNode: FileNode[] = [];
 	function traverse(tree: FileTree[], currentPath: string[] = []) {
 		for (const file of tree) {
-			// TODO: ここおもそう？
 			const newPath = [...currentPath, file.name];
 			fileNode.push({
 				name: file.name,

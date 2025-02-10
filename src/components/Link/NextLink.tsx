@@ -6,8 +6,7 @@ import { IconButton } from "@/park-ui/components/icon-button";
 import type { ComponentProps } from "react";
 import type { StrictOmit } from "ts-essentials";
 
-// https://github.com/vercel/next.js/issues/45187#issuecomment-1639518030 問題何とかしたい...
-// TODO:暫定対処なのでできればやめたい
+// TODO: https://github.com/vercel/next.js/issues/45187#issuecomment-1639518030 問題何とかしたい...
 export const NextLink = ({
 	...props
 }: ComponentProps<typeof Link> & { href: string }) => {

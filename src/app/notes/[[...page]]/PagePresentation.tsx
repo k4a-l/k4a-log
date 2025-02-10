@@ -33,10 +33,6 @@ const vaultObject = getVaultObject();
 export default async function NotePage({ page }: Props) {
 	const pathFromParams = path.join(...page);
 
-	// metadataの取得
-	const start = performance.now();
-	// TODOファイルごとに分割
-
 	// uid→pathの検索
 	const uidPathMap = reverseObjects(vaultObject.pathMap);
 

@@ -12,10 +12,7 @@ import type { BookMarkRoot } from "@/components/Bookmark";
 import type { TVault } from "@/features/metadata/type";
 
 export const getVaultObject = (): TVault => {
-	// TODO: エラーハンドリンク
 	try {
-		// metadataの取得
-		// TODO: エラーハンドリンク
 		const start = performance.now();
 		const vaultFileContent = readFileSync(vaultMetadataFilePath, {
 			encoding: "utf-8",
@@ -33,8 +30,6 @@ export const getVaultObject = (): TVault => {
 };
 
 export const getBookmarkObject = (): BookMarkRoot => {
-	// metadataの取得
-	// TODO: エラーハンドリンク
 	try {
 		const bookmarkFileContent = readFileSync(bookmarkFilePath, {
 			encoding: "utf-8",
@@ -48,8 +43,6 @@ export const getBookmarkObject = (): BookMarkRoot => {
 };
 
 export const getFolderObject = (): Folder[] => {
-	// metadataの取得
-	// TODO: エラーハンドリンク
 	try {
 		const content = readFileSync(folderFilePath, {
 			encoding: "utf-8",

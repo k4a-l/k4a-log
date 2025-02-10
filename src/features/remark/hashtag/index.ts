@@ -39,7 +39,6 @@ export const remarkHashtagPlugin: Plugin = () => {
 					const hashTagValue = text.replace("#", "");
 					parent.children.splice(childIndex + i, 1, {
 						...child,
-						// TODO: fix
 						// @ts-expect-error
 						type: "element",
 						data: {
