@@ -53,7 +53,9 @@ export const SearchPresentation = ({
 	const result = useHonoQuery(
 		"search",
 		strictFromEntries(
-			strictEntries(searchQuery).map(([k, v]) => [k, v?.toString()]),
+			strictEntries(searchQuery).flatMap(([k, v]) =>
+				v ? [[k, v.toString()]] : [],
+			),
 		),
 	);
 
