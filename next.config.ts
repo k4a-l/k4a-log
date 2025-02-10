@@ -8,7 +8,6 @@ const baseUrl =
 			: "http://localhost:3000";
 
 const nextConfig: NextConfig = {
-	productionBrowserSourceMaps: true,
 	/* config options here */
 	webpack: (
 		config,
