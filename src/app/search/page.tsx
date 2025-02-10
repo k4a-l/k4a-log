@@ -40,6 +40,7 @@ export default async function Page({
 				keywords={[]}
 				title={"検索"}
 				url={searchPath}
+				robots="none"
 			/>
 			<Stack alignItems={"center"} h="full" w="full">
 				<SearchPresentation

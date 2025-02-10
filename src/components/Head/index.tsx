@@ -8,6 +8,7 @@ interface MyHeadProps {
 	url: string;
 	imagePath?: string;
 	keywords: string[];
+	robots?: string;
 }
 
 // https://qiita.com/tsuka-rinorino/items/3b4fb69d980cecddf512
@@ -17,6 +18,7 @@ export const MyHead = ({
 	url: _url,
 	imagePath: _imagePath,
 	keywords,
+	robots,
 }: MyHeadProps) => {
 	const url = normalizePath(_url);
 	const imagePath = path.join(
@@ -46,6 +48,7 @@ export const MyHead = ({
 			/>
 			<meta content={description} name="description" />
 			<meta content={keywords.join(",")} name="keywords" />
+			{robots ?? <meta content={robots} name="robots" />}
 			{/* <!-- 設定 --> */}
 			<meta
 				content="telephone=no,email=no,address=no"
