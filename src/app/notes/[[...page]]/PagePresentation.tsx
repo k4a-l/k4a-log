@@ -25,6 +25,7 @@ import { css } from "styled-system/css";
 import { Spacer, Stack } from "styled-system/jsx";
 
 import { Client } from "./Client";
+import FloatingPopup from "@/components/NoteLink/Float";
 
 type Props = { page: string[] };
 
@@ -127,30 +128,32 @@ export default async function NotePage({ page }: Props) {
 					<BeforeAfterNote note={tNote} vault={vaultObject} />
 				) : null}
 
-				{tNote?.backLinks.length ? (
-					<Stack
-						className={css({
-							bg: "white",
-							p: 2,
-							rounded: "md",
-							gap: 2,
-						})}
-					>
-						<BackLinks tNote={tNote} />
-					</Stack>
-				) : null}
-				{tNote?.twoHopLinks.length ? (
-					<Stack
-						className={css({
-							bg: "white",
-							p: 2,
-							rounded: "md",
-							gap: 2,
-						})}
-					>
-						<TwoHopLinks tNote={tNote} />
-					</Stack>
-				) : null}
+				<FloatingPopup>
+					{tNote?.backLinks.length ? (
+						<Stack
+							className={css({
+								bg: "white",
+								p: 2,
+								rounded: "md",
+								gap: 2,
+							})}
+						>
+							<BackLinks tNote={tNote} />
+						</Stack>
+					) : null}
+					{tNote?.twoHopLinks.length ? (
+						<Stack
+							className={css({
+								bg: "white",
+								p: 2,
+								rounded: "md",
+								gap: 2,
+							})}
+						>
+							<TwoHopLinks tNote={tNote} />
+						</Stack>
+					) : null}
+				</FloatingPopup>
 			</Stack>
 			{fileData.data.toc?.children.length ? (
 				<SideTableOfContents toc={fileData.data.toc} />
