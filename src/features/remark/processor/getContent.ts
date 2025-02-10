@@ -1,6 +1,7 @@
 import { readFileSync } from "node:fs";
-import path from "node:path";
 
+// biome-ignore lint:correctness/noUnusedImports
+import path from "node:path";
 import {
 	convertNoExtensionPathToMD,
 	lastOfArr,
@@ -12,9 +13,9 @@ import type { ReactProcessor } from ".";
 import type { Root } from "mdast";
 import type { ReactElement } from "react";
 import type { Processor } from "unified";
-import { safeDecodeURIComponent } from "@/utils/path";
-import { withAssetsDirPath } from "@/features/metadata/constant";
+import { convertPathsToMD, safeDecodeURIComponent } from "@/utils/path";
 import { processRemark } from "./process";
+import { withAssetsDirPath } from "@/features/metadata/constant";
 
 export const getFileContent = (
 	paths: string[],
@@ -28,27 +29,17 @@ export const getFileContent = (
 			data: VFileData;
 	  }
 	| undefined => {
-	let header: string | undefined;
-
-	const fPath = path.join(
-		path.resolve(),
-		withAssetsDirPath,
-		...convertNoExtensionPathToMD(paths).map((p) => {
-			// ヘッダー付きリンクの整形
-			const matched = p.match(/^.+#([^.]*).*$/);
-			if (matched) {
-				header = matched[1];
-				return p.replace(new RegExp(`#${header}`), "");
-			}
-			return p;
-		}),
-	);
-
-	// `.`以外にマッチする正規表現
-
 	const title = safeDecodeURIComponent(
 		lastOfArr(paths)?.replace(/\.(md)/, "") ?? "",
 	);
+
+	path.join(
+		path.resolve(),
+		withAssetsDirPath,
+		...convertNoExtensionPathToMD(paths).map((p) => p),
+	);
+
+	const { fPath, header } = convertPathsToMD(paths);
 
 	try {
 		const fileContent = readFileSync(fPath, { encoding: "utf-8" });
