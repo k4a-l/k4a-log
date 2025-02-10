@@ -511,7 +511,10 @@ const createFolderFile = async (vault: TVault): Promise<void> => {
 		path: string;
 		title: string;
 	}[] = vault.notes.map((n) => {
-		return { path: vault.pathMap[n.path] ?? n.path, title: n.basename };
+		return {
+			path: vault.pathMap[n.path] ?? n.path,
+			title: n.metadata.frontmatter.title ?? n.basename,
+		};
 	});
 	const folders = buildFileTree(notes);
 
