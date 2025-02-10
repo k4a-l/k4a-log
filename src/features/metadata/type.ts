@@ -63,7 +63,7 @@ type TNoteLink = { path: string; title: string; thumbnailPath?: string };
 export type TNote = TNoteIndependence & {
 	/** pathをキーにvaultObjectからtitleなどは取得できるが、使用時に楽なのでまとめちゃう */
 	backLinks: TNoteLink[];
-	twoHopLinks: (TNoteLink & { links: TNoteLink[] })[];
+	twoHopLinks: (TNoteLink & { links: TNoteLink[]; isExists: boolean })[];
 };
 
 export type YMMap = {

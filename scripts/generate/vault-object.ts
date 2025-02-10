@@ -433,6 +433,8 @@ export const injectAllLinksToTNoteIndependence = (
 			// .md以外の.**の場合は何もしない
 			if (hasExtensionButNotMD(link.path)) continue;
 
+			const isExists = noteLinkMap.has(normalizePath(link.path));
+
 			// 再検索
 			const twoHopNotes = notes.filter((_n) => {
 				const nPath = normalizePath(_n.path);
@@ -461,6 +463,7 @@ export const injectAllLinksToTNoteIndependence = (
 				})),
 				path: link.path,
 				title: link.title,
+				isExists: isExists,
 			});
 		}
 	}

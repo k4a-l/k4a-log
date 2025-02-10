@@ -8,9 +8,13 @@ import type { StrictOmit } from "ts-essentials";
 
 // TODO: https://github.com/vercel/next.js/issues/45187#issuecomment-1639518030 問題何とかしたい...
 export const NextLink = ({
+	href,
 	...props
-}: ComponentProps<typeof Link> & { href: string }) => {
-	return <Link {...props} />;
+}: StrictOmit<ComponentProps<typeof Link>, "href"> & {
+	href: string | undefined;
+}) => {
+	if (!href) return <span {...props} />;
+	return <Link {...props} href={href} />;
 };
 
 export const NextLinkButton = (

@@ -64,8 +64,13 @@ export const TwoHopLinks = ({ tNote }: { tNote: TNote }) => {
 						textDecoration={"none"}
 						textWrap={"wrap"}
 						variant={"ghost"}
+						disabled={!thl.isExists}
 					>
-						<NextLink href={toNoteHref(normalizePath(thl.path))}>
+						<NextLink
+							href={
+								thl.isExists ? toNoteHref(normalizePath(thl.path)) : undefined
+							}
+						>
 							<FileIcon />
 							{thl.title}
 						</NextLink>
