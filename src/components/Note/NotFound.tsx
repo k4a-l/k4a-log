@@ -10,7 +10,7 @@ import {
 import { searchPath } from "@/app/search/util";
 import { NextLink, NextLinkButton } from "@/components/Link/NextLink";
 import { getVaultObject } from "@/features/file/io";
-import { notesDirPath } from "@/features/metadata/constant";
+import { notesDirPath, toNoteHref } from "@/features/metadata/constant";
 import { Link } from "@/park-ui/components/link";
 import { normalizePath, safeDecodeURIComponent } from "@/utils/path";
 import { css } from "styled-system/css";
@@ -27,8 +27,8 @@ export const NoteNotFound = ({ href: _href }: { href: string }) => {
 	}));
 
 	const fuse = new Fuse(searchTargets, {
-		keys: ["title", "path"] satisfies (keyof (typeof searchTargets)[number])[],
-		threshold: 0.5,
+		keys: ["path"] satisfies (keyof (typeof searchTargets)[number])[],
+		threshold: 0.4,
 	});
 	const result = fuse.search(href);
 
@@ -108,7 +108,7 @@ export const NoteNotFound = ({ href: _href }: { href: string }) => {
 												textAlign={"end"}
 											>
 												<NextLink
-													href={path.join("/", normalizePath(pathOrId))}
+													href={toNoteHref("/", normalizePath(pathOrId))}
 												>
 													<span
 														className={css({
