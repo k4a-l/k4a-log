@@ -25,6 +25,11 @@ export const remarkEmbedLinks: Plugin = () => {
 				return;
 			}
 
+			// 前後に空行がある = 単paragraphなのでそれ以外は処理しない
+			if (node.children.length > 1) {
+				return;
+			}
+
 			const newChildren: PhrasingContent[] = [];
 			for (const child of node.children) {
 				if (child.type === "link") {

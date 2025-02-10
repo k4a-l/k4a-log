@@ -219,10 +219,12 @@ journey
 
 ## 外部埋め込みリンク
 
-### 単独行の場合は埋め込みに変換(連続行でも)
+### 単独行の場合は埋め込みに変換(前後に空行が必要)
 
 https://www.youtube.com/watch?v=mORyYinMBdg
+
 https://www.youtube.com/watch?v=mORyYinMBdg
+
 [タイトル付き](https://www.youtube.com/watch?v=mORyYinMBdg)
 
 ### 要素の一部の場合は普通のリンク
@@ -231,6 +233,10 @@ https://www.youtube.com/watch?v=mORyYinMBdg
   - https://www.youtube.com/watch?v=mORyYinMBdg
 
 文章内(https://www.youtube.com/watch?v=mORyYinMBdg)
+
+連続
+https://www.youtube.com/watch?v=mORyYinMBdg
+https://www.youtube.com/watch?v=mORyYinMBdg
 
 ### 種類ごと
 
@@ -245,4 +251,5 @@ https://x.com/XDevelopers
 #### その他
 
 https://zenn.dev/
+
 https://nextjs.org/docs/app/building-your-application/optimizing/third-party-libraries

@@ -4,9 +4,18 @@ import { ErrorBoundary } from "react-error-boundary";
 import { css } from "styled-system/css";
 import { Stack } from "styled-system/jsx";
 
-import { EmbeddedCardError } from "./Presentational";
+import {
+	EmbeddedCardError,
+	EmbeddedCardPresentational,
+} from "./Presentational";
 
-import type { AnchorHTMLAttributes, PropsWithChildren } from "react";
+import {
+	Suspense,
+	type AnchorHTMLAttributes,
+	type PropsWithChildren,
+} from "react";
+import { Spinner } from "@/park-ui/components/spinner";
+import metaFetcher from "meta-fetcher";
 import { Link } from "@/park-ui/components/link";
 import { NextLink } from "@/components/Link/NextLink";
 
@@ -17,14 +26,24 @@ const EmbeddedLinkWithBoundary = ({
 }: AnchorHTMLAttributes<HTMLAnchorElement>) => {
 	if (!href) return;
 
+	if (typeof window !== "undefined") {
+		return (
+			<Link asChild color={"blue.10"}>
+				<NextLink href={href}>{children}</NextLink>
+			</Link>
+		);
+	}
+
 	return (
 		<ErrorBoundary fallback={<EmbeddedCardError url={href} />}>
-			<EmbeddedLink url={href}>{children}</EmbeddedLink>
+			<Suspense fallback={<Spinner />}>
+				<EmbeddedLink url={href}>{children}</EmbeddedLink>
+			</Suspense>
 		</ErrorBoundary>
 	);
 };
 
-const EmbeddedLink = ({
+const EmbeddedLink = async ({
 	url,
 	children,
 }: PropsWithChildren<{ url: string }>) => {
@@ -34,8 +53,7 @@ const EmbeddedLink = ({
 		const id = urlObj.searchParams.get("v");
 		if (id) {
 			return (
-				<Stack>
-					<YouTubeEmbed height={400} params="controls=1" videoid={id} />
+				<Stack gap={0}>
 					<a
 						className={css({
 							fontSize: "0.5em",
@@ -46,29 +64,24 @@ const EmbeddedLink = ({
 					>
 						{children}
 					</a>
+					<YouTubeEmbed height={400} params="controls=1" videoid={id} />
 				</Stack>
 			);
 		}
 	}
 
-	// const metadata = await metaFetcher(url);
+	const metadata = await metaFetcher(url);
 
 	return (
-		<Link asChild color={"blue.10"}>
-			<NextLink href={url}>{url}</NextLink>
-		</Link>
+		<EmbeddedCardPresentational
+			banner={metadata.metadata.banner}
+			description={metadata.metadata.description}
+			favicons={metadata.favicons}
+			title={metadata.metadata.title}
+			url={url}
+			website={metadata.metadata.website}
+		/>
 	);
-
-	// return (
-	// 	<EmbeddedCardPresentational
-	// 		banner={metadata.metadata.banner}
-	// 		description={metadata.metadata.description}
-	// 		favicons={metadata.favicons}
-	// 		title={metadata.metadata.title}
-	// 		url={url}
-	// 		website={metadata.metadata.website}
-	// 	/>
-	// );
 };
 
 export { EmbeddedLinkWithBoundary as EmbeddedLink };
