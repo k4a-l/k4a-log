@@ -232,7 +232,7 @@ const RemarkCalloutPlugin: Plugin = (
 						// @ts-expect-error わからん
 						type: "element",
 						data: { hProperties: { className: titleClass }, hName: "div" },
-						// @ts-expect-error　ここも
+						// @ts-expect-error
 						children: [
 							{
 								type: "html",
@@ -243,16 +243,16 @@ const RemarkCalloutPlugin: Plugin = (
 								value: title,
 								data: { hProperties: { className: titleTextClass } },
 							},
-							...(dataExpandable
+							...((dataExpandable
 								? [
 										{
 											type: "html",
 											value: `<${iconTagName} class="${iconClass}">${expandIcon}</${iconTagName}>`,
-										} satisfies BlockContent,
+										},
 									]
-								: []),
+								: []) satisfies BlockContent[]),
 							...titleChildren,
-						] satisfies (BlockContent | PhrasingContent)[],
+						] as (BlockContent | PhrasingContent)[],
 					};
 
 					node.children.splice(0, 1, titleHtmlNode);

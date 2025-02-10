@@ -376,6 +376,16 @@ export const injectAllLinksToTNoteIndependence = (
 		}
 	}
 
+	const noteLinkMap = new Map<string, Set<string>>();
+	for (const note of notes) {
+		const set = new Set<string>(
+			[...note.metadata.links, ...note.metadata.embeds].map((p) =>
+				normalizePath(p.path),
+			),
+		);
+		noteLinkMap.set(normalizePath(note.path), set);
+	}
+
 	/** inject twoHopLink
 	 * https://help.masui.org/2%E3%83%9B%E3%83%83%E3%83%97%E3%83%AA%E3%83%B3%E3%82%AF%E3%81%AE%E8%80%83%E5%AF%9F-5b6f9e74b1b77e00148f8c42 より
 	 * `A→C, B→Cというリンクが存在するとき、AとBの間にはなんらかの関連があると考えてよい。`
@@ -397,52 +407,64 @@ export const injectAllLinksToTNoteIndependence = (
 	 * 日本語で表すと、「同じfrontLinkを持つものを関連づけ、frontLink経由のtwoHopLinkとする」という感じ
 	 */
 	// TODO: 重すぎ...
-	// loggingWithColor("cyan", "2hoplink");
-	// for (const note of notes) {
-	// 	process.stdout.write(`${note.basename}`);
-	// 	process.stdout.write("\r");
-	// 	for (const link of [...note.metadata.links, ...note.metadata.embeds]) {
-	// 		if (note.twoHopLinks?.find((thl) => thl.path === link.path)) continue;
-	// 		// .md以外の.**の場合は何もしない
-	// 		if (hasExtensionButNotMD(link.path)) continue;
+	loggingWithColor("cyan", "2hoplink");
+	// linkを持つ側のnote
+	for (const baseNote of notes) {
+		// 2個以上は出現させない
+		const seen = new Set<string>(
+			[
+				// // おおもとのファイルと同じ場合は除外
+				{ path: normalizePath(baseNote.path) },
+				...baseNote.backLinks,
+				...baseNote.metadata.links,
+				...baseNote.metadata.embeds,
+			].map((l) => normalizePath(l.path)),
+		);
 
-	// 		// 同じlinkを持つものをまとめる
-	// 		const targets = notes.filter((p) => {
-	// 			// おおもとのファイルと同じ場合は除外
-	// 			if (isSamePath(note.path, p.path)) {
-	// 				return false;
-	// 			}
-	// 			return [...p.metadata.links, ...p.metadata.embeds].find((l) => {
-	// 				// おおもとのファイルと同じ場合は除外
-	// 				if (isSamePath(note.path, l.path)) {
-	// 					return false;
-	// 				}
-	// 				// backLinkに含まれていたら除外
-	// 				if (note.backLinks.some((bl) => isSamePath(bl.path, l.path))) {
-	// 					return false;
-	// 				}
-	// 				// 画像なども除外
-	// 				if (hasExtensionButNotMD(link.path)) {
-	// 					return false;
-	// 				}
-	// 				return isSamePath(l.path, link.path);
-	// 			});
-	// 		});
+		process.stdout.write(`${baseNote.basename}`);
+		process.stdout.write("\r");
+		// note → link
+		for (const link of [
+			...baseNote.metadata.links,
+			...baseNote.metadata.embeds,
+		]) {
+			// すでに計算されていたら何もしない
+			if (baseNote.twoHopLinks?.find((thl) => thl.path === link.path)) continue;
+			// .md以外の.**の場合は何もしない
+			if (hasExtensionButNotMD(link.path)) continue;
 
-	// 		// twoHopLinksが空ならそもそも追加しない
-	// 		if (!targets.length) continue;
+			// 再検索
+			const twoHopNotes = notes.filter((_n) => {
+				const nPath = normalizePath(_n.path);
+				if (seen.has(nPath)) {
+					return false;
+				}
 
-	// 		note.twoHopLinks.push({
-	// 			links: targets.map((t) => ({
-	// 				path: t.path,
-	// 				title: t.basename,
-	// 				thumbnailPath: t.thumbnailPath,
-	// 			})),
-	// 			path: link.path,
-	// 			title: link.title,
-	// 		});
-	// 	}
-	// }
+				const linkSet = noteLinkMap.get(nPath);
+				const hasLink = linkSet?.has(link.path);
+
+				if (hasLink) {
+					seen.add(nPath);
+				}
+
+				return hasLink;
+			});
+
+			// twoHopLinksが空ならそもそも追加しない
+			if (!twoHopNotes.length) continue;
+
+			baseNote.twoHopLinks.push({
+				links: twoHopNotes.map((t) => ({
+					path: t.path,
+					title: t.basename,
+					thumbnailPath: t.thumbnailPath,
+				})),
+				path: link.path,
+				title: link.title,
+			});
+		}
+	}
+
 	return notes;
 };
 

@@ -110,7 +110,5 @@ export const convertPathsToMD = (
 		}),
 	);
 
-	console.log(fPath);
-
 	return { fPath, header };
 };
