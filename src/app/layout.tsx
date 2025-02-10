@@ -21,6 +21,7 @@ import { HStack, Spacer, Stack } from "styled-system/jsx";
 import type React from "react";
 import { Spinner } from "@/park-ui/components/spinner";
 import { Suspense } from "react";
+import { SWRConfig } from "swr";
 
 export const HEADER_HEIGHT = "34px";
 
@@ -117,7 +118,13 @@ export default async function RootLayout({
 									p={2}
 									// flexBasis={"1000px"}
 								>
-									<Suspense fallback={<Spinner />}>{children}</Suspense>
+									<SWRConfig
+										value={{
+											shouldRetryOnError: false,
+										}}
+									>
+										<Suspense fallback={<Spinner />}>{children}</Suspense>
+									</SWRConfig>
 								</HStack>
 							</Stack>
 						</HStack>
