@@ -105,7 +105,6 @@ export const NoteNotFound = ({ href: _href }: { href: string }) => {
 												flexWrap={"wrap"}
 												gap={1}
 												lineHeight={"1em"}
-												textAlign={"end"}
 											>
 												<NextLink
 													href={toNoteHref("/", normalizePath(pathOrId))}
