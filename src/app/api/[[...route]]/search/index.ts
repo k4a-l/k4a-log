@@ -1,4 +1,3 @@
-import { readdir } from "node:fs/promises";
 import path from "node:path";
 import {} from "@/features/metadata/constant";
 
@@ -13,16 +12,7 @@ import { isSamePath } from "@/utils/path";
 import { pageViewLength, sortStrategy } from "./constant";
 
 import type { BlankEnv, BlankInput } from "hono/types";
-
-async function getFileList(path: string): Promise<string[]> {
-	try {
-		const files = await readdir(path);
-		return files;
-	} catch (err) {
-		console.error("Error reading directory:", err);
-		return [];
-	}
-}
+import { getFileList } from "../../util";
 
 const vaultObject = getVaultObject();
 

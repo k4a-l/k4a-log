@@ -3,6 +3,8 @@ import path from "path-browserify";
 import { IS_PRODUCTION } from "./env";
 
 import type { TNoteIndependence, TTagMetaData } from "@/features/metadata/type";
+import { withAssetsDirPath } from "@/features/metadata/constant";
+import { convertNoExtensionPathToMD } from "@/features/remark/wikilink/util";
 
 /**
  * @see {@link normalizePath}
@@ -83,4 +85,25 @@ export const safeDecodeURIComponent = (str: string) => {
 	} catch (error) {
 		return str;
 	}
+};
+
+export const convertPathsToMD = (
+	paths: string[],
+): { fPath: string; header: string | undefined } => {
+	let header: string | undefined;
+	const fPath = path.join(
+		path.resolve(),
+		withAssetsDirPath,
+		...convertNoExtensionPathToMD(paths).map((p) => {
+			// ヘッダー付きリンクの整形
+			const matched = p.match(/^.+#([^.]*).*$/);
+			if (matched) {
+				header = matched[1];
+				return p.replace(new RegExp(`#${header}`), "");
+			}
+			return p;
+		}),
+	);
+
+	return { fPath, header };
 };
