@@ -44,7 +44,7 @@ export const createStringifyProcessor = ({
 			"paragraph-wrap": ParagraphWrap,
 			blockquote: Callout,
 			pre: Pre,
-			code: Code,
+			code: CodeBlock,
 		},
 	} satisfies RehypeReactOptions);
 };

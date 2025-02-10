@@ -1,6 +1,6 @@
 "use client";
 import {} from "@/components/Link/NextLink";
-import React, { type ComponentProps, useState } from "react";
+import React, { Suspense, useState } from "react";
 import ReactMarkdown, { type Components } from "react-markdown";
 import {} from "react/jsx-runtime";
 import rehypeRaw from "rehype-raw";
@@ -9,8 +9,7 @@ import remarkRehype from "remark-rehype";
 
 import {} from "styled-system/jsx";
 import { ReactViewTaskList } from "./TaskList";
-
-import type { MetaProps } from "@/features/metadata/type";
+import { Spinner } from "@/park-ui/components/spinner";
 
 export const DynamicReactCode = ({
 	transpiledCode,
@@ -34,22 +33,23 @@ export const executeComponent = (jsxString: string): React.FC => {
 	return Component;
 };
 
-export const DynamicK4aReactCode = ({
-	markdown,
-	vault,
-}: { markdown: string } & MetaProps) => {
+export const DynamicK4aReactCode = ({ markdown }: { markdown: string }) => {
 	return (
-		<ReactMarkdown
-			components={
-				{
-					tasklist: (props: ComponentProps<typeof ReactViewTaskList>) =>
-						ReactViewTaskList({ ...props, vault }),
-				} as Components
-			}
-			rehypePlugins={[rehypeRaw]}
-			remarkPlugins={[remarkGfm, [remarkRehype, { allowDangerousHtml: true }]]}
-		>
-			{markdown}
-		</ReactMarkdown>
+		<Suspense fallback={<Spinner />}>
+			<ReactMarkdown
+				components={
+					{
+						tasklist: ReactViewTaskList,
+					} as Components
+				}
+				rehypePlugins={[rehypeRaw]}
+				remarkPlugins={[
+					remarkGfm,
+					[remarkRehype, { allowDangerousHtml: true }],
+				]}
+			>
+				{markdown}
+			</ReactMarkdown>
+		</Suspense>
 	);
 };

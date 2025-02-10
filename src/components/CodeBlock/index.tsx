@@ -83,11 +83,7 @@ export const CodeBlock = (
 					p: 2,
 				})}
 			>
-				<DynamicK4aReactCode
-					markdown={children as string}
-					note={note}
-					vault={vault}
-				/>
+				<DynamicK4aReactCode markdown={children as string} />
 			</div>
 		);
 	}
