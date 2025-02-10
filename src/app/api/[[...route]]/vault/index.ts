@@ -52,9 +52,8 @@ export const noteAPI = new Hono<BlankEnv, BlankInput, "/">().get(
 		if (!href) throw new HTTPException(404);
 
 		const note = vault.notes.find((p) => isSamePath(p.path, href));
-
+		const { fPath } = convertPathsToMD([href]);
 		try {
-			const { fPath } = convertPathsToMD([href]);
 			const fileContent = readFileSync(fPath, { encoding: "utf-8" });
 			if (!note) throw new HTTPException(404);
 
@@ -68,6 +67,7 @@ export const noteAPI = new Hono<BlankEnv, BlankInput, "/">().get(
 				fileContent,
 			});
 		} catch (error) {
+			console.error("コンテンツの取得でエラー", { fPath, href }, error);
 			throw new HTTPException(404);
 		}
 	},
