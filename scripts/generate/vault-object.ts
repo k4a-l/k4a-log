@@ -135,7 +135,7 @@ const createParsedTree = async (
 			const frontmatter = (file.data as VFileData).frontmatter;
 
 			const currentPath = normalizePath(pathOfUnderRoot);
-			const [basename, extension] = entry.name.split(".");
+			const [basename, extension] = dividePathAndExtension(entry.name);
 			const metadata = createNoteMetaData(
 				runResult.children,
 				normalizePath(path.join(currentPath)),
@@ -363,7 +363,8 @@ export const injectAllLinksToTNoteIndependence = (
 			if (hasExtensionButNotMD(link.path)) continue;
 
 			const targetIndex = notes.findIndex((p) => {
-				return isSamePath(dividePathAndExtension(p.path)[0], link.path);
+				const [baseName] = dividePathAndExtension(p.path);
+				return isSamePath(baseName, link.path);
 			});
 			const target = notes[targetIndex];
 			if (target?.backLinks.find((t) => t.path === note.path)) continue;

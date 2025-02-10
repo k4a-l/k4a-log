@@ -4,7 +4,10 @@ import { IS_PRODUCTION } from "./env";
 
 import type { TNoteIndependence, TTagMetaData } from "@/features/metadata/type";
 import { withAssetsDirPath } from "@/features/metadata/constant";
-import { convertNoExtensionPathToMD } from "@/features/remark/wikilink/util";
+import {
+	convertNoExtensionPathToMD,
+	lastOfArr,
+} from "@/features/remark/wikilink/util";
 
 /**
  * @see {@link normalizePath}
@@ -31,8 +34,20 @@ export const normalizePath = (str: string): string => {
 export const dividePathAndExtension = (
 	str: string,
 ): [string, string | undefined] => {
-	const [baseName, extension] = str.split(".");
-	return [baseName ?? str, extension];
+	const splitted = str.split(".");
+
+	if (splitted.length === 0) {
+		return ["", undefined];
+	}
+
+	if (splitted.length === 1) {
+		return [str, undefined];
+	}
+
+	const extension = lastOfArr(splitted);
+	const baseName = splitted.slice(0, splitted.length - 1).join(".");
+
+	return [baseName, extension];
 };
 
 /**
@@ -94,6 +109,8 @@ export const convertPathsToMD = (
 			return p;
 		}),
 	);
+
+	console.log(fPath);
 
 	return { fPath, header };
 };

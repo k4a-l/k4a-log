@@ -17,7 +17,7 @@ export const convertNoExtensionPathToMD = (_path: string[]): string[] => {
 
 	if (!last) return [];
 
-	if (last?.match(/.*\..*/)) {
+	if (last?.match(/.*\.md$/)) {
 		path.push(last);
 	} else {
 		path.push(`${last}.md`);
