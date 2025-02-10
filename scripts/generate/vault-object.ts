@@ -124,7 +124,6 @@ const createParsedTree = async (
 			const parseProcessor = createParseProcessor(
 				[pathOfUnderRoot].map((p) => encodeURIComponent(p)),
 				fileNode,
-				{},
 			);
 			const runProcessor = createRunProcessor(
 				{ listItems: [] },
