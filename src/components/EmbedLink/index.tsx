@@ -10,7 +10,7 @@ import type { AnchorHTMLAttributes, PropsWithChildren } from "react";
 import { Link } from "@/park-ui/components/link";
 import { NextLink } from "@/components/Link/NextLink";
 
-const EmbeddedLinkWithBoundary = async ({
+const EmbeddedLinkWithBoundary = ({
 	href,
 	children,
 	...other

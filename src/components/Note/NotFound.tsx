@@ -17,7 +17,7 @@ import { css } from "styled-system/css";
 import { HStack, Spacer, Stack } from "styled-system/jsx";
 import path from "path-browserify";
 
-export const NoteNotFound = async ({ href: _href }: { href: string }) => {
+export const NoteNotFound = ({ href: _href }: { href: string }) => {
 	const href = safeDecodeURIComponent(_href.split(/\\|\//).join("/"));
 	const vault = getVaultObject();
 

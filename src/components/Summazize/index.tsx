@@ -6,7 +6,7 @@ import { strictEntries } from "@/utils/object";
 import { css } from "styled-system/css";
 import { HStack, Stack } from "styled-system/jsx";
 
-export const SummarizeByYM = async () => {
+export const SummarizeByYM = () => {
 	// metadataの取得
 	const vaultObject = getVaultObject();
 
