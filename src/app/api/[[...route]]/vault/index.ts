@@ -9,8 +9,8 @@ import { convertPathsToMD, isSamePath } from "@/utils/path";
 import { HTTPException } from "hono/http-exception";
 // biome-ignore lint/style/useNodejsImportProtocol: <explanation>
 import { readFileSync } from "fs";
+import path from "path-browserify";
 import { getFileList } from "../../util";
-import path from "node:path";
 
 const vault = getVaultObject();
 
@@ -50,6 +50,9 @@ export const noteAPI = new Hono<BlankEnv, BlankInput, "/">().get(
 
 		const href = decodeURIComponent(c.req.query("path") ?? "").split("#")[0];
 		if (!href) throw new HTTPException(404);
+
+		// おまじない：これを書いておかないとvercelのバンドルに含まれない
+		await getFileList(path.join(process.cwd(), "assets/notes/public"));
 
 		const note = vault.notes.find((p) => isSamePath(p.path, href));
 		const { fPath } = convertPathsToMD([href]);
