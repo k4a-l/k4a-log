@@ -16,6 +16,8 @@ export async function fetcher<T>(
 		[key: string]: string;
 	},
 ) {
+	// わからん
+	await new Promise((resolve) => setTimeout(resolve, 500));
 	const searchParams = new URLSearchParams();
 	if (queryParams) {
 		for (const [key, value] of Object.entries(queryParams)) {
