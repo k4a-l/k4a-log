@@ -21,7 +21,7 @@ const RenderFolder = React.memo(
 		const pathname = usePathname();
 
 		const targetPath = useMemo(() => {
-			const pathnameSplit = pathSplit(pathname);
+			const pathnameSplit = pathSplit(decodeURIComponent(pathname));
 			return pathnameSplit.slice(1, depth - pathnameSplit.length + 2);
 		}, [depth, pathname]);
 
@@ -92,7 +92,10 @@ const RenderFile = React.memo(
 		const pathname = usePathname();
 
 		const isMatch = useMemo(() => {
-			return isSamePath(decodeURIComponent(pathname), toNoteHref(file.path));
+			return isSamePath(
+				decodeURIComponent(pathname),
+				decodeURIComponent(toNoteHref(file.path)),
+			);
 		}, [pathname, file.path]);
 		return (
 			<NextLinkButton

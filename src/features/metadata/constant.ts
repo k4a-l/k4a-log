@@ -1,3 +1,4 @@
+import { pathSplit } from "@/utils/path";
 import path from "path-browserify";
 
 export const assetsDirPath = "assets";
@@ -12,7 +13,13 @@ export const notesDirPath = "notes";
 export const withAssetsDirPath = path.join(assetsDirPath, notesDirPath);
 
 export const toNoteHref = (...str: string[]) =>
-	path.join("/", notesDirPath, ...str);
+	path.join(
+		"/",
+		notesDirPath,
+		...str.flatMap((s) => {
+			return pathSplit(s).map((p) => encodeURIComponent(p));
+		}),
+	);
 
 export const bookmarkFilePath = path.join(
 	assetsDirPath,
