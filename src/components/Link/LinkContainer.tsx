@@ -1,44 +1,36 @@
-import {
-	createRunProcessor,
-	createStringifyProcessor,
-} from "@/features/remark/processor";
-import { getFileContent } from "@/features/remark/processor/getContent";
-import { createParseProcessor } from "@/features/remark/processor/parse";
 import { css } from "styled-system/css";
 
 import {
 	EmbedLinkImage,
-	EmbedLinkMarkdown,
 	EmbedLinkPdf,
 	EmbedLinkVideo,
+	type MDLinkPresentationalType,
 	TransitionLinkDead,
 	TransitionLinkExist,
 } from "./LinkPresentational";
-
-import type { MetaProps, PathMap } from "@/features/metadata/type";
 import type { WikiLinkData } from "@/types/mdast";
-import type { AnchorHTMLAttributes, FC } from "react";
-import { safeDecodeURIComponent } from "@/utils/path";
+import { Suspense, type FC } from "react";
 import { toNoteHref } from "@/features/metadata/constant";
+import { Spinner } from "@/park-ui/components/spinner";
+import { EmbedLinkMarkdown, EmbedLinkMarkdownLayout } from "./EmbedMarkdown";
+import { ErrorBoundary } from "react-error-boundary";
+import { FileWarningIcon } from "lucide-react";
 
-type WikiLinkComponentProps = AnchorHTMLAttributes<HTMLAnchorElement> &
-	WikiLinkData["hProperties"] & { pathMap: PathMap };
+export type WikiLinkComponentProps = WikiLinkData["hProperties"];
 
-export const LinkContainer: FC<WikiLinkComponentProps & MetaProps> = (
-	props,
-) => {
-	const { href, children, "is-embed": isEmbed, alias, ...others } = props;
+export const LinkContainer: FC<WikiLinkComponentProps> = (props) => {
+	const { href, "is-embed": isEmbed, alias, ...others } = props;
 
 	if (isEmbed) {
 		return <EmbedLinkContainer {...props} />;
 	}
 
-	return <TransitionLinkContainer {...props} />;
+	const { parentsLinks, assetsDirPath, ...linkProps } = props;
+
+	return <TransitionLinkContainer {...linkProps} />;
 };
 
-export const TransitionLinkContainer: FC<WikiLinkComponentProps> = ({
-	assetsDirPath,
-	parentsLinks,
+export const TransitionLinkContainer: FC<MDLinkPresentationalType> = ({
 	isDeadLink,
 	...props
 }) => {
@@ -49,19 +41,14 @@ export const TransitionLinkContainer: FC<WikiLinkComponentProps> = ({
 	return <TransitionLinkExist {...props} />;
 };
 
-export const EmbedLinkContainer: FC<
-	WikiLinkComponentProps & MetaProps
-> = async ({
+export const EmbedLinkContainer: FC<WikiLinkComponentProps> = ({
 	assetsDirPath,
 	parentsLinks,
 	isDeadLink,
 	type,
-	pathMap,
-	vault,
-	note,
 	...props
 }) => {
-	const { href, children, title, alias, ...others } = props;
+	const { href, title, alias, ...others } = props;
 
 	const withNoteHref = toNoteHref(href);
 
@@ -78,36 +65,19 @@ export const EmbedLinkContainer: FC<
 	}
 
 	if (type === "link") {
-		const paths = href.split(/\\|\//);
-
-		const parentLinksArr = parentsLinks
-			.split(" ")
-			.map((p) => safeDecodeURIComponent(p));
-
-		const remarkProcessor = createParseProcessor(
-			parentLinksArr,
-			[...vault.notes, ...vault.assets].map((p) => ({
-				absPath: p.path,
-				name: p.basename,
-			})),
-			{},
+		return (
+			<EmbedLinkMarkdownLayout title={alias ?? title} href={href}>
+				<ErrorBoundary fallback={<FileWarningIcon />}>
+					<Suspense fallback={<Spinner />}>
+						<EmbedLinkMarkdown
+							{...props}
+							href={href}
+							parentsLinks={parentsLinks}
+						/>
+					</Suspense>
+				</ErrorBoundary>
+			</EmbedLinkMarkdownLayout>
 		);
-		const rehypeProcessor = createRunProcessor({
-			listItems: note.metadata.listItems,
-		});
-		const stringifyProcessor = createStringifyProcessor();
-		const data = getFileContent(
-			paths,
-			remarkProcessor,
-			rehypeProcessor,
-			stringifyProcessor,
-		);
-
-		if (!data) {
-			return <EmbedLinkMarkdown {...props} href={""} />;
-		}
-
-		return <EmbedLinkMarkdown {...props}>{data.content}</EmbedLinkMarkdown>;
 	}
 
 	return (

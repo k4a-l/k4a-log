@@ -1,7 +1,6 @@
 "use client";
 
-import { Link as LinkIcons, SearchIcon } from "lucide-react";
-import path from "path-browserify";
+import { SearchIcon } from "lucide-react";
 import {
 	type FC,
 	type PropsWithChildren,
@@ -12,14 +11,9 @@ import {
 
 import { getSearchPath } from "@/app/search/util";
 import { NextLink, NextLinkIconButton } from "@/components/Link/NextLink";
-import { embedMarkdownClass } from "@/components/Toc";
-import { IconButton } from "@/park-ui/components/icon-button";
 import { Link } from "@/park-ui/components/link";
-import { normalizePath } from "@/utils/path";
 import { css } from "styled-system/css";
-import { HStack, Stack } from "styled-system/jsx";
-
-import type { PathMap } from "@/features/metadata/type";
+import { HStack } from "styled-system/jsx";
 import type { WikiLinkData } from "@/types/mdast";
 import type { StrictOmit } from "ts-essentials";
 import { toNoteHref } from "@/features/metadata/constant";
@@ -29,7 +23,8 @@ type LinkPresentationalType = StrictOmit<
 	"assetsDirPath" | "type" | "parentsLinks"
 >;
 
-type MDLinkPresentationalType = PropsWithChildren<LinkPresentationalType>;
+export type MDLinkPresentationalType =
+	PropsWithChildren<LinkPresentationalType>;
 
 const TransitionLinkContainer: FC<
 	PropsWithChildren<Pick<WikiLinkData["hProperties"], "isTagLink" | "title">>
@@ -98,13 +93,12 @@ export const TransitionLinkExist: FC<MDLinkPresentationalType> = ({
 	isTagLink,
 	...others
 }) => {
-	const pathMap: PathMap = {};
-	const pathOrId = toNoteHref(pathMap[normalizePath(href)] ?? href);
-
 	return (
 		<TransitionLinkContainer isTagLink={isTagLink} title={title}>
 			<Link asChild color={"blue.10"}>
-				<NextLink href={pathOrId}>{alias ?? title ?? children}</NextLink>
+				<NextLink href={href.startsWith("#") ? href : toNoteHref(href)}>
+					{alias ?? title ?? children}
+				</NextLink>
 			</Link>
 		</TransitionLinkContainer>
 	);
@@ -216,67 +210,5 @@ export const EmbedLinkPdf: FC<PropsWithChildren<LinkPresentationalType>> = ({
 			src={href || ":"}
 			style={{ height: `${iframeHeight}px` }}
 		/>
-	);
-};
-
-export const EmbedLinkMarkdown: FC<MDLinkPresentationalType> = ({
-	href,
-	title,
-	alias,
-	children,
-}) => {
-	const pathMap: PathMap = {};
-
-	if (!href) {
-		return <EmbedLinkNotFound title={title} />;
-	}
-
-	const pathOrId = path.join(pathMap[normalizePath(href)] ?? href);
-
-	return (
-		<Stack
-			className={`${css({
-				borderWidth: 1,
-				borderColor: "gray.3",
-				w: "100%",
-			})}, ${embedMarkdownClass}`}
-			my={4}
-		>
-			<HStack
-				className={css({
-					borderBottomWidth: "1",
-					borderBottomColor: "gray.3",
-					px: 2,
-					py: 1,
-				})}
-				justifyContent={"space-between"}
-			>
-				<span
-					className={css({
-						fontWeight: "bold",
-						fontSize: "1em",
-					})}
-				>
-					{alias ?? title}
-				</span>
-				<IconButton asChild color="blue.10" size="xs" variant={"ghost"}>
-					<NextLink href={toNoteHref(pathOrId)}>
-						<LinkIcons size={"1em"} />
-					</NextLink>
-				</IconButton>
-			</HStack>
-			<span
-				className={css({
-					maxH: "600px",
-					overflow: "auto",
-					scrollbarWidth: "thin",
-					px: 2,
-					pb: 1,
-					fontWeight: "normal",
-				})}
-			>
-				{children}
-			</span>
-		</Stack>
 	);
 };
