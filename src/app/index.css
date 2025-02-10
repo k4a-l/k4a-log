@@ -150,11 +150,6 @@
 
 	/********** COLL OUT **********/
 	/* 開閉 */
-	.callout-content {
-		display: grid;
-		grid-template-rows: 0fr;
-		transition: 250ms grid-template-rows ease;
-	}
 	[data-expanded="true"] .callout-content {
 		grid-template-rows: 1fr;
 	}
