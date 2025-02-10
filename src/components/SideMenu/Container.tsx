@@ -11,10 +11,11 @@ import {} from "../Bookmark";
 import { FolderContent } from "./Content";
 
 import type { Folder } from "scripts/generate/folder";
+import React from "react";
 
 type Props = { folders: Folder[] };
 
-export const SideMenuInnerPart = ({ folders }: Props) => {
+export const SideMenuInnerPart = React.memo(({ folders }: Props) => {
 	return (
 		<Stack
 			bg="white"
@@ -43,7 +44,7 @@ export const SideMenuInnerPart = ({ folders }: Props) => {
 			<FolderContent folders={folders} />
 		</Stack>
 	);
-};
+});
 
 export const SideMenuDrawer = ({ folders }: Props) => {
 	return (
