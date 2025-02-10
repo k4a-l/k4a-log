@@ -72,17 +72,12 @@ export default async function NotePage({ page }: Props) {
 	});
 	const stringifyProcessor = createStringifyProcessor();
 
-	console.log("getFileContent start", performance.now() - start);
-
-	// 実行→やっぱここが重い？
-	// parseが割と軽くなったのでやっぱここ
 	const fileData = getFileContent(
 		notePath.split(/\\|\//),
 		parseProcessor,
 		runProcessor,
 		stringifyProcessor,
 	);
-	console.log(" getFileContent end", performance.now() - start);
 
 	if (!fileData) return <NoteNotFound href={pathFromParams} />;
 	// データ加工

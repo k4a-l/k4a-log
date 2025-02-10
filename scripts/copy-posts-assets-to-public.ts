@@ -28,7 +28,6 @@ const copyFiles = (srcPath: string, destPath: string) => {
 			.filter((p) => hasExtensionButNotMD(p)),
 		...(n.thumbnailPath ? [n.thumbnailPath] : []),
 	]);
-	// console.log(allAssetPathList);
 
 	// srcPath配下のファイルを読み込む
 	// ディレクトリだった場合は、再帰的に処理する
