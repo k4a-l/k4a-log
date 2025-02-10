@@ -1,5 +1,5 @@
 import { copyFileSync } from "node:fs";
-import path from "node:path";
+import path from "path-browserify";
 
 import {
 	bookmarkFilePath,

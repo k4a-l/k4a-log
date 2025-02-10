@@ -1,5 +1,5 @@
-import * as fs from "node:fs";
-import * as path from "node:path";
+// biome-ignore lint/style/useNodejsImportProtocol: <explanation>
+import * as fs from "fs";
 
 import GithubSlugger from "github-slugger";
 
@@ -7,6 +7,7 @@ import type { WikiLinkData } from "@/types/mdast";
 import {} from "react/jsx-runtime";
 import { normalizePath, pathSplit, safeDecodeURIComponent } from "@/utils/path";
 import { loggingWithColor } from "scripts/util";
+import path from "path-browserify";
 
 // _startPathの最後の要素に拡張子が含まれていない場合は、最後の要素に.mdを結合したあたらしい配列を作る
 // 拡張子が含まれている場合は、そのままの配列を使う

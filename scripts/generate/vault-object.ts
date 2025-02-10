@@ -1,6 +1,6 @@
 import fs, {} from "node:fs";
 import { readFile } from "node:fs/promises";
-import path from "node:path";
+import path from "path-browserify";
 
 import { toString as mdastToString } from "mdast-util-to-string";
 import { v4 as uuid } from "uuid";
@@ -124,6 +124,7 @@ const createParsedTree = async (
 			const parseProcessor = createParseProcessor(
 				[pathOfUnderRoot].map((p) => encodeURIComponent(p)),
 				fileNode,
+				{},
 			);
 			const runProcessor = createRunProcessor(
 				{ listItems: [] },

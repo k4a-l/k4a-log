@@ -1,4 +1,4 @@
-import path from "node:path";
+import path from "path-browserify";
 
 import { PageWithTransition } from "@/components/Common/pageWithTransition";
 import { FrontMatter } from "@/components/FrontMatter";

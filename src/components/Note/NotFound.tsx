@@ -1,5 +1,3 @@
-import path from "node:path";
-
 import Fuse from "fuse.js";
 import {
 	MapPinHouseIcon,
@@ -17,6 +15,7 @@ import { Link } from "@/park-ui/components/link";
 import { normalizePath, safeDecodeURIComponent } from "@/utils/path";
 import { css } from "styled-system/css";
 import { HStack, Spacer, Stack } from "styled-system/jsx";
+import path from "path-browserify";
 
 export const NoteNotFound = async ({ href: _href }: { href: string }) => {
 	const href = safeDecodeURIComponent(_href.split(/\\|\//).join("/"));

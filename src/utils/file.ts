@@ -1,5 +1,5 @@
 import fs from "node:fs";
-import { dirname } from "node:path";
+import { dirname } from "path-browserify";
 
 export const writeFileRecursive = async (
 	path: string,
