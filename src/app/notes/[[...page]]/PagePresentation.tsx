@@ -65,14 +65,12 @@ export default async function NotePage({ page }: Props) {
 				name: p.basename,
 			})),
 		],
+		vaultObject.pathMap,
 	);
 	const runProcessor = createRunProcessor({
 		listItems: tNote.metadata.listItems,
 	});
-	const stringifyProcessor = createStringifyProcessor({
-		pathMap: vaultObject.pathMap,
-		meta: { vault: vaultObject, note: tNote },
-	});
+	const stringifyProcessor = createStringifyProcessor();
 
 	console.log("getFileContent start", performance.now() - start);
 

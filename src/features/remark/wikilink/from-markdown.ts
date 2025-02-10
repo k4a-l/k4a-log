@@ -159,9 +159,11 @@ const createWikiLinkData = (
 	];
 	const isDeadLink = _link === undefined;
 
+	const pathOrId = path.join(opts.pathMap[normalizePath(link)] ?? link);
+
 	const hProperties: WikiLinkData["hProperties"] = {
 		className: classNames,
-		href: isDeadLink ? link : hrefTemplate(link),
+		href: isDeadLink ? pathOrId : hrefTemplate(pathOrId),
 		title: displayName,
 		assetsDirPath: opts.assetPath,
 		"is-embed": isCirclerReference ? undefined : isEmbed ? "true" : undefined,

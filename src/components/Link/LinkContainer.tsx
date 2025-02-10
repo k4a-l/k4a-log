@@ -90,17 +90,12 @@ export const EmbedLinkContainer: FC<
 				absPath: p.path,
 				name: p.basename,
 			})),
+			{},
 		);
 		const rehypeProcessor = createRunProcessor({
 			listItems: note.metadata.listItems,
 		});
-		const stringifyProcessor = createStringifyProcessor({
-			pathMap,
-			meta: {
-				vault,
-				note: note,
-			},
-		});
+		const stringifyProcessor = createStringifyProcessor();
 		const data = getFileContent(
 			paths,
 			remarkProcessor,
@@ -109,14 +104,10 @@ export const EmbedLinkContainer: FC<
 		);
 
 		if (!data) {
-			return <EmbedLinkMarkdown pathMap={pathMap} {...props} href={""} />;
+			return <EmbedLinkMarkdown {...props} href={""} />;
 		}
 
-		return (
-			<EmbedLinkMarkdown pathMap={pathMap} {...props}>
-				{data.content}
-			</EmbedLinkMarkdown>
-		);
+		return <EmbedLinkMarkdown {...props}>{data.content}</EmbedLinkMarkdown>;
 	}
 
 	return (

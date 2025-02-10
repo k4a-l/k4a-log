@@ -14,11 +14,13 @@ import type { Root } from "mdast";
 import type { Processor } from "unified";
 
 import { normalizePath, safeDecodeURIComponent } from "@/utils/path";
-import path from "node:path";
+import type { PathMap } from "@/features/metadata/type";
+import path from "path-browserify";
 
 export const createParseProcessor = (
 	_parentsLinks: string[],
 	notes: FileNode[],
+	pathMap: PathMap,
 ): Processor<Root, undefined, undefined, Root, string> => {
 	const parentsLinks = _parentsLinks
 		.map((p) => safeDecodeURIComponent(p))
@@ -43,6 +45,7 @@ export const createParseProcessor = (
 			parentsLinks,
 			notes,
 			fileMap,
+			pathMap,
 		} satisfies WikiLinkOption)
 		.use(remarkFrontmatter, [
 			{

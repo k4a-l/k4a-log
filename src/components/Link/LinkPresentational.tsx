@@ -29,9 +29,7 @@ type LinkPresentationalType = StrictOmit<
 	"assetsDirPath" | "type" | "parentsLinks"
 >;
 
-type MDLinkPresentationalType = PropsWithChildren<
-	LinkPresentationalType & { pathMap: PathMap }
->;
+type MDLinkPresentationalType = PropsWithChildren<LinkPresentationalType>;
 
 const TransitionLinkContainer: FC<
 	PropsWithChildren<Pick<WikiLinkData["hProperties"], "isTagLink" | "title">>
@@ -76,7 +74,7 @@ const TransitionLinkContainer: FC<
 };
 export const TransitionLinkDead: FC<
 	PropsWithChildren<MDLinkPresentationalType>
-> = ({ href, children, pathMap, isTagLink, alias, title, ...others }) => {
+> = ({ href, children, isTagLink, alias, title, ...others }) => {
 	return (
 		<TransitionLinkContainer isTagLink={isTagLink} title={title}>
 			<Link asChild color="blue.8">
@@ -97,10 +95,10 @@ export const TransitionLinkExist: FC<MDLinkPresentationalType> = ({
 	children,
 	alias,
 	title,
-	pathMap,
 	isTagLink,
 	...others
 }) => {
+	const pathMap: PathMap = {};
 	const pathOrId = toNoteHref(pathMap[normalizePath(href)] ?? href);
 
 	return (
@@ -226,8 +224,9 @@ export const EmbedLinkMarkdown: FC<MDLinkPresentationalType> = ({
 	title,
 	alias,
 	children,
-	pathMap,
 }) => {
+	const pathMap: PathMap = {};
+
 	if (!href) {
 		return <EmbedLinkNotFound title={title} />;
 	}
