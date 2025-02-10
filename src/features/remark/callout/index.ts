@@ -21,7 +21,12 @@ import {
 	zapIcon,
 } from "./icons";
 
-import type { BlockContent, PhrasingContent, Root } from "mdast";
+import type {
+	BlockContent,
+	DefinitionContent,
+	PhrasingContent,
+	Root,
+} from "mdast";
 import type { Plugin } from "unified";
 
 type Callout = Record<string, unknown>;
@@ -202,6 +207,13 @@ const RemarkCalloutPlugin: Plugin = (
 					let icon: string;
 					let validCalloutType: string;
 
+					// break要素が出現する前の要素
+					const breakElIndex = remainingLines.findIndex(
+						(line) => line.type === "break",
+					);
+					const titleChildren = remainingLines.slice(0, breakElIndex);
+					const contentChildren = remainingLines.slice(breakElIndex + 1);
+
 					if (memoizedContainsKey(callouts, calloutType)) {
 						icon = callouts[calloutType.toLowerCase()] ?? pencilIcon;
 						validCalloutType = calloutType.toLowerCase();
@@ -215,19 +227,32 @@ const RemarkCalloutPlugin: Plugin = (
 						calloutType.toUpperCase();
 
 					const iconHTML = `<${iconTagName} class="${iconClass}">${icon}</${iconTagName}>`;
-					const titleTextHTML =
-						title &&
-						`<${titleTextTagName} class="${titleTextClass}">${titleTextTransform(
-							title,
-						)}</${titleTextTagName}>`;
-					const expandHTML = dataExpandable
-						? `<${iconTagName} class="${iconClass}">${expandIcon}</${iconTagName}>`
-						: "";
 
-					const titleHtmlNode: BlockContent = {
-						type: "html",
-						data: {},
-						value: `<div class="${titleClass}">${iconHTML}${titleTextHTML}${expandHTML}</div>`,
+					const titleHtmlNode: BlockContent | DefinitionContent = {
+						// @ts-expect-error わからん
+						type: "element",
+						data: { hProperties: { className: titleClass }, hName: "div" },
+						// @ts-expect-error　ここも
+						children: [
+							{
+								type: "html",
+								value: iconHTML,
+							},
+							{
+								type: "text",
+								value: title,
+								data: { hProperties: { className: titleTextClass } },
+							},
+							...(dataExpandable
+								? [
+										{
+											type: "html",
+											value: `<${iconTagName} class="${iconClass}">${expandIcon}</${iconTagName}>`,
+										} satisfies BlockContent,
+									]
+								: []),
+							...titleChildren,
+						] satisfies (BlockContent | PhrasingContent)[],
 					};
 
 					node.children.splice(0, 1, titleHtmlNode);
@@ -250,7 +275,7 @@ const RemarkCalloutPlugin: Plugin = (
 							hName: "div",
 						},
 						children: [
-							...remainingLines,
+							...contentChildren,
 							// これ以降はデフォルトの動作に任せる
 							...(otherChildren.length
 								? ([{ type: "break" }] as PhrasingContent[])
