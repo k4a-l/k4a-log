@@ -2,25 +2,31 @@
 import { css } from "styled-system/css";
 import { HStack, Stack } from "styled-system/jsx";
 
-type EmbeddedCardProps = {
-	url: string;
-	title: string;
-	description?: string;
-	website: string;
-	favicons: string[];
-	banner?: string;
-};
+import type { OgObject } from "open-graph-scraper/dist/lib/types";
+import { Link } from "@/park-ui/components/link";
 
 export const EmbeddedCardPresentational = ({
 	url,
-	title,
-	description,
-	website,
-	banner,
-	favicons,
-}: EmbeddedCardProps) => {
-	const urlObj = new URL(website);
-	const favicon = favicons[0];
+	ogpData,
+}: { url: string; ogpData: OgObject }) => {
+	const urls =
+		ogpData.ogImage
+			?.map((image) => image.url)
+			.filter((url) => url != null && url !== undefined) ?? [];
+
+	const title = ogpData.ogTitle
+		? ogpData.ogTitle.includes("�")
+			? url
+			: ogpData.ogTitle
+		: "";
+
+	// https://zenn.dev/team_zenn/articles/opengraphscraper-commit の対応で6.4.0に上げれば解決できそうだが、6.0.0から上げられない問題が別途ある（https://zenn.dev/st43/scraps/ac20e59cf6614b）のでデッドロック 他のライブラリでも無理だった。
+	const description = ogpData.ogDescription
+		? ogpData.ogDescription.includes("�")
+			? ""
+			: ogpData.ogDescription
+		: "";
+	const imageUrl = findImageFromOgp(urls, url);
 
 	return (
 		<Container>
@@ -70,7 +76,7 @@ export const EmbeddedCardPresentational = ({
 							flexGrow: 1,
 						})}
 					>
-						{favicon ? (
+						{ogpData.favicon ? (
 							<img
 								alt={title}
 								className={css({
@@ -78,43 +84,63 @@ export const EmbeddedCardPresentational = ({
 									height: "14px",
 									maxWidth: "14px",
 								})}
-								src={favicon}
+								src={
+									ogpData.favicon.startsWith("http")
+										? ogpData.favicon
+										: new URL(ogpData.favicon, url).toString()
+								}
 							/>
 						) : null}
-						{urlObj.hostname}
+						{new URL(url).hostname}
 					</HStack>
 				</Stack>
-				<img
-					alt={title}
-					className={css({
-						objectFit: "cover",
-						height: "120px",
-						maxWidth: "230px",
-					})}
-					src={banner}
-				/>
+				{imageUrl ? (
+					<img
+						alt={title}
+						className={css({
+							objectFit: "cover",
+							height: "120px",
+							maxWidth: "230px",
+						})}
+						src={imageUrl}
+					/>
+				) : null}
 			</a>
 		</Container>
 	);
 };
 
+// amazonが複数のOG画像を返してくるので、その対策
+function findImageFromOgp(
+	originalUrls: string[],
+	domain: string,
+): string | undefined {
+	if (domain.includes("amazon") || domain.includes("amzn")) {
+		const urls = originalUrls.filter((url) => {
+			return url.includes("/I/") && url.includes("_SX") && url.includes("_SY");
+		});
+		return urls[0];
+	}
+	return originalUrls[0];
+}
+
 export const EmbeddedCardError = ({ url }: { url: string }) => {
 	return (
 		<Container>
-			<a
+			<Link
 				className={css({
 					display: "flex",
 					p: 2,
 					alignItems: "center",
-					color: "inherit",
 					textDecoration: "none",
 				})}
+				colorScheme={"blue"}
 				href={url}
 				rel="noopener noreferrer"
 				target="_blank"
 			>
 				{url}
-			</a>
+			</Link>
 		</Container>
 	);
 };

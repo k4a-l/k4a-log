@@ -3,6 +3,7 @@ import { ErrorBoundary } from "react-error-boundary";
 
 import { css } from "styled-system/css";
 import { Stack } from "styled-system/jsx";
+import ogs from "open-graph-scraper";
 
 import {
 	EmbeddedCardError,
@@ -15,7 +16,6 @@ import {
 	type PropsWithChildren,
 } from "react";
 import { Spinner } from "@/park-ui/components/spinner";
-import metaFetcher from "meta-fetcher";
 import { Link } from "@/park-ui/components/link";
 import { NextLink } from "@/components/Link/NextLink";
 
@@ -70,18 +70,14 @@ const EmbeddedLink = async ({
 		}
 	}
 
-	const metadata = await metaFetcher(url);
+	const ogObject = await ogs({
+		url,
+		fetchOptions: new URL(url).hostname.match(/x.com|twitter.com/)
+			? { headers: { "User-Agent": "bot" } }
+			: {},
+	});
 
-	return (
-		<EmbeddedCardPresentational
-			banner={metadata.metadata.banner}
-			description={metadata.metadata.description}
-			favicons={metadata.favicons}
-			title={metadata.metadata.title}
-			url={url}
-			website={metadata.metadata.website}
-		/>
-	);
+	return <EmbeddedCardPresentational url={url} ogpData={ogObject.result} />;
 };
 
 export { EmbeddedLinkWithBoundary as EmbeddedLink };

@@ -223,8 +223,6 @@ journey
 
 https://www.youtube.com/watch?v=mORyYinMBdg
 
-https://www.youtube.com/watch?v=mORyYinMBdg
-
 [タイトル付き](https://www.youtube.com/watch?v=mORyYinMBdg)
 
 ### 要素の一部の場合は普通のリンク
@@ -244,12 +242,40 @@ https://www.youtube.com/watch?v=mORyYinMBdg
 
 ↑で確認
 
-#### Twitter(未対応)
+#### Twitter
+
+プロフィールはいける
 
 https://x.com/XDevelopers
+
+ポストはいけない
+
+https://x.com/XDevelopers/status/1851463451929186504
+
+#### Amazon
+
+複数商品のページは画像が取得できない
+
+https://www.amazon.co.jp/dp/B082TQK2SB
+
+こっちはいける
+
+https://www.amazon.co.jp/dp/4094513086
+
+#### Yahoo
+
+https://store.shopping.yahoo.co.jp/pfudirect/pd-id100y.html
+
+### Rakuten
+
+> ShiftJISなので文字化けするのでタイトルなどは表示抑制
+
+https://item.rakuten.co.jp/pfudirect/pd-kb401b/
 
 #### その他
 
 https://zenn.dev/
 
 https://nextjs.org/docs/app/building-your-application/optimizing/third-party-libraries
+
+あとは適宜
