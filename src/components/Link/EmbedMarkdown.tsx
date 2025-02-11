@@ -1,5 +1,7 @@
 "use client";
 
+import { LinkIcon } from "lucide-react";
+
 import { useHonoQuery } from "@/app/search/hono";
 import { toNoteHref } from "@/features/metadata/constant";
 import {
@@ -7,18 +9,20 @@ import {
 	createRunProcessor,
 	createStringifyProcessor,
 } from "@/features/remark/processor";
+import { processRemark } from "@/features/remark/processor/process";
 import { IconButton } from "@/park-ui/components/icon-button";
-import type { WikiLinkData } from "@/types/mdast";
-import { convertPathsToMD, safeDecodeURIComponent } from "@/utils/path";
-import type { FC, PropsWithChildren } from "react";
+import { Spinner } from "@/park-ui/components/spinner";
+import { convertPathsToLocalMD, safeDecodeURIComponent } from "@/utils/path";
+import { css } from "styled-system/css";
 import { Stack, HStack } from "styled-system/jsx";
+
 import { embedMarkdownClass } from "../Toc";
+
 import { EmbedLinkNotFound } from "./LinkPresentational";
 import { NextLink } from "./NextLink";
-import { css } from "styled-system/css";
-import { Spinner } from "@/park-ui/components/spinner";
-import { LinkIcon } from "lucide-react";
-import { processRemark } from "@/features/remark/processor/process";
+
+import type { WikiLinkData } from "@/types/mdast";
+import type { FC, PropsWithChildren } from "react";
 
 export const EmbedLinkMarkdownLayout: FC<
 	PropsWithChildren<{ title: string; href: string }>
@@ -110,7 +114,7 @@ export const EmbedLinkMarkdown: FC<Props> = (props) => {
 	});
 	const stringifyProcessor = createStringifyProcessor();
 
-	const { fPath, header } = convertPathsToMD(paths);
+	const { fPath, header } = convertPathsToLocalMD(paths);
 	const data = processRemark(
 		{ fPath, header, title: alias ?? title },
 		remarkProcessor,

@@ -2,12 +2,12 @@
 import * as fs from "fs";
 
 import GithubSlugger from "github-slugger";
+import path from "path-browserify";
 
-import type { WikiLinkData } from "@/types/mdast";
-import {} from "react/jsx-runtime";
 import { normalizePath, pathSplit, safeDecodeURIComponent } from "@/utils/path";
 import { loggingWithColor } from "scripts/util";
-import path from "path-browserify";
+
+import type { WikiLinkData } from "@/types/mdast";
 
 // _startPathの最後の要素に拡張子が含まれていない場合は、最後の要素に.mdを結合したあたらしい配列を作る
 // 拡張子が含まれている場合は、そのままの配列を使う

@@ -1,13 +1,14 @@
 import path from "path-browserify";
 
-import { IS_PRODUCTION } from "./env";
-
-import type { TNoteIndependence, TTagMetaData } from "@/features/metadata/type";
 import { withAssetsDirPath } from "@/features/metadata/constant";
 import {
 	convertNoExtensionPathToMD,
 	lastOfArr,
 } from "@/features/remark/wikilink/util";
+
+import { IS_PRODUCTION } from "./env";
+
+import type { TNoteIndependence, TTagMetaData } from "@/features/metadata/type";
 
 /**
  * @see {@link normalizePath}
@@ -92,13 +93,20 @@ export const safeDecodeURIComponent = (str: string) => {
 	}
 };
 
+export const convertPathsToLocalMD = (
+	paths: string[],
+): { fPath: string; header: string | undefined } => {
+	const { header, fPath: _fPath } = convertPathsToMD(paths);
+
+	const fPath = path.join(path.resolve(), withAssetsDirPath, _fPath);
+
+	return { fPath, header };
+};
 export const convertPathsToMD = (
 	paths: string[],
 ): { fPath: string; header: string | undefined } => {
 	let header: string | undefined;
 	const fPath = path.join(
-		path.resolve(),
-		withAssetsDirPath,
 		...convertNoExtensionPathToMD(paths).map((p) => {
 			// ヘッダー付きリンクの整形
 			const matched = p.match(/^.+#([^.]*).*$/);

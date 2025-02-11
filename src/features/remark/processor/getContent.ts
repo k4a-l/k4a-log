@@ -1,21 +1,21 @@
-import { readFileSync } from "node:fs";
-
 // biome-ignore lint:correctness/noUnusedImports
+import { readFileSync } from "node:fs";
 import path from "node:path";
+
+import { withAssetsDirPath } from "@/features/metadata/constant";
 import {
 	convertNoExtensionPathToMD,
 	lastOfArr,
 } from "@/features/remark/wikilink/util";
+import { convertPathsToLocalMD, safeDecodeURIComponent } from "@/utils/path";
 
-import type { VFileData } from "../frontmatter";
+import { processRemark } from "./process";
 
 import type { ReactProcessor } from ".";
+import type { VFileData } from "../frontmatter";
 import type { Root } from "mdast";
 import type { ReactElement } from "react";
 import type { Processor } from "unified";
-import { convertPathsToMD, safeDecodeURIComponent } from "@/utils/path";
-import { processRemark } from "./process";
-import { withAssetsDirPath } from "@/features/metadata/constant";
 
 export const getFileContent = (
 	paths: string[],
@@ -39,7 +39,7 @@ export const getFileContent = (
 		...convertNoExtensionPathToMD(paths).map((p) => p),
 	);
 
-	const { fPath, header } = convertPathsToMD(paths);
+	const { fPath, header } = convertPathsToLocalMD(paths);
 
 	try {
 		const fileContent = readFileSync(fPath, { encoding: "utf-8" });
