@@ -159,7 +159,7 @@ const FolderContentRecursive = React.memo(
 						</Stack>
 					))}
 				{folders.length > MAX_FILE_IN_FOLDER && (
-					<HStack justifyContent={"space-between"}>
+					<HStack justifyContent={"space-between"} mb="1">
 						<Button
 							disabled={page === 0}
 							onClick={() => setPage(page - 1)}
