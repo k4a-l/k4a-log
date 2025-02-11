@@ -1,6 +1,9 @@
 "use client";
 
-import { pageViewLength } from "@/app/api/[[...route]]/search/constant";
+import {
+	pageViewLength,
+	type sortStrategy,
+} from "@/app/api/[[...route]]/search/constant";
 import { NextLink, NextLinkButton } from "@/components/Link/NextLink";
 import { Link } from "@/park-ui/components/link";
 import { Spinner } from "@/park-ui/components/spinner";
@@ -13,6 +16,8 @@ import { type SearchQuery, getSearchPath } from "./util";
 import type { useHonoQuery } from "./hono";
 import type { PropsWithChildren } from "react";
 import { toNoteHref } from "@/features/metadata/constant";
+import { match, P } from "ts-pattern";
+import type { ValueOf } from "ts-essentials";
 
 const IngContainer = ({ children }: PropsWithChildren) => {
 	return (
@@ -93,11 +98,17 @@ export const SearchResult = ({
 									<Stack gap={0} overflow={"hidden"}>
 										<span
 											className={css({
-												fontSize: "xs",
+												fontSize: "0.4em",
 												opacity: 0.7,
 											})}
 										>
-											{r.created ? r.created : "作成日不明"}
+											{match(searchQuery.sort as ValueOf<typeof sortStrategy>)
+												.with(P.union("updated-new", "updated-old"), () =>
+													r.updated ? r.updated : "更新日不明",
+												)
+												.otherwise(() =>
+													r.created ? r.created : "作成日不明",
+												)}
 										</span>
 										<span
 											className={css({
