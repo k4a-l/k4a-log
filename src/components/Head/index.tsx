@@ -48,7 +48,7 @@ export const MyHead = ({
 			/>
 			<meta content={description} name="description" />
 			<meta content={keywords.join(",")} name="keywords" />
-			{robots ?? <meta content={robots} name="robots" />}
+			{robots ? <meta content={robots} name="robots" /> : null}
 			{/* <!-- 設定 --> */}
 			<meta
 				content="telephone=no,email=no,address=no"
