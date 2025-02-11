@@ -81,13 +81,12 @@ export const SearchPresentation = ({
 								.returnType<ReactNode>()
 								// 他の場所で表示するのでnull
 								.with("query", () => null)
-								.with("tag", () => null)
 								.with("includesTests", () => null)
 								.with("sort", () => null)
 								.with("page", () => null)
-								.with("hasLink", () => null)
 								// 以下個別
-								.with(P.union("created"), () => (
+								// タグなどは専用のフィールドがあるが、選択しているのかわからなくて検索結果が出ないということが自分でも起きたので
+								.with(P.union("created", "hasLink", "tag"), () => (
 									<ButtonTag key={k}>
 										<NextLink
 											href={getSearchPath({
