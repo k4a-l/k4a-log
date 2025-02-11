@@ -1,4 +1,3 @@
-import * as Babel from "@babel/standalone";
 import SyntaxHighlighter from "react-syntax-highlighter";
 import { docco } from "react-syntax-highlighter/dist/esm/styles/hljs";
 
@@ -6,14 +5,12 @@ import { css } from "styled-system/css";
 
 import { DynamicK4aReactCode, DynamicReactCode } from "./DynamicReactCode";
 import { Mermaid } from "./Mermaid";
+import { Suspense, type PropsWithChildren } from "react";
+import { ErrorBoundary } from "react-error-boundary";
+import { Spinner } from "@/park-ui/components/spinner";
 
-import type { MetaProps } from "@/features/metadata/type";
-import type { PropsWithChildren } from "react";
-
-export const CodeBlock = (
-	props: PropsWithChildren<HTMLElement & MetaProps>,
-) => {
-	const { children, className, vault, note } = props;
+export const CodeBlock = (props: PropsWithChildren<HTMLElement>) => {
+	const { children, className } = props;
 
 	const language = className?.match(/language-(\w+)/)?.[1];
 
@@ -42,11 +39,6 @@ export const CodeBlock = (
 	}
 
 	if (language === "react") {
-		const transpiledCode =
-			Babel.transform(String(children), {
-				presets: ["react"],
-			}).code ?? "";
-
 		return (
 			<div
 				className={css({
@@ -60,7 +52,11 @@ export const CodeBlock = (
 						p: 2,
 					})}
 				>
-					<DynamicReactCode transpiledCode={transpiledCode} />
+					<ErrorBoundary fallback={"コンパイルエラー"}>
+						<Suspense fallback={<Spinner />}>
+							<DynamicReactCode markdown={String(children)} />
+						</Suspense>
+					</ErrorBoundary>
 				</div>
 				<SyntaxHighlighter
 					className={css({ fontFamily: "monospace", margin: 0 })}
@@ -83,7 +79,19 @@ export const CodeBlock = (
 					p: 2,
 				})}
 			>
-				<DynamicK4aReactCode markdown={children as string} />
+				<ErrorBoundary
+					fallback={
+						<SyntaxHighlighter
+							className={css({ fontFamily: "monospace" })}
+							language={language}
+							style={docco}
+						>
+							{children as string}
+						</SyntaxHighlighter>
+					}
+				>
+					<DynamicK4aReactCode markdown={children as string} />
+				</ErrorBoundary>
 			</div>
 		);
 	}

@@ -1,4 +1,5 @@
 "use client";
+
 import {} from "@/components/Link/NextLink";
 import React, { Suspense, useState } from "react";
 import ReactMarkdown, { type Components } from "react-markdown";
@@ -11,10 +12,15 @@ import {} from "styled-system/jsx";
 import { ReactViewTaskList } from "./TaskList";
 import { Spinner } from "@/park-ui/components/spinner";
 
-export const DynamicReactCode = ({
-	transpiledCode,
-}: { transpiledCode: string }) => {
-	const Component = executeComponent(transpiledCode);
+import * as Babel from "@babel/standalone";
+
+export const DynamicReactCode = ({ markdown }: { markdown: string }) => {
+	const Component = executeComponent(
+		Babel.transform(String(markdown), {
+			presets: ["react"],
+		}).code ?? "",
+	);
+
 	return <Component />;
 };
 
