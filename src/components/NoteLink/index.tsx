@@ -38,9 +38,7 @@ export const BackLinks = ({ tNote }: { tNote: TNote }) => {
 						variant={"ghost"}
 					>
 						<NextLink href={toNoteHref(normalizePath(bl.path))}>
-							<FileIcon
-								className={css({ h: "1.25em", w: "1.25em", flexShrink: 0 })}
-							/>
+							<FileIcon className={css({ flexShrink: 0 })} />
 							{bl.title}
 						</NextLink>
 					</Button>
@@ -74,9 +72,7 @@ export const TwoHopLinks = ({ tNote }: { tNote: TNote }) => {
 								thl.isExists ? toNoteHref(normalizePath(thl.path)) : undefined
 							}
 						>
-							<FileIcon
-								className={css({ h: "1.25em", w: "1.25em", flexShrink: 0 })}
-							/>
+							<FileIcon className={css({ flexShrink: 0 })} />
 							{thl.title}
 						</NextLink>
 					</Button>
@@ -96,9 +92,7 @@ export const TwoHopLinks = ({ tNote }: { tNote: TNote }) => {
 							variant={"ghost"}
 						>
 							<NextLink href={toNoteHref(normalizePath(l.path))}>
-								<Link2Icon
-									className={css({ h: "1.25em", w: "1.25em", flexShrink: 0 })}
-								/>
+								<Link2Icon className={css({ flexShrink: 0 })} />
 								{l.title}
 							</NextLink>
 						</Button>

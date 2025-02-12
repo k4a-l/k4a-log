@@ -105,7 +105,6 @@ export default async function RootLayout({
 								<HStack
 									alignItems={"start"}
 									className={`${css({
-										fontSize: { sm: "1em", base: "0.8em" },
 										"& > *": {
 											wordBreak: "break-all",
 											minW: 0,
