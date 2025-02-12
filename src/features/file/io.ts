@@ -6,10 +6,10 @@ import {
 	folderFilePath,
 	vaultMetadataFilePath,
 } from "@/features/metadata/constant";
-import type { Folder } from "scripts/generate/folder";
 
 import type { BookMarkRoot } from "@/components/Bookmark";
 import type { TVault } from "@/features/metadata/type";
+import type { Folder } from "scripts/generate/folder";
 
 export const getVaultObject = (): TVault => {
 	try {

@@ -1,4 +1,5 @@
 import { MenuIcon, XIcon } from "lucide-react";
+import React from "react";
 
 import { HEADER_HEIGHT } from "@/app/layout";
 import { Drawer } from "@/park-ui/components/drawer";
@@ -6,12 +7,9 @@ import { IconButton } from "@/park-ui/components/icon-button";
 import { css } from "styled-system/css";
 import { Stack } from "styled-system/jsx";
 
-import {} from "../Bookmark";
-
 import { FolderContent } from "./Content";
 
 import type { Folder } from "scripts/generate/folder";
-import React from "react";
 
 type Props = { folders: Folder[] };
 
@@ -28,18 +26,18 @@ export const SideMenuInnerPart = React.memo(({ folders }: Props) => {
 				lg: "flex",
 				base: "none",
 			}}
-			w="auto"
 			flexGrow={1}
 			maxW="300px"
 			overflowX={"hidden"}
 			overflowY={"auto"}
 			position={"sticky"}
+			rounded={"md"}
+			scrollbarWidth={"thin"}
 			style={{
 				top: `calc(${HEADER_HEIGHT})`,
 				maxHeight: `calc(100vh - ${HEADER_HEIGHT} - 8px)`,
 			}}
-			rounded={"md"}
-			scrollbarWidth={"thin"}
+			w="auto"
 		>
 			<FolderContent folders={folders} />
 		</Stack>

@@ -1,17 +1,18 @@
 "use client";
 
 import path from "path-browserify";
+import useSWR from "swr";
 
+import { client, fetcher } from "@/app/search/hono";
 import { NextLink, NextLinkButton } from "@/components/Link/NextLink";
 import { Link } from "@/park-ui/components/link";
-import { normalizePath } from "@/utils/path";
-import { Stack } from "styled-system/jsx";
-import { css } from "styled-system/css";
-import { client, fetcher } from "@/app/search/hono";
 import { Spinner } from "@/park-ui/components/spinner";
-import useSWR from "swr";
-import type { InferResponseType } from "hono";
+import { normalizePath } from "@/utils/path";
+import { css } from "styled-system/css";
+import { Stack } from "styled-system/jsx";
+
 import type { TasksResponse } from "@/app/api/[[...route]]/vault";
+import type { InferResponseType } from "hono";
 
 const tasksAPI = client.api.vault.tasks;
 const tasksURL = tasksAPI.$url();

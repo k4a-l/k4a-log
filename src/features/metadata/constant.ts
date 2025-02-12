@@ -1,5 +1,6 @@
-import { pathSplit } from "@/utils/path";
 import path from "path-browserify";
+
+import { pathSplit } from "@/utils/path";
 
 export const assetsDirPath = "assets";
 

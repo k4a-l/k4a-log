@@ -1,9 +1,10 @@
 "use client";
-import { type PropsWithChildren, useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
-import { css } from "styled-system/css";
-import { IconButton } from "@/park-ui/components/icon-button";
 import { LinkIcon, XIcon } from "lucide-react";
+import { type PropsWithChildren, useEffect, useRef, useState } from "react";
+
+import { IconButton } from "@/park-ui/components/icon-button";
+import { css } from "styled-system/css";
 import { HStack, Stack } from "styled-system/jsx";
 
 export default function FloatingPopup({ children }: PropsWithChildren) {
@@ -60,23 +61,23 @@ export default function FloatingPopup({ children }: PropsWithChildren) {
 			{/* 右下のフロートボタン */}
 			{!isBottomVisible && !isPopupOpen && (
 				<motion.div
+					animate={{ opacity: 1, scale: 1 }}
 					className={css({
 						position: "fixed",
 						bottom: 2,
 						right: 2,
 						zIndex: "popover",
 					})}
-					initial={{ opacity: 0, scale: 0.8 }}
-					animate={{ opacity: 1, scale: 1 }}
 					exit={{ opacity: 0, scale: 0.8 }}
+					initial={{ opacity: 0, scale: 0.8 }}
 				>
 					<IconButton
-						variant={"subtle"}
 						bg="white"
 						colorPalette={"white"}
 						onClick={() => setIsPopupOpen(true)}
 						shadow={"md"}
 						size={{ md: "md", base: "sm" }}
+						variant={"subtle"}
 					>
 						<LinkIcon />
 					</IconButton>
@@ -86,7 +87,7 @@ export default function FloatingPopup({ children }: PropsWithChildren) {
 			{/* フロートポップアップ */}
 			{!isBottomVisible && isPopupOpen && (
 				<motion.div
-					ref={popupRef}
+					animate={{ opacity: 1, y: 0 }}
 					className={css({
 						position: "fixed",
 						bottom: 2,
@@ -98,11 +99,11 @@ export default function FloatingPopup({ children }: PropsWithChildren) {
 						h: "calc(100% - 32px - 16px - 4px)",
 						zIndex: "popover",
 					})}
-					initial={{ opacity: 0, y: 10 }}
-					animate={{ opacity: 1, y: 0 }}
 					exit={{ opacity: 0, y: 10 }}
+					initial={{ opacity: 0, y: 10 }}
+					ref={popupRef}
 				>
-					<HStack position={"sticky"} top={0} justifyContent={"end"}>
+					<HStack justifyContent={"end"} position={"sticky"} top={0}>
 						<IconButton
 							onClick={() => setIsPopupOpen(false)}
 							size="sm"

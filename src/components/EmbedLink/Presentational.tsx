@@ -1,9 +1,9 @@
 "use client";
+import { Link } from "@/park-ui/components/link";
 import { css } from "styled-system/css";
 import { HStack, Stack } from "styled-system/jsx";
 
 import type { OgObject } from "open-graph-scraper/dist/lib/types";
-import { Link } from "@/park-ui/components/link";
 
 export const EmbeddedCardPresentational = ({
 	url,

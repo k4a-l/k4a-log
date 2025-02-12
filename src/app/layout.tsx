@@ -5,6 +5,8 @@ import { GoogleAnalytics } from "@next/third-parties/google";
 import { HashIcon, SearchIcon } from "lucide-react";
 import Image from "next/image";
 import path from "path-browserify";
+import { Suspense } from "react";
+import { SWRConfig } from "swr";
 
 import { getSearchPath } from "@/app/search/util";
 import Scroll from "@/components/Hook/Scroll";
@@ -15,13 +17,11 @@ import { getFolderObject } from "@/features/file/io";
 import { notesDirPath } from "@/features/metadata/constant";
 import { Button } from "@/park-ui/components/button";
 import { Link } from "@/park-ui/components/link";
+import { Spinner } from "@/park-ui/components/spinner";
 import { css } from "styled-system/css";
 import { HStack, Spacer, Stack } from "styled-system/jsx";
 
 import type React from "react";
-import { Spinner } from "@/park-ui/components/spinner";
-import { Suspense } from "react";
-import { SWRConfig } from "swr";
 
 export const HEADER_HEIGHT = "34px";
 
@@ -44,10 +44,10 @@ export default async function RootLayout({
 						bgColor: "neutral.100",
 						fontSize: { sm: "1em", base: "0.8em" },
 					})}
+					gap={0}
 					h="auto"
 					minH="full"
 					w="full"
-					gap={0}
 				>
 					<HStack
 						className={css({
@@ -103,7 +103,6 @@ export default async function RootLayout({
 								w="full"
 							>
 								<HStack
-									flex={1}
 									alignItems={"start"}
 									className={`${css({
 										fontSize: { sm: "1em", base: "0.8em" },
@@ -112,11 +111,11 @@ export default async function RootLayout({
 											minW: 0,
 										},
 									})}, `}
+									flex={1}
 									h="100%"
 									justifyContent={"center"}
-									w="100%"
 									p={2}
-									// flexBasis={"1000px"}
+									w="100%"
 								>
 									<SWRConfig
 										value={{

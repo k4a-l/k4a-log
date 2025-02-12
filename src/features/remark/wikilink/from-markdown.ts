@@ -1,3 +1,5 @@
+import path from "path-browserify";
+
 import { normalizePath, pathSplit, safeDecodeURIComponent } from "@/utils/path";
 
 import { getWikiLinkExtension, lastOfArr, pathResolver } from "./util";
@@ -9,7 +11,6 @@ import type {
 	Extension as FromMarkdownExtension,
 	Token,
 } from "mdast-util-from-markdown";
-import path from "path-browserify";
 
 export function fromMarkdown(
 	opts: Required<WikiLinkOption>,

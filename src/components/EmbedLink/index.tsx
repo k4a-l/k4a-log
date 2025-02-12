@@ -1,23 +1,22 @@
 import { YouTubeEmbed } from "@next/third-parties/google";
-import { ErrorBoundary } from "react-error-boundary";
-
-import { css } from "styled-system/css";
-import { Stack } from "styled-system/jsx";
 import ogs from "open-graph-scraper";
-
-import {
-	EmbeddedCardError,
-	EmbeddedCardPresentational,
-} from "./Presentational";
-
 import {
 	Suspense,
 	type AnchorHTMLAttributes,
 	type PropsWithChildren,
 } from "react";
-import { Spinner } from "@/park-ui/components/spinner";
-import { Link } from "@/park-ui/components/link";
+import { ErrorBoundary } from "react-error-boundary";
+
 import { NextLink } from "@/components/Link/NextLink";
+import { Link } from "@/park-ui/components/link";
+import { Spinner } from "@/park-ui/components/spinner";
+import { css } from "styled-system/css";
+import { Stack } from "styled-system/jsx";
+
+import {
+	EmbeddedCardError,
+	EmbeddedCardPresentational,
+} from "./Presentational";
 
 const EmbeddedLinkWithBoundary = ({
 	href,
@@ -77,7 +76,7 @@ const EmbeddedLink = async ({
 			: {},
 	});
 
-	return <EmbeddedCardPresentational url={url} ogpData={ogObject.result} />;
+	return <EmbeddedCardPresentational ogpData={ogObject.result} url={url} />;
 };
 
 export { EmbeddedLinkWithBoundary as EmbeddedLink };

@@ -9,10 +9,11 @@ import { type NoteMeta, sortByCreatedNew } from "@/features/note/util";
 import { idParser } from "@/features/remark/frontmatter";
 import { isSamePath } from "@/utils/path";
 
+import { getFileList } from "../../util";
+
 import { pageViewLength, sortStrategy } from "./constant";
 
 import type { BlankEnv, BlankInput } from "hono/types";
-import { getFileList } from "../../util";
 
 const vaultObject = getVaultObject();
 

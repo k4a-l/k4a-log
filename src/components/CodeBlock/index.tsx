@@ -1,13 +1,13 @@
+import { Suspense, type PropsWithChildren } from "react";
+import { ErrorBoundary } from "react-error-boundary";
 import SyntaxHighlighter from "react-syntax-highlighter";
 import { docco } from "react-syntax-highlighter/dist/esm/styles/hljs";
 
+import { Spinner } from "@/park-ui/components/spinner";
 import { css } from "styled-system/css";
 
 import { DynamicK4aReactCode, DynamicReactCode } from "./DynamicReactCode";
 import { Mermaid } from "./Mermaid";
-import { Suspense, type PropsWithChildren } from "react";
-import { ErrorBoundary } from "react-error-boundary";
-import { Spinner } from "@/park-ui/components/spinner";
 
 export const CodeBlock = (props: PropsWithChildren<HTMLElement>) => {
 	const { children, className } = props;

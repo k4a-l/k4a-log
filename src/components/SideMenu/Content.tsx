@@ -1,8 +1,10 @@
 "use client";
 import { ChevronDownIcon, ChevronRightIcon, FileIcon } from "lucide-react";
+import { usePathname } from "next/navigation";
 import React, { useMemo, useState } from "react";
 
 import { NextLinkButton } from "@/components/Link/NextLink";
+import { toNoteHref } from "@/features/metadata/constant";
 import { Button } from "@/park-ui/components/button";
 import { isSamePath, normalizePath, pathSplit } from "@/utils/path";
 import { css } from "styled-system/css";
@@ -10,8 +12,6 @@ import { Box, HStack, Stack } from "styled-system/jsx";
 
 import type { FindFromUnion } from "@/utils/type";
 import type { Folder } from "scripts/generate/folder";
-import { usePathname } from "next/navigation";
-import { toNoteHref } from "@/features/metadata/constant";
 
 const RenderFolder = React.memo(
 	({
@@ -77,8 +77,8 @@ const RenderFolder = React.memo(
 				{isOpen && (
 					<Box borderLeftColor={"gray.3"} borderLeftWidth={1} ml={4}>
 						<FolderContentRecursive
-							folders={folder.children}
 							depth={depth + 1}
+							folders={folder.children}
 						/>
 					</Box>
 				)}
@@ -134,6 +134,7 @@ const RenderFile = React.memo(
 );
 
 const MAX_FILE_IN_FOLDER = 10;
+
 const FolderContentRecursive = React.memo(
 	({ folders, depth }: { folders: Folder[]; depth: number }) => {
 		const [page, setPage] = useState(0);
@@ -152,7 +153,7 @@ const FolderContentRecursive = React.memo(
 							key={f.path}
 						>
 							{f.type === "folder" ? (
-								<RenderFolder folder={f} depth={depth} />
+								<RenderFolder depth={depth} folder={f} />
 							) : (
 								<RenderFile folder={f} />
 							)}
@@ -163,8 +164,8 @@ const FolderContentRecursive = React.memo(
 						<Button
 							disabled={page === 0}
 							onClick={() => setPage(page - 1)}
-							variant={"outline"}
 							size="xs"
+							variant={"outline"}
 							w="full"
 						>
 							{"<"}
@@ -172,8 +173,8 @@ const FolderContentRecursive = React.memo(
 						<Button
 							disabled={(page + 1) * 10 >= folders.length}
 							onClick={() => setPage(page + 1)}
-							variant={"outline"}
 							size="xs"
+							variant={"outline"}
 							w="full"
 						>
 							{">"}

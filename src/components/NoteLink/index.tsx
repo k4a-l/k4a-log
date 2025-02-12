@@ -1,13 +1,13 @@
 import { FileIcon, Link2Icon } from "lucide-react";
 
 import { NextLink } from "@/components/Link/NextLink";
+import { toNoteHref } from "@/features/metadata/constant";
 import { Button } from "@/park-ui/components/button";
 import { normalizePath } from "@/utils/path";
 import { css } from "styled-system/css";
 import { Stack } from "styled-system/jsx";
 
 import type { TNote } from "@/features/metadata/type";
-import { toNoteHref } from "@/features/metadata/constant";
 
 export const BackLinks = ({ tNote }: { tNote: TNote }) => {
 	return (
@@ -57,6 +57,7 @@ export const TwoHopLinks = ({ tNote }: { tNote: TNote }) => {
 				<Stack gap={0} key={thl.path}>
 					<Button
 						asChild
+						disabled={!thl.isExists}
 						fontWeight={"normal"}
 						height={"auto"}
 						justifyContent={"start"}
@@ -67,7 +68,6 @@ export const TwoHopLinks = ({ tNote }: { tNote: TNote }) => {
 						textDecoration={"none"}
 						textWrap={"wrap"}
 						variant={"ghost"}
-						disabled={!thl.isExists}
 					>
 						<NextLink
 							href={

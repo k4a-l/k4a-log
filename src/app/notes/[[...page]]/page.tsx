@@ -1,6 +1,8 @@
-import NotePage from "./PagePresentation";
 import { Suspense } from "react";
+
 import { Spinner } from "@/park-ui/components/spinner";
+
+import NotePage from "./PagePresentation";
 
 export const revalidate = 600; // 10分ごとに再検証する
 

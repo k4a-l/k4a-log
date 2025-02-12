@@ -1,3 +1,4 @@
+import path from "path-browserify";
 import { remark } from "remark";
 import remarkFrontmatter, {
 	type Options as RemarkFrontmatterOptions,
@@ -7,15 +8,13 @@ import remarkParse from "remark-parse";
 
 import { assetsDirPath } from "@/features/metadata/constant";
 import wikiLinkPlugin from "@/features/remark/wikilink";
+import { normalizePath, safeDecodeURIComponent } from "@/utils/path";
 
+import type { PathMap } from "@/features/metadata/type";
 import type { WikiLinkOption } from "@/features/remark/wikilink/type";
 import type { FileNode } from "@/features/remark/wikilink/util";
 import type { Root } from "mdast";
 import type { Processor } from "unified";
-
-import { normalizePath, safeDecodeURIComponent } from "@/utils/path";
-import type { PathMap } from "@/features/metadata/type";
-import path from "path-browserify";
 
 export const createParseProcessor = (
 	_parentsLinks: string[],

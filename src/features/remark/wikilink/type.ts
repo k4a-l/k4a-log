@@ -1,5 +1,5 @@
-import type { PathMap } from "@/features/metadata/type";
 import type { FileMap, FileNode } from "./util";
+import type { PathMap } from "@/features/metadata/type";
 import type { WikiLink } from "@/types/mdast";
 
 export type WikiLinkOption = {

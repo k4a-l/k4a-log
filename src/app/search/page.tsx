@@ -1,11 +1,11 @@
 import { PageWithTransition } from "@/components/Common/pageWithTransition";
 import { MyHead } from "@/components/Head";
 import { getVaultObject } from "@/features/file/io";
+import { safeDecodeURIComponent } from "@/utils/path";
 import { Stack } from "styled-system/jsx";
 
 import { SearchPresentation } from "./SearchPresentation";
 import { type SearchQuery, searchPath } from "./util";
-import { safeDecodeURIComponent } from "@/utils/path";
 
 export type SearchParams = Promise<SearchQuery>;
 
@@ -38,9 +38,9 @@ export default async function Page({
 				description={""}
 				imagePath={undefined}
 				keywords={[]}
+				robots="none"
 				title={"検索"}
 				url={searchPath}
-				robots="none"
 			/>
 			<Stack alignItems={"center"} h="full" w="full">
 				<SearchPresentation

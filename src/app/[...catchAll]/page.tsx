@@ -1,6 +1,5 @@
-import path from "path-browserify";
-
 import { redirect } from "next/navigation";
+import path from "path-browserify";
 
 import { blogDirPath, notesDirPath } from "@/features/metadata/constant";
 import { strictEntries, strictFromEntries } from "@/utils/object";

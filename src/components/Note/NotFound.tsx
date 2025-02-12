@@ -6,6 +6,7 @@ import {
 	RabbitIcon,
 	SearchIcon,
 } from "lucide-react";
+import path from "path-browserify";
 
 import { searchPath } from "@/app/search/util";
 import { NextLink, NextLinkButton } from "@/components/Link/NextLink";
@@ -15,7 +16,6 @@ import { Link } from "@/park-ui/components/link";
 import { normalizePath, safeDecodeURIComponent } from "@/utils/path";
 import { css } from "styled-system/css";
 import { HStack, Spacer, Stack } from "styled-system/jsx";
-import path from "path-browserify";
 
 export const NoteNotFound = ({ href: _href }: { href: string }) => {
 	const href = safeDecodeURIComponent(_href.split(/\\|\//).join("/"));

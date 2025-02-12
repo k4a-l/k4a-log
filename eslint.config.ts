@@ -13,6 +13,7 @@ export default [
 		files: ["**/*.{js,jsx,ts,tsx}"],
 		rules: {
 			"@next/next/no-img-element": "off",
+			"react/display-name": "off",
 			"import/order": [
 				"warn",
 				{

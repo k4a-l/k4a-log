@@ -5,11 +5,11 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
 import { IconButton } from "@/park-ui/components/icon-button";
+import { safeDecodeURIComponent } from "@/utils/path";
 import { css } from "styled-system/css";
 import { HStack } from "styled-system/jsx";
 
 import { getSearchPath } from "./util";
-import { safeDecodeURIComponent } from "@/utils/path";
 
 export const SearchBox = () => {
 	const searchParams = useSearchParams();

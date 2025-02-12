@@ -11,12 +11,13 @@ import {
 
 import { getSearchPath } from "@/app/search/util";
 import { NextLink, NextLinkIconButton } from "@/components/Link/NextLink";
+import { toNoteHref } from "@/features/metadata/constant";
 import { Link } from "@/park-ui/components/link";
 import { css } from "styled-system/css";
 import { HStack } from "styled-system/jsx";
+
 import type { WikiLinkData } from "@/types/mdast";
 import type { StrictOmit } from "ts-essentials";
-import { toNoteHref } from "@/features/metadata/constant";
 
 type LinkPresentationalType = StrictOmit<
 	WikiLinkData["hProperties"],

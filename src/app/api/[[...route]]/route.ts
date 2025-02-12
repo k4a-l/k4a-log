@@ -2,9 +2,9 @@ import { Hono } from "hono";
 import { handle } from "hono/vercel";
 
 import { searchAPI } from "./search";
+import { noteAPI, vaultAPI } from "./vault";
 
 import type { PageConfig } from "next";
-import { noteAPI, vaultAPI } from "./vault";
 
 // basePath は API ルートのベースパスを指定します
 // 以降、新たに生やす API ルートはこのパスを基準に追加されます

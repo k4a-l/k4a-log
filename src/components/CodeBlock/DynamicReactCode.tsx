@@ -1,6 +1,7 @@
 "use client";
 
 import {} from "@/components/Link/NextLink";
+import * as Babel from "@babel/standalone";
 import React, { Suspense, useState } from "react";
 import ReactMarkdown, { type Components } from "react-markdown";
 import {} from "react/jsx-runtime";
@@ -9,10 +10,9 @@ import remarkGfm from "remark-gfm";
 import remarkRehype from "remark-rehype";
 
 import {} from "styled-system/jsx";
-import { ReactViewTaskList } from "./TaskList";
 import { Spinner } from "@/park-ui/components/spinner";
 
-import * as Babel from "@babel/standalone";
+import { ReactViewTaskList } from "./TaskList";
 
 export const DynamicReactCode = ({ markdown }: { markdown: string }) => {
 	const Component = executeComponent(

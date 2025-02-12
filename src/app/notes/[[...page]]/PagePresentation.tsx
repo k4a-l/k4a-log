@@ -6,6 +6,7 @@ import { MyHead } from "@/components/Head";
 import { BeforeAfterNote } from "@/components/Note/BeforeAfter";
 import { NoteNotFound } from "@/components/Note/NotFound";
 import { BackLinks, TwoHopLinks } from "@/components/NoteLink";
+import FloatingPopup from "@/components/NoteLink/Float";
 import { SideTableOfContents } from "@/components/Toc";
 import { getVaultObject } from "@/features/file/io";
 import { blogDirPath } from "@/features/metadata/constant";
@@ -25,7 +26,6 @@ import { css } from "styled-system/css";
 import { Spacer, Stack } from "styled-system/jsx";
 
 import { Client } from "./Client";
-import FloatingPopup from "@/components/NoteLink/Float";
 
 type Props = { page: string[] };
 
@@ -93,10 +93,10 @@ export default async function NotePage({ page }: Props) {
 				url={notePathAbsolute}
 			/>
 			<Stack
+				flexShrink={1}
 				maxW={"max(1000px,100%)"}
 				minW={0}
 				w={{ base: "100%", lg: "700px", xl: "1000px" }}
-				flexShrink={1}
 			>
 				<PageWithTransition>
 					<Stack bg="white" p={4} rounded={"md"}>

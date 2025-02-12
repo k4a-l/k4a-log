@@ -1,5 +1,12 @@
+import { FileWarningIcon } from "lucide-react";
+import { Suspense, type FC } from "react";
+import { ErrorBoundary } from "react-error-boundary";
+
+import { toNoteHref } from "@/features/metadata/constant";
+import { Spinner } from "@/park-ui/components/spinner";
 import { css } from "styled-system/css";
 
+import { EmbedLinkMarkdown, EmbedLinkMarkdownLayout } from "./EmbedMarkdown";
 import {
 	EmbedLinkImage,
 	EmbedLinkPdf,
@@ -8,13 +15,8 @@ import {
 	TransitionLinkDead,
 	TransitionLinkExist,
 } from "./LinkPresentational";
+
 import type { WikiLinkData } from "@/types/mdast";
-import { Suspense, type FC } from "react";
-import { toNoteHref } from "@/features/metadata/constant";
-import { Spinner } from "@/park-ui/components/spinner";
-import { EmbedLinkMarkdown, EmbedLinkMarkdownLayout } from "./EmbedMarkdown";
-import { ErrorBoundary } from "react-error-boundary";
-import { FileWarningIcon } from "lucide-react";
 
 export type WikiLinkComponentProps = WikiLinkData["hProperties"];
 
@@ -66,7 +68,7 @@ export const EmbedLinkContainer: FC<WikiLinkComponentProps> = ({
 
 	if (type === "link") {
 		return (
-			<EmbedLinkMarkdownLayout title={alias ?? title} href={href}>
+			<EmbedLinkMarkdownLayout href={href} title={alias ?? title}>
 				<ErrorBoundary fallback={<FileWarningIcon />}>
 					<Suspense fallback={<Spinner />}>
 						<EmbedLinkMarkdown
