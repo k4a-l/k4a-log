@@ -52,6 +52,12 @@ export const EmbedLinkContainer: FC<WikiLinkComponentProps> = ({
 }) => {
 	const { href, title, alias, ...others } = props;
 
+	// 埋め込みでもdeadLinkだったらTransitionLinkDeadを表示
+	// そのままマークダウンなどを取得しようとすると基本的にエラーになるが、同名のものがルートあった場合に取得できてしまうので
+	if (isDeadLink === "true") {
+		return <TransitionLinkDead {...props} />;
+	}
+
 	const withNoteHref = toNoteHref(href);
 
 	if (type === "img") {
