@@ -75,6 +75,20 @@
 			color: #888;
 			font-size: 0.8em;
 		}
+
+		.paragraph-wrap {
+			white-space: normal;
+			display: inline-block;
+			width: 100%;
+			min-width: 0;
+
+			& > img,
+			& > video {
+				display: inline;
+				vertical-align: top;
+				gap: 0;
+			}
+		}
 	}
 
 	.toc {

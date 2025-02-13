@@ -2,7 +2,7 @@ import path from "path-browserify";
 
 import { blogDirPath, workDirPath } from "@/features/metadata/constant";
 import { strictEntries, strictFromEntries } from "@/utils/object";
-import { normalizePath } from "@/utils/path";
+import { normalizePath, pathSplit } from "@/utils/path";
 
 import type { Result } from "mdast-util-toc";
 
@@ -104,7 +104,13 @@ const specialId = {
 		matcher: (file) =>
 			file.path.startsWith(normalizePath(path.join("/", blogDirPath))) ||
 			file.path.startsWith(normalizePath(path.join("/", workDirPath))),
-		parser: (file) => file.path.split(/\\|\//).slice(0, -1).join("/"),
+		parser: (file) => {
+			const splitted = pathSplit(file.path);
+			// blog/直下だったらそのまま
+			if (splitted.length <= 2) return splitted.join("/");
+			// blog/yyyy/等の場合は最後のディレクトリ名を使用
+			return file.path.split(/\\|\//).slice(0, -1).join("/");
+		},
 	},
 } satisfies {
 	[key: string]: {
