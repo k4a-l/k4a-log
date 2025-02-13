@@ -109,7 +109,6 @@ export const SideTableOfContents = ({
 
 	useEffect(() => {
 		const handleScroll = _.throttle(() => {
-			// const embedMarkdownClass = "embed-markdown";
 			const hTags = ["h1", "h2", "h3", "h4", "h5", "h6"];
 			const headings = Array.from(
 				document.querySelectorAll(hTags.join(", ")),

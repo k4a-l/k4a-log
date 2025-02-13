@@ -37,7 +37,7 @@ export const EmbedLinkMarkdownLayout: FC<
 				borderColor: "gray.3",
 				w: "100%",
 			})}, ${embedMarkdownClass}`}
-			my={4}
+			my={2}
 		>
 			<HStack
 				className={css({
