@@ -13,7 +13,11 @@ import { NextLink, NextLinkButton } from "@/components/Link/NextLink";
 import { getVaultObject } from "@/features/file/io";
 import { notesDirPath, toNoteHref } from "@/features/metadata/constant";
 import { Link } from "@/park-ui/components/link";
-import { normalizePath, safeDecodeURIComponent } from "@/utils/path";
+import {
+	getLinkOrId,
+	normalizePath,
+	safeDecodeURIComponent,
+} from "@/utils/path";
 import { css } from "styled-system/css";
 import { HStack, Spacer, Stack } from "styled-system/jsx";
 
@@ -95,8 +99,10 @@ export const NoteNotFound = ({ href: _href }: { href: string }) => {
 								})}
 							>
 								{result.map((r) => {
-									const pathOrId =
-										vault.pathMap[normalizePath(r.item.path)] ?? r.item.path;
+									const linkOrId = getLinkOrId(
+										normalizePath(r.item.path),
+										vault.pathMap,
+									);
 									return (
 										<li key={r.item.path}>
 											<Link
@@ -107,7 +113,7 @@ export const NoteNotFound = ({ href: _href }: { href: string }) => {
 												lineHeight={"1em"}
 											>
 												<NextLink
-													href={toNoteHref("/", normalizePath(pathOrId))}
+													href={toNoteHref("/", normalizePath(linkOrId))}
 												>
 													<span
 														className={css({
@@ -123,7 +129,7 @@ export const NoteNotFound = ({ href: _href }: { href: string }) => {
 															lineHeight: "1.8em",
 														})}
 													>
-														({normalizePath(pathOrId).split("/").join("/")})
+														({normalizePath(linkOrId).split("/").join("/")})
 													</span>
 												</NextLink>
 											</Link>

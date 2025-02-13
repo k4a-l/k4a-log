@@ -8,7 +8,11 @@ import {
 
 import { IS_PRODUCTION } from "./env";
 
-import type { TNoteIndependence, TTagMetaData } from "@/features/metadata/type";
+import type {
+	PathMap,
+	TNoteIndependence,
+	TTagMetaData,
+} from "@/features/metadata/type";
 
 /**
  * @see {@link normalizePath}
@@ -119,4 +123,9 @@ export const convertPathsToMD = (
 	);
 
 	return { fPath, header };
+};
+
+export const getLinkOrId = (link: string, pathMap: PathMap): string => {
+	const pathOrId = pathMap[normalizePath(link)] ?? link;
+	return pathOrId;
 };

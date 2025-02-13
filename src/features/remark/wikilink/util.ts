@@ -206,6 +206,11 @@ export function getWikiLinkExtension(value: string | undefined): {
 		return { type: "video", extension: strippedExtension };
 	}
 
+	const isMatchMD = value.match(/\.md$/);
+	if (isMatchMD) {
+		return { type: "link", extension: strippedExtension };
+	}
+
 	const isMatchAnyExtension = value.match(/\.([0-9a-z]{1,4})$/)?.[0];
 	if (isMatchAnyExtension) {
 		return { type: "unknown", extension: strippedExtension };

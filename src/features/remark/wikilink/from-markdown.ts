@@ -1,6 +1,11 @@
 import path from "path-browserify";
 
-import { normalizePath, pathSplit, safeDecodeURIComponent } from "@/utils/path";
+import {
+	getLinkOrId,
+	normalizePath,
+	pathSplit,
+	safeDecodeURIComponent,
+} from "@/utils/path";
 
 import { getWikiLinkExtension, lastOfArr, pathResolver } from "./util";
 
@@ -160,18 +165,18 @@ const createWikiLinkData = (
 	];
 	const isDeadLink = _link === undefined;
 
-	const pathOrId = path.join(opts.pathMap[normalizePath(link)] ?? link);
+	const linkOrId = getLinkOrId(normalizePath(link), opts.pathMap);
 
 	const hProperties: WikiLinkData["hProperties"] = {
 		className: classNames,
-		href: isDeadLink ? pathOrId : hrefTemplate(pathOrId),
+		href: isDeadLink ? linkOrId : hrefTemplate(linkOrId),
 		title: displayName,
 		assetsDirPath: opts.assetPath,
 		"is-embed": isCirclerReference ? undefined : isEmbed ? "true" : undefined,
 		...(type === "unknown"
 			? {
 					type: "unknown",
-					alias: `⚠️「${displayName}」 を埋め込み表示できません`,
+					alias: `⚠️「${displayName}」 を${isEmbed ? "埋め込み" : ""}表示できません`,
 				}
 			: isCirclerReference && isEmbed
 				? {

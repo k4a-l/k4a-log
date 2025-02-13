@@ -93,7 +93,7 @@ export const EmbedLinkContainer: FC<WikiLinkComponentProps> = ({
 			{...others}
 			className={css({ bg: "black.a2", px: 2, py: 1, rounded: "md" })}
 		>
-			{alias ?? `⚠️${title}: を埋め込み表示できません`}
+			{alias ?? title}
 		</span>
 	);
 };

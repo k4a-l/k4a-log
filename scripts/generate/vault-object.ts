@@ -1,8 +1,8 @@
 import fs, {} from "node:fs";
 import { readFile } from "node:fs/promises";
-import path from "path-browserify";
 
 import { toString as mdastToString } from "mdast-util-to-string";
+import path from "path-browserify";
 import { v4 as uuid } from "uuid";
 import { VFile } from "vfile";
 
@@ -27,6 +27,7 @@ import {
 import { writeFileRecursive } from "@/utils/file";
 import {
 	dividePathAndExtension,
+	getLinkOrId,
 	hasExtensionButNotMD,
 	isSamePath,
 	isTestOnlyNote,
@@ -228,14 +229,17 @@ export const convertNodeToFileMetadata = (
 			const isOwnLink = isSamePath(properties.href, currentPath);
 
 			if (!properties.href.startsWith("#") && !isOwnLink) {
-				const path = normalizePath(
+				const link = normalizePath(
 					properties.href.split("#")[0] ?? properties.href,
 				);
-				const title = properties.title.split("#")[0] ?? properties.title;
+				const title =
+					properties.alias ??
+					properties.title.split("#")[0] ??
+					properties.title;
 				if (properties["is-embed"]) {
 					r.embeds.push({
 						title: title,
-						path: path,
+						path: link,
 						aliasTitle: properties.alias,
 						position: node.position,
 						isTagLink: properties.isTagLink === "true",
@@ -243,7 +247,7 @@ export const convertNodeToFileMetadata = (
 				} else {
 					r.links.push({
 						title: title,
-						path: path,
+						path: link,
 						aliasTitle: properties.alias,
 						position: node.position,
 						isTagLink: properties.isTagLink === "true",
@@ -347,6 +351,7 @@ export const createNoteMetaData = (
 
 export const injectAllLinksToTNoteIndependence = (
 	iNotes: TNoteIndependence[],
+	pathMap: PathMap,
 ): TNote[] => {
 	const notes = iNotes.map((p): TNote => {
 		return { ...p, backLinks: [], twoHopLinks: [] };
@@ -369,7 +374,7 @@ export const injectAllLinksToTNoteIndependence = (
 			const target = notes[targetIndex];
 			if (target?.backLinks.find((t) => t.path === note.path)) continue;
 			notes[targetIndex]?.backLinks.push({
-				path: note.path,
+				path: getLinkOrId(note.path, pathMap),
 				title: note.basename,
 				thumbnailPath: note.thumbnailPath,
 			});
@@ -457,11 +462,11 @@ export const injectAllLinksToTNoteIndependence = (
 
 			baseNote.twoHopLinks.push({
 				links: twoHopNotes.map((t) => ({
-					path: t.path,
+					path: getLinkOrId(t.path, pathMap),
 					title: t.basename,
 					thumbnailPath: t.thumbnailPath,
 				})),
-				path: link.path,
+				path: getLinkOrId(link.path, pathMap),
 				title: link.title,
 				isExists: isExists,
 			});
@@ -563,7 +568,7 @@ export const createVaultFile = async (): Promise<TVault> => {
 			path: normalizePath(path.join(f.path)),
 		}));
 	loggingWithColor("cyan", "injectAllLinksToTNoteIndependence start");
-	const tNotes = injectAllLinksToTNoteIndependence(tiNotes);
+	const tNotes = injectAllLinksToTNoteIndependence(tiNotes, pathMap);
 	loggingWithColor("cyan", "createCreatedMap start");
 	const createdMap = createCreatedMap(tNotes);
 
