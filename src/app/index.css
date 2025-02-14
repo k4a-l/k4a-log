@@ -237,6 +237,11 @@
 		font-weight: bold;
 
 		color: var(--color-callout-fg);
+
+		.callout-title-inner {
+			display: flex;
+			flex-wrap: wrap;
+		}
 	}
 
 	blockquote[data-callout] .callout-title-icon svg {
@@ -253,7 +258,7 @@
 
 	blockquote[data-callout="tip"],
 	blockquote[data-callout="abstract"],
-	blockquote[data-callout="abstract"] {
+	blockquote[data-callout="hint"] {
 		--color-callout-bg: var(--color-tip-bg);
 		--color-callout-fg: var(--color-tip-fg);
 	}

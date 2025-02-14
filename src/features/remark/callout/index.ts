@@ -54,7 +54,7 @@ export interface Config {
 	/**
 	 * the custom class name to be added to the title text element
 	 */
-	titleTextClass: string;
+	titleInnerClass: string;
 	/**
 	 * a function to transform the title text, you can use it to append custom strings
 	 */
@@ -90,7 +90,7 @@ const defaultConfig: Config = {
 	blockquoteClass: undefined,
 	titleClass: "callout-title",
 	titleTextTagName: "div",
-	titleTextClass: "callout-title-text",
+	titleInnerClass: "callout-title-inner",
 	titleTextTransform: (title: string) => title.trim(),
 	iconTagName: "div",
 	iconClass: "callout-title-icon",
@@ -174,7 +174,7 @@ const RemarkCalloutPlugin: Plugin = (
 		iconClass,
 		contentClass,
 		callouts,
-		titleTextClass,
+		titleInnerClass: titleTextClass,
 		titleTextTagName,
 		titleTextTransform,
 	} = mergedConfig;
@@ -211,8 +211,13 @@ const RemarkCalloutPlugin: Plugin = (
 					const breakElIndex = remainingLines.findIndex(
 						(line) => line.type === "break",
 					);
-					const titleChildren = remainingLines.slice(0, breakElIndex);
-					const contentChildren = remainingLines.slice(breakElIndex + 1);
+					const titleChildren = remainingLines.slice(
+						0,
+						breakElIndex === -1 ? 0 : breakElIndex,
+					);
+					const contentChildren = remainingLines.slice(
+						breakElIndex === -1 ? 0 : breakElIndex + 1,
+					);
 
 					if (memoizedContainsKey(callouts, calloutType)) {
 						icon = callouts[calloutType.toLowerCase()] ?? pencilIcon;
@@ -225,6 +230,15 @@ const RemarkCalloutPlugin: Plugin = (
 					const title =
 						array.input.slice(matched[0].length).trim() ||
 						calloutType.toUpperCase();
+
+					console.log({
+						breakElIndex,
+						titleChildren,
+						title,
+						contentChildren,
+						otherChildren,
+						remainingLines,
+					});
 
 					const iconHTML = `<${iconTagName} class="${iconClass}">${icon}</${iconTagName}>`;
 
@@ -239,9 +253,16 @@ const RemarkCalloutPlugin: Plugin = (
 								value: iconHTML,
 							},
 							{
-								type: "text",
-								value: title,
+								type: "element",
 								data: { hProperties: { className: titleTextClass } },
+								children: [
+									{
+										type: "text",
+										value: title,
+									},
+									...titleChildren,
+									...(breakElIndex === -1 ? contentChildren : []),
+								],
 							},
 							...((dataExpandable
 								? [
@@ -251,7 +272,6 @@ const RemarkCalloutPlugin: Plugin = (
 										},
 									]
 								: []) satisfies BlockContent[]),
-							...titleChildren,
 						] as (BlockContent | PhrasingContent)[],
 					};
 
@@ -268,21 +288,24 @@ const RemarkCalloutPlugin: Plugin = (
 							"data-expanded": String(dataExpanded),
 						},
 					};
-					node.children.push({
-						type: "paragraph",
-						data: {
-							hProperties: { className: contentClass },
-							hName: "div",
-						},
-						children: [
-							...contentChildren,
-							// これ以降はデフォルトの動作に任せる
-							...(otherChildren.length
-								? ([{ type: "break" }] as PhrasingContent[])
-								: ([] as PhrasingContent[])),
-							...(otherChildren as PhrasingContent[]),
-						],
-					});
+
+					if (breakElIndex !== -1) {
+						node.children.push({
+							type: "paragraph",
+							data: {
+								hProperties: { className: contentClass },
+								hName: "div",
+							},
+							children: [
+								...contentChildren,
+								// これ以降はデフォルトの動作に任せる
+								...(otherChildren.length
+									? ([{ type: "break" }] as PhrasingContent[])
+									: ([] as PhrasingContent[])),
+								...(otherChildren as PhrasingContent[]),
+							],
+						});
+					}
 				}
 			}
 		});
