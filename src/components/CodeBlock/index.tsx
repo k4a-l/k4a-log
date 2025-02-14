@@ -1,13 +1,15 @@
+import dynamic from "next/dynamic";
 import { Suspense, type PropsWithChildren } from "react";
 import { ErrorBoundary } from "react-error-boundary";
-import SyntaxHighlighter from "react-syntax-highlighter";
-import { docco } from "react-syntax-highlighter/dist/esm/styles/hljs";
 
 import { Spinner } from "@/park-ui/components/spinner";
 import { css } from "styled-system/css";
 
 import { DynamicK4aReactCode, DynamicReactCode } from "./DynamicReactCode";
 import { Mermaid } from "./Mermaid";
+const CustomSyntaxHighlighter = dynamic(() =>
+	import("./SyntaxHighlighter").then((mod) => mod.CustomSyntaxHighlighter),
+);
 
 export const CodeBlock = (props: PropsWithChildren<HTMLElement>) => {
 	const { children, className } = props;
@@ -58,13 +60,9 @@ export const CodeBlock = (props: PropsWithChildren<HTMLElement>) => {
 						</Suspense>
 					</ErrorBoundary>
 				</div>
-				<SyntaxHighlighter
-					className={css({ fontFamily: "monospace", margin: 0 })}
-					language={"tsx"}
-					style={docco}
-				>
+				<CustomSyntaxHighlighter language={"tsx"}>
 					{children as string}
-				</SyntaxHighlighter>
+				</CustomSyntaxHighlighter>
 			</div>
 		);
 	}
@@ -81,13 +79,9 @@ export const CodeBlock = (props: PropsWithChildren<HTMLElement>) => {
 			>
 				<ErrorBoundary
 					fallback={
-						<SyntaxHighlighter
-							className={css({ fontFamily: "monospace" })}
-							language={language}
-							style={docco}
-						>
+						<CustomSyntaxHighlighter language={language}>
 							{children as string}
-						</SyntaxHighlighter>
+						</CustomSyntaxHighlighter>
 					}
 				>
 					<DynamicK4aReactCode markdown={children as string} />
@@ -101,13 +95,9 @@ export const CodeBlock = (props: PropsWithChildren<HTMLElement>) => {
 	}
 
 	return (
-		<SyntaxHighlighter
-			className={css({ fontFamily: "monospace" })}
-			language={language}
-			style={docco}
-		>
+		<CustomSyntaxHighlighter language={language}>
 			{children as string}
-		</SyntaxHighlighter>
+		</CustomSyntaxHighlighter>
 	);
 };
 
