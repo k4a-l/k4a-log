@@ -76,8 +76,11 @@
 			font-size: 0.8em;
 		}
 
+		li > .paragraph-wrap {
+			display: inline;
+		}
+
 		.paragraph-wrap {
-			white-space: normal;
 			display: inline-block;
 			width: 100%;
 			min-width: 0;
@@ -375,5 +378,11 @@
 
 	h3:has(div) {
 		font-size: inherit;
+	}
+}
+
+.md-note-container {
+	a.link {
+		display: inline;
 	}
 }
