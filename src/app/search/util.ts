@@ -51,7 +51,10 @@ export const getSearchPath = (
 	}
 
 	if (searchQuery.hasLink) {
-		searchParams.set(searchQueryKey.hasLink, searchQuery.hasLink);
+		searchParams.set(
+			searchQueryKey.hasLink,
+			searchQuery.hasLink.replace(/^\//, ""),
+		);
 	}
 
 	return `${searchPath}?${searchParams.toString()}`;

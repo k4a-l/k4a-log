@@ -28,8 +28,8 @@ export type MDLinkPresentationalType =
 	PropsWithChildren<LinkPresentationalType>;
 
 const TransitionLinkContainer: FC<
-	PropsWithChildren<Pick<WikiLinkData["hProperties"], "isTagLink" | "title">>
-> = ({ isTagLink, title, children }) => {
+	PropsWithChildren<Pick<WikiLinkData["hProperties"], "isTagLink" | "href">>
+> = ({ isTagLink, href, children }) => {
 	if (!isTagLink) return children;
 
 	return (
@@ -51,7 +51,7 @@ const TransitionLinkContainer: FC<
 				colorPalette={"blue"}
 				colorScheme={"blue"}
 				h="auto"
-				href={getSearchPath({ hasLink: title })}
+				href={getSearchPath({ hasLink: href })}
 				minW="2em"
 				p={"0.2em"}
 				size="xs"
@@ -72,7 +72,7 @@ export const TransitionLinkDead: FC<
 	PropsWithChildren<MDLinkPresentationalType>
 > = ({ href, children, isTagLink, alias, title, ...others }) => {
 	return (
-		<TransitionLinkContainer isTagLink={isTagLink} title={title}>
+		<TransitionLinkContainer href={href} isTagLink={isTagLink}>
 			<Link
 				_hover={{
 					textDecorationColor: "blue.10",
@@ -108,7 +108,7 @@ export const TransitionLinkExist: FC<MDLinkPresentationalType> = ({
 	...others
 }) => {
 	return (
-		<TransitionLinkContainer isTagLink={isTagLink} title={title}>
+		<TransitionLinkContainer href={title} isTagLink={isTagLink}>
 			<Link asChild color={"blue.10"} fontWeight={"inherit"}>
 				<NextLink href={href.startsWith("#") ? href : toNoteHref(href)}>
 					{alias ?? title ?? children}
