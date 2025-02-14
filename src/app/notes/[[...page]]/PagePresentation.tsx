@@ -9,7 +9,7 @@ import { BackLinks, TwoHopLinks } from "@/components/NoteLink";
 import FloatingPopup from "@/components/NoteLink/Float";
 import { SideTableOfContents } from "@/components/Toc";
 import { getVaultObject } from "@/features/file/io";
-import { blogDirPath } from "@/features/metadata/constant";
+import { blogDirPath, toNoteHref } from "@/features/metadata/constant";
 import {
 	createRunProcessor,
 	createStringifyProcessor,
@@ -87,7 +87,9 @@ export default async function NotePage({ page }: Props) {
 			<Client />
 			<MyHead
 				description={tNote.metadata.frontmatter?.description || ""}
-				imagePath={tNote.thumbnailPath}
+				imagePath={
+					tNote.thumbnailPath ? toNoteHref(tNote.thumbnailPath) : undefined
+				}
 				keywords={[]}
 				title={title}
 				url={notePathAbsolute}
