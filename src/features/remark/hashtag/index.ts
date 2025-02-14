@@ -3,7 +3,7 @@ import { visit } from "unist-util-visit";
 
 import { splitByHashtag } from "./util";
 
-import type { Root } from "mdast";
+import type { BlockContent, PhrasingContent, Root, RootContent } from "mdast";
 import type { Handler } from "mdast-util-to-hast";
 import type { Plugin } from "unified";
 
@@ -33,14 +33,12 @@ export const remarkHashtagPlugin: Plugin = () => {
 
 			const texts = splitByHashtag(child?.value ?? "");
 
-			for (let i = 0; i < texts.length; i++) {
-				const text = texts[i] as string;
+			const newChildren = texts.map((text): BlockContent | RootContent => {
 				if (text.startsWith("#")) {
 					const hashTagValue = text.replace("#", "");
-					parent.children.splice(childIndex + i, 1, {
+					return {
 						...child,
-						// @ts-expect-error
-						type: "element",
+						type: "element" as PhrasingContent["type"],
 						data: {
 							hName: "hashtag",
 							hChildren: [{ type: "text", value: hashTagValue }],
@@ -48,10 +46,12 @@ export const remarkHashtagPlugin: Plugin = () => {
 								href: hashTagValue,
 							},
 						},
-					});
-				} else {
-					parent.children.splice(childIndex + i, 1, u("text", text));
+					} as PhrasingContent;
 				}
-			}
+
+				return u("text", text) satisfies RootContent;
+			});
+
+			parent.children.splice(childIndex, 1, ...newChildren);
 		});
 };
