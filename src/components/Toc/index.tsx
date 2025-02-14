@@ -13,14 +13,14 @@ import type {
 	DefinitionContent,
 	List,
 	ListItem,
-	PhrasingContent,
+	RootContentMap,
 } from "mdast";
 import type { Result } from "mdast-util-toc";
 
 const RenderPhrasingContent = ({
 	content,
 	activeId,
-}: { content: PhrasingContent; activeId: string }) => {
+}: { content: RootContentMap[keyof RootContentMap]; activeId: string }) => {
 	if (content.type === "link") {
 		return (
 			<NextLink
@@ -41,7 +41,7 @@ const RenderPhrasingContent = ({
 		);
 	}
 
-	if (content.type === "text") {
+	if ("value" in content) {
 		return <>{content.value}</>;
 	}
 

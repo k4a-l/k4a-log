@@ -231,15 +231,6 @@ const RemarkCalloutPlugin: Plugin = (
 						array.input.slice(matched[0].length).trim() ||
 						calloutType.toUpperCase();
 
-					console.log({
-						breakElIndex,
-						titleChildren,
-						title,
-						contentChildren,
-						otherChildren,
-						remainingLines,
-					});
-
 					const iconHTML = `<${iconTagName} class="${iconClass}">${icon}</${iconTagName}>`;
 
 					const titleHtmlNode: BlockContent | DefinitionContent = {

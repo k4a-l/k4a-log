@@ -27,6 +27,7 @@ export const Hashtag = ({
 					borderColor: "gray",
 					height: "1.5em",
 					gap: 0,
+					display: "inline-flex !important",
 				})}
 				href={getSearchPath({ tag: href, query: "" })}
 			>

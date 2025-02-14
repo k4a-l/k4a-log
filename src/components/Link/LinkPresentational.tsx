@@ -73,7 +73,20 @@ export const TransitionLinkDead: FC<
 > = ({ href, children, isTagLink, alias, title, ...others }) => {
 	return (
 		<TransitionLinkContainer isTagLink={isTagLink} title={title}>
-			<Link asChild color="blue.8">
+			<Link
+				_hover={{
+					textDecorationColor: "blue.10",
+					textDecorationStyle: "solid",
+					textDecorationThickness: "2px",
+				}}
+				asChild
+				colorPalette={"gray"}
+				fontWeight={"inherit"}
+				textDecoration={"underline"}
+				textDecorationColor={"blue.7"}
+				textDecorationStyle={"dashed"}
+				textDecorationThickness={"1px"}
+			>
 				<NextLink
 					{...others}
 					href={getSearchPath({ hasLink: href })}
@@ -96,7 +109,7 @@ export const TransitionLinkExist: FC<MDLinkPresentationalType> = ({
 }) => {
 	return (
 		<TransitionLinkContainer isTagLink={isTagLink} title={title}>
-			<Link asChild color={"blue.10"}>
+			<Link asChild color={"blue.10"} fontWeight={"inherit"}>
 				<NextLink href={href.startsWith("#") ? href : toNoteHref(href)}>
 					{alias ?? title ?? children}
 				</NextLink>

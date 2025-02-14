@@ -41,7 +41,7 @@ export default async function RootLayout({
 			<body>
 				<Stack
 					className={css({
-						bgColor: "neutral.100",
+						bgColor: "neutral.50",
 						fontSize: { sm: "1em", base: "0.8em" },
 					})}
 					gap={0}
