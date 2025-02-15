@@ -1,7 +1,6 @@
 import { MenuIcon, XIcon } from "lucide-react";
 import React from "react";
 
-import { HEADER_HEIGHT } from "@/app/layout";
 import { Drawer } from "@/park-ui/components/drawer";
 import { IconButton } from "@/park-ui/components/icon-button";
 import { css } from "styled-system/css";
@@ -10,6 +9,7 @@ import { Stack } from "styled-system/jsx";
 import { FolderContent } from "./Content";
 
 import type { Folder } from "scripts/generate/folder";
+import { HEADER_HEIGHT } from "../Layout";
 
 type Props = { folders: Folder[] };
 

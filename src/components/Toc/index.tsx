@@ -3,7 +3,7 @@
 import _ from "lodash";
 import { useEffect, useState } from "react";
 
-import { HEADER_HEIGHT } from "@/app/layout";
+import { HEADER_HEIGHT } from "../Layout";
 import { NextLink } from "@/components/Link/NextLink";
 import { css } from "styled-system/css";
 import { Stack } from "styled-system/jsx";
