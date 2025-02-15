@@ -70,6 +70,7 @@ export const EmbedLinkMarkdownLayout: FC<
 					px: 2,
 					pb: 1,
 					fontWeight: "normal",
+					fontSize: { sm: "1rem", base: "0.8rem" },
 				})}
 			>
 				{children}
