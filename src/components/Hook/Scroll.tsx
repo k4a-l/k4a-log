@@ -1,21 +1,35 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
-// https://github.com/vercel/next.js/issues/45187#issuecomment-1639518030
+// https://github.com/vercel/next.js/discussions/64435#discussioncomment-12031529
 // TODO:暫定対処なのでできればやめたい
 export default function Scroll() {
-	// when clicking a link, user will not scroll to the top of the page if the header is sticky.
-	// their current scroll position will persist to the next page.
-	// this useEffect is a workaround to 'fix' that behavior.
-
 	const pathname = usePathname();
+
+	const isStatePopped = useRef(false);
+
+	// Handling the scroll position to ensure clicking on the links
+	// scrolls the page to the top with the sticky positioned navbar.
+	useEffect(() => {
+		// biome-ignore lint/suspicious/noAssignInExpressions: <explanation>
+		const onPopState = () => (isStatePopped.current = true);
+
+		window.addEventListener("popstate", onPopState);
+		return () => window.removeEventListener("popstate", onPopState);
+	}, []);
+
 	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
-		// ヘッダーリンクの場合はスクロールしない
-		if (window.location.hash) return;
-		document.body.scroll(0, 0);
+		if (!isStatePopped.current) {
+			// navigation occurred without pressing
+			// the browser's back or forward buttons
+			// ref.current!.scrollIntoView();
+			window.scrollTo(0, 0);
+		} else {
+			isStatePopped.current = false;
+		}
 	}, [pathname]);
 	return <></>;
 }

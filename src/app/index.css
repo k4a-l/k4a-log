@@ -25,8 +25,7 @@
 		all: revert; /* スタイルをデフォルトに戻す */
 	}
 
-	html,
-	body {
+	html {
 		/* 少し柔らかい感じのフォント */
 		font-family: "Kosugi Maru", sans-serif;
 		height: 100%;
