@@ -27,6 +27,12 @@ export const convertNoExtensionPathToMD = (_path: string[]): string[] => {
 	});
 };
 
+export const correctFileName = (str: string) => {
+	// 大文字英語のみを小文字にする
+	// obsidianがcase insensitiveなので
+	return str.toLowerCase();
+};
+
 export type FileNode = { name: string; absPath: string };
 
 export type FileMap = Map<string, FileNode>;
@@ -67,7 +73,9 @@ export function findClosest(
 	}
 
 	const targetCandidates = fileNodes.filter(
-		(item) => item.name.replace(/\.md$/, "") === targetName,
+		(item) =>
+			correctFileName(item.name.replace(/\.md$/, "")) ===
+			correctFileName(targetName),
 	);
 	if (targetCandidates.length === 0) return undefined; // 対象が見つからなければ終了
 
@@ -80,7 +88,10 @@ export function findClosest(
 		// 共通部分を求める（距離計算のため）
 		let commonLength = 0;
 		for (let i = 0; i < Math.min(startPath.length, targetPath.length); i++) {
-			if (startPath[i] === targetPath[i]) {
+			if (
+				correctFileName(startPath[i] ?? "") ===
+				correctFileName(targetPath[i] ?? "")
+			) {
 				commonLength++;
 			} else {
 				break;

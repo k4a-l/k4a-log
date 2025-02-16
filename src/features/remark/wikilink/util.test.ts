@@ -2,7 +2,7 @@ import { expect, test } from "vitest";
 
 import { notesDirPath } from "@/features/metadata/constant";
 
-import { type FileTree, createFileTrees } from "./util";
+import { type FileTree, correctFileName, createFileTrees } from "./util";
 
 const TEST_FILE_TREE: FileTree[] = [
 	{
@@ -36,6 +36,15 @@ const TEST_FILE_TREE: FileTree[] = [
 		name: "SYNTAX TEST",
 		children: [
 			{ type: "file", name: "COMMON.md" },
+			{
+				type: "dir",
+				name: "link",
+				children: [
+					{ type: "file", name: "abc123１２３・あいう漢字ABC.md" },
+					{ type: "file", name: "LINK.md" },
+					{ type: "file", name: "Link2.md" },
+				],
+			},
 			{ type: "file", name: "ORIGINAL.md" },
 		],
 	},
@@ -113,4 +122,8 @@ test("ファイル一覧取得", () => {
 	const directoryPath = `./assets/${notesDirPath}/tests`;
 	const fileTree = createFileTrees(directoryPath);
 	expect(fileTree).toStrictEqual(TEST_FILE_TREE);
+});
+
+test("correctFileName", () => {
+	expect(correctFileName("aaああ12１２AA")).toStrictEqual("aaああ12１２aa");
 });
