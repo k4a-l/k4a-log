@@ -1,9 +1,11 @@
-import path from "node:path";
-
-import { redirect } from "next/navigation";
-
-import { notesDirPath } from "@/features/metadata/constant";
+import { Spinner } from "@/park-ui/components/spinner";
+import { Suspense } from "react";
+import NotePage from "@/app/notes/[[...page]]/PagePresentation";
 
 export default async function Page() {
-	redirect(path.join("/", notesDirPath));
+	return (
+		<Suspense fallback={<Spinner />}>
+			<NotePage />
+		</Suspense>
+	);
 }

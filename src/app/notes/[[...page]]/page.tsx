@@ -12,7 +12,7 @@ type Props = { params: Params };
 
 export default async function Page({ params }: Props) {
 	// 生の値取得→noteDirはついてない
-	const pathsFromParams = (await params).page ?? ["Index"];
+	const pathsFromParams = (await params).page;
 
 	return (
 		<Suspense fallback={<Spinner />}>

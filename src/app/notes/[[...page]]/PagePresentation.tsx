@@ -27,12 +27,12 @@ import { Spacer, Stack } from "styled-system/jsx";
 
 import { Client } from "./Client";
 
-type Props = { page: string[] };
+type Props = { page?: string[] };
 
 const vaultObject = getVaultObject();
 
 export default async function NotePage({ page }: Props) {
-	const pathFromParams = path.join(...page);
+	const pathFromParams = path.join(...(page ?? ["Index"]));
 
 	// uid→pathの検索
 	const uidPathMap = reverseObjects(vaultObject.pathMap);
