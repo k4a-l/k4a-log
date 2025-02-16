@@ -182,6 +182,9 @@
 		display: flex;
 		flex-direction: row;
 	}
+	.callout-content {
+		padding-top: 0.5em;
+	}
 
 	/********** COLL OUT **********/
 	/* 開閉 */

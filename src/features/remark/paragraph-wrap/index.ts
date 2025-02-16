@@ -21,6 +21,10 @@ export const remarkParagraphWrapPlugin: Plugin = () => {
 			const newChildren: PhrasingContent[] = [];
 			let buffer: PhrasingContent[] = [];
 
+			if (parent?.type === "blockquote") {
+				return;
+			}
+
 			// listItemとかを囲むとおかしなことになるのでspanにするだけ
 			if (node.children.some((c) => c.type === "break")) {
 				node.data = {
