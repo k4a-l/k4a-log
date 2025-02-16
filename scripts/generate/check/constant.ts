@@ -9,6 +9,8 @@ if (!NG_WORDS.includes("__CHECK")) {
 	throw new Error("NG_WORDSに__CHECKを含めてください");
 }
 
+type ArrayOrSingle<T> = T | T[];
+
 export type NoteCondition = {
 	// perfect match
 	tags?: string[];
@@ -17,13 +19,14 @@ export type NoteCondition = {
 	// contain match
 	titles?: string[];
 	// perfect match
-	frontmatter?: Record<string, string | string[]>;
+	frontmatter?: Record<string, ArrayOrSingle<string | boolean>>;
 };
 
 // これもenvにすべきだけど、面倒なのと公開しても問題ないのでそのまま
 export const PUBLIC_CONDITION: NoteCondition = {
 	tags: ["public"],
-	paths: ["public", "blog", "tests"],
+	paths: ["public", "blog", "tests", "log"],
 	titles: [],
-	frontmatter: { publish: "true" },
+	// ※dir(path)が対象外ならコレ設定しても意味ない
+	frontmatter: { publish: ["true", true] },
 };
