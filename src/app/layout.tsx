@@ -30,8 +30,8 @@ export default async function RootLayout({
 		<html lang="ja">
 			<Scroll />
 			{process.env.NODE_ENV === "production" && <GoogleAnalytics gaId={gaId} />}
+
 			<body>
-				<Navbar folders={folders} />
 				<Stack
 					className={css({
 						bgColor: "neutral.100",
@@ -42,6 +42,7 @@ export default async function RootLayout({
 					minH="full"
 					w="full"
 				>
+					<Navbar folders={folders} />
 					<Stack flex={1} h="auto" minH="full" w="full">
 						<HStack alignItems={"space-between"}>
 							<SideMenuInnerPart folders={folders} />
