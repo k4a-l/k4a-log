@@ -1,6 +1,7 @@
 // ref: https://github.com/escwxyz/remark-obsidian-callout
 
 import type {} from "unist";
+
 import { visit } from "unist-util-visit";
 
 import {
@@ -228,8 +229,12 @@ const RemarkCalloutPlugin: Plugin = (
 					}
 
 					const title =
-						array.input.slice(matched[0].length).trim() ||
-						calloutType.toUpperCase();
+						// [!type] [[Link]]Title or [!type]
+						(remainingLines.length && breakElIndex === -1) ||
+						// [!type] Title
+						matched[0] !== firstLine.value
+							? array.input.slice(matched[0].length).trim()
+							: calloutType.toUpperCase();
 
 					const iconHTML = `<${iconTagName} class="${iconClass}">${icon}</${iconTagName}>`;
 
@@ -280,23 +285,21 @@ const RemarkCalloutPlugin: Plugin = (
 						},
 					};
 
-					if (breakElIndex !== -1) {
-						node.children.push({
-							type: "paragraph",
-							data: {
-								hProperties: { className: contentClass },
-								hName: "div",
-							},
-							children: [
-								...contentChildren,
-								// これ以降はデフォルトの動作に任せる
-								...(otherChildren.length
-									? ([{ type: "break" }] as PhrasingContent[])
-									: ([] as PhrasingContent[])),
-								...(otherChildren as PhrasingContent[]),
-							],
-						});
-					}
+					node.children.push({
+						type: "paragraph",
+						data: {
+							hProperties: { className: contentClass },
+							hName: "div",
+						},
+						children: [
+							...(breakElIndex !== -1 ? contentChildren : []),
+							// これ以降はデフォルトの動作に任せる
+							// ...(otherChildren.length
+							// 	? ([{ type: "break" }] as PhrasingContent[])
+							// 	: ([] as PhrasingContent[])),
+							...(otherChildren as PhrasingContent[]),
+						],
+					});
 				}
 			}
 		});

@@ -218,6 +218,8 @@
 			--color-tip-bg: #f0feff;
 			--color-success-fg: #3fb950;
 			--color-success-bg: #f0fff3;
+			--color-quote-fg: #bebebe;
+			--color-quote-bg: whitesmoke;
 		}
 	}
 
@@ -313,8 +315,8 @@
 	}
 
 	blockquote[data-callout="quote"] {
-		--color-callout-bg: var(--color-default-bg);
-		--color-callout-fg: var(--color-default-fg);
+		--color-callout-bg: var(--color-quote-bg);
+		--color-callout-fg: var(--color-quote-fg);
 	}
 
 	blockquote[data-callout="chat1"],
