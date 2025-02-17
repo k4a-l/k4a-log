@@ -25,7 +25,7 @@ export type NoteCondition = {
 // これもenvにすべきだけど、面倒なのと公開しても問題ないのでそのまま
 export const PUBLIC_CONDITION: NoteCondition = {
 	tags: ["public"],
-	paths: ["public", "blog", "tests", "log"],
+	paths: ["public", "blog", "tests"],
 	titles: [],
 	// ※dir(path)が対象外ならコレ設定しても意味ない
 	frontmatter: { publish: ["true", true] },
