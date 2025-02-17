@@ -218,7 +218,7 @@
 			--color-tip-bg: #f0feff;
 			--color-success-fg: #3fb950;
 			--color-success-bg: #f0fff3;
-			--color-quote-fg: #bebebe;
+			--color-quote-fg: #a1a1a1;
 			--color-quote-bg: whitesmoke;
 		}
 	}
@@ -245,13 +245,15 @@
 	}
 
 	blockquote[data-callout] {
-		border-left: 0.25em solid
-			var(--borderColor-default, var(--color-border-default));
+		/* border-left: 0.25em solid
+			var(--borderColor-default, var(--color-border-default)); */
 		color: inherit;
 		padding: 0.8em 1em 1em 1em;
 
 		background-color: var(--color-callout-bg);
 		border-left-color: var(--color-callout-fg);
+
+		border-radius: 0.2em;
 	}
 
 	blockquote[data-callout] .callout-title {
@@ -267,6 +269,10 @@
 		.callout-title-inner {
 			display: flex;
 			flex-wrap: wrap;
+		}
+
+		a {
+			font-weight: normal !important;
 		}
 	}
 
