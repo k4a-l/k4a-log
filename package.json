@@ -5,7 +5,7 @@
 	"scripts": {
 		"dev": "next dev",
 		"start": "next start",
-		"build": "npm run pull-content && npm run prepare-asset && rm -rf .next/cache && next build",
+		"build": "npm run prepare-asset && rm -rf .next/cache && next build",
 		"lint": "biome lint --write ./src",
 		"format": "biome format --write ./src",
 		"check": "biome check --write ./src && eslint ./src --fix",
@@ -16,7 +16,8 @@
 		"generate-metadata": "dotenv -e .env tsx --tsconfig tsconfig.json  scripts/generate/vault-object.ts main",
 		"copy-metadata": "tsx --tsconfig tsconfig.json  scripts/copy-obsidian-metadata.ts main",
 		"copy-attachment": "tsx --tsconfig tsconfig.json  scripts/copy-posts-assets-to-public.ts main",
-		"prepare-asset": "npm run generate-metadata && npm run copy-metadata && npm run copy-attachment",
+		"generate": "npm run generate-metadata && npm run copy-metadata && npm run copy-attachment",
+		"prepare-asset": "npm run pull-content && npm run generate",
 		"debug": "cross-env NODE_OPTIONS='--inspect' next dev"
 	},
 	"dependencies": {
