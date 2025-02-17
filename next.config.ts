@@ -22,6 +22,7 @@ const nextConfig: NextConfig = {
 		API_ENDPOINT: `${baseUrl}/api`,
 		RUNTIME: "Next.js",
 	},
+	outputFileTracingIgnores: [".next/cache"],
 };
 
 export default nextConfig;

@@ -5,7 +5,7 @@
 	"scripts": {
 		"dev": "next dev",
 		"start": "next start",
-		"build": "npm run pull-content && npm run prepare-asset && rm -rf .next/cache && next build",
+		"build": "npm run pull-content && npm run prepare-asset && next build",
 		"lint": "biome lint --write ./src",
 		"format": "biome format --write ./src",
 		"check": "biome check --write ./src && eslint ./src --fix",
