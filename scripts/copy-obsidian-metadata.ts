@@ -13,7 +13,7 @@ const bookmarkFilePathOfObsidian = path.join(
 	"bookmarks.json",
 );
 
-const main = async () => {
+export const main = async () => {
 	await copyFileSync(bookmarkFilePathOfObsidian, bookmarkFilePath);
 };
 

@@ -69,5 +69,10 @@ const copyFiles = (srcPath: string, destPath: string) => {
 	}
 };
 
-deleteExistsFile();
-copyFiles(assetsPath, publicPath);
+export const main = () => {
+	deleteExistsFile();
+	copyFiles(assetsPath, publicPath);
+};
+
+const [funcName] = process.argv.slice(2);
+if (funcName === "main") main();
