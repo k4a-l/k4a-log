@@ -106,9 +106,9 @@ const specialId = {
 			file.path.startsWith(normalizePath(path.join("/", workDirPath))),
 		parser: (file) => {
 			const splitted = pathSplit(file.path);
-			// blog/直下だったらそのまま
-			if (splitted.length <= 2) return splitted.join("/");
-			// blog/yyyy/等の場合は最後のディレクトリ名を使用
+			// foo/直下だったらそのまま
+			if (splitted.length <= 3) return splitted.join("/");
+			// foo/yyyy/等の場合は最後のディレクトリ名を使用
 			return file.path.split(/\\|\//).slice(0, -1).join("/");
 		},
 	},

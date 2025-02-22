@@ -30,6 +30,7 @@ export const remarkParagraphWrapPlugin: Plugin = () => {
 				node.data = {
 					hName: "span",
 					hProperties: {
+						className: "paragraph-wrap",
 						style: "display: block;  padding: 0.5em 0;",
 					},
 					...node.data,
