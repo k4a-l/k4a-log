@@ -9,6 +9,10 @@ if (!NG_WORDS.includes("__CHECK")) {
 	throw new Error("NG_WORDSに__CHECKを含めてください");
 }
 
+export const SAFE_WORDS = JSON.parse(process.env.SAFE_WORDS ?? "[]");
+if (!Array.isArray(SAFE_WORDS))
+	throw new Error("SAFE_WORDSは配列にしてください");
+
 type ArrayOrSingle<T> = T | T[];
 
 export type NoteCondition = {

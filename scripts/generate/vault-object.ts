@@ -41,7 +41,7 @@ import {
 	isMatchNodeCondition,
 	PUBLIC_CONDITION,
 } from "./check";
-import { NG_WORDS } from "./check";
+import { NG_WORDS, SAFE_WORDS } from "./check";
 import { buildFileTree } from "./folder";
 
 import type { FileEntity, FileOrDirEntity } from "./type";
@@ -170,7 +170,7 @@ const createParsedTree = async (
 				continue;
 			}
 			// NGチェックは強制終了
-			const isNG = isContainNGWords(fileContent, NG_WORDS);
+			const isNG = isContainNGWords(fileContent, NG_WORDS, SAFE_WORDS);
 			if (isNG) {
 				throw new Error(
 					`NGチェックに引っかかったファイル:${pathOfUnderRoot} NGワード: ${NG_WORDS}`,

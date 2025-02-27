@@ -27,6 +27,10 @@ describe("isContainNGWords", () => {
 			),
 		).toBe(false);
 	});
+
+	test("セーフワード", () => {
+		expect(isContainNGWords("N hoge NGN", ["NG"], ["NGN"])).toBe(false);
+	});
 });
 
 describe("isPrivateFile", () => {

@@ -1,9 +1,18 @@
-import type { TNoteIndependence, TTagMetaData } from "@/features/metadata/type";
-import type { NoteCondition } from "./constant";
 import { normalizePath } from "@/utils/path";
 
-export const isContainNGWords = (str: string, ngWords: string[]): boolean => {
-	return ngWords.some((word) => str.match(word));
+import type { NoteCondition } from "./constant";
+import type { TNoteIndependence, TTagMetaData } from "@/features/metadata/type";
+
+export const isContainNGWords = (
+	str: string,
+	ngWords: string[],
+	safeWords?: string[],
+): boolean => {
+	const overWriteStr = safeWords?.join("|");
+	const overWriteReg = new RegExp(`(${overWriteStr})`, "g");
+	const processedStr = str.replace(overWriteReg, "");
+
+	return ngWords.some((word) => processedStr.match(word));
 };
 
 // https://github.com/k4a-l/obsidian-dymamic-classname/blob/a5cca4615a6736010e7859ecff63dc065f59be2c/main.ts#L120
