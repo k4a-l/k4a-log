@@ -30,7 +30,7 @@ export type NoteCondition = {
 export const PUBLIC_CONDITION: NoteCondition = {
 	tags: ["public"],
 	paths: ["public", "blog", "tests"],
-	titles: [],
+	titles: ["!🔐"],
 	// ※dir(path)が対象外ならコレ設定しても意味ない
 	frontmatter: { publish: ["true", true] },
 };

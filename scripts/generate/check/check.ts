@@ -15,6 +15,15 @@ export const isContainNGWords = (
 	return ngWords.some((word) => processedStr.match(word));
 };
 
+const splitByPosNeg = (arr: string[]): { pos: string[]; neg: string[] } => {
+	const positive = arr.flatMap((t) => (t.startsWith("!") ? [] : [t]));
+	const negative = arr.flatMap((t) =>
+		t.startsWith("!") ? t.replace(/^!/, "") : [],
+	);
+
+	return { pos: positive, neg: negative };
+};
+
 // https://github.com/k4a-l/obsidian-dymamic-classname/blob/a5cca4615a6736010e7859ecff63dc065f59be2c/main.ts#L120
 export const isMatchNodeCondition = (
 	note: Pick<TNoteIndependence, "basename" | "path"> & {
@@ -22,6 +31,23 @@ export const isMatchNodeCondition = (
 	},
 	cond: NoteCondition,
 ): boolean => {
+	const tagsSplit = splitByPosNeg(cond.tags ?? []);
+	const pathsSplit = splitByPosNeg(cond.paths ?? []);
+	const titleSplit = splitByPosNeg(cond.titles ?? []);
+
+	const negativeMatch =
+		tagsSplit.neg.some((tag) =>
+			note.metadata.tags.find((t) => t.tag === tag),
+		) ||
+		pathsSplit.neg.some((p) =>
+			normalizePath(note.path).startsWith(normalizePath(p)),
+		) ||
+		titleSplit.neg.some((t) => note.basename.includes(t));
+
+	if (negativeMatch) {
+		return false;
+	}
+
 	if (cond.tags?.some((tag) => note.metadata.tags.find((t) => t.tag === tag))) {
 		return true;
 	}

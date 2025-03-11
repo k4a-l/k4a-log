@@ -69,6 +69,17 @@ describe("isPrivateFile", () => {
 				),
 			).toBe(false);
 		});
+
+		test("OVERWRITE", () => {
+			expect(
+				isMatchNodeCondition(
+					produce(baseData, (draft) => {
+						draft.metadata.tags = [{ tag: "private" }, { tag: "exclude" }];
+					}),
+					{ tags: ["private", "!exclude"] },
+				),
+			).toBe(false);
+		});
 	});
 
 	describe("TITLE", () => {
@@ -90,6 +101,17 @@ describe("isPrivateFile", () => {
 						draft.basename = "ti🔐 🔐tle";
 					}),
 					{ titles: ["🔐🔐"] },
+				),
+			).toBe(false);
+		});
+
+		test("OVERWRITE", () => {
+			expect(
+				isMatchNodeCondition(
+					produce(baseData, (draft) => {
+						draft.basename = "ti🔐tle📒";
+					}),
+					{ titles: ["🔐", "!📒"] },
 				),
 			).toBe(false);
 		});
@@ -122,6 +144,17 @@ describe("isPrivateFile", () => {
 						draft.path = "/path/private/to/file";
 					}),
 					{ paths: ["hoge", "private"] },
+				),
+			).toBe(false);
+		});
+
+		test("OVERWRITE", () => {
+			expect(
+				isMatchNodeCondition(
+					produce(baseData, (draft) => {
+						draft.path = "/private/path/to/file";
+					}),
+					{ paths: ["private", "!private/path"] },
 				),
 			).toBe(false);
 		});
