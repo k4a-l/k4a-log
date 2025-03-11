@@ -31,24 +31,20 @@ export const frontMatterKeys = {
 	title: { key: "title", type: "string" } as const,
 	description: { key: "description", type: "string" },
 	thumbnailPath: { key: "thumbnailPath", type: "string" },
-} satisfies { [key: string]: { key: string; type: AllowedType } };
+	buy: { key: "buy", type: "string" } as const,
+	dispose: { key: "dispose", type: "string" } as const,
+	price: { key: "price", type: "number" } as const,
+	status: { key: "status", type: "string" } as const,
+} as const satisfies { [key: string]: { key: string; type: AllowedType } };
 
-export type FrontMatter = Partial<
-	Record<
-		keyof typeof frontMatterKeys,
-		{
-			string: string;
-			array: YAMLArray;
-			number: number;
-			boolean: boolean;
-			object: YAMLObject;
-			null: null;
-		}[(typeof frontMatterKeys)[keyof typeof frontMatterKeys]["type"]]
-	>
->;
+export type TFrontMatter = {
+	[K in keyof typeof frontMatterKeys]?: (typeof frontMatterKeys)[K]["type"] extends "number"
+		? number
+		: string;
+};
 
 export type VFileData = {
-	frontmatter?: FrontMatter;
+	frontmatter?: TFrontMatter;
 	toc: Result["map"];
 };
 
@@ -83,17 +79,19 @@ export const getTypedKey = <T extends AllowedType>(
 	}
 };
 
-export const getFrontMatters = (obj: Record<string, unknown>): FrontMatter => {
-	const frontmatter: FrontMatter = strictFromEntries(
-		strictEntries(frontMatterKeys).flatMap(
-			([key, { key: _, type }]):
-				| [[keyof FrontMatter, FrontMatter[keyof FrontMatter]]]
-				| [] => {
-				const value = getTypedKey(obj, key, type);
-				if (!value) return [];
-				return [[key, value]];
-			},
-		),
+export const getFrontMatters = (obj: Record<string, unknown>): TFrontMatter => {
+	const frontmatter: TFrontMatter = strictFromEntries(
+		strictEntries(frontMatterKeys).flatMap(([key, { key: _, type }]) => {
+			const value = getTypedKey(obj, key, type);
+			if (!value) return [];
+			return [
+				[
+					key,
+					// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+					value satisfies TFrontMatter[keyof TFrontMatter] as unknown as any,
+				],
+			];
+		}),
 	);
 
 	return frontmatter;
@@ -121,7 +119,7 @@ const specialId = {
 
 export const idParser = (
 	file: { path: string },
-	frontmatter: FrontMatter | undefined,
+	frontmatter: TFrontMatter | undefined,
 ): string | undefined => {
 	const idRaw = frontmatter?.[frontMatterKeys.id.key];
 

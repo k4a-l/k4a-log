@@ -1,4 +1,4 @@
-import type { FrontMatter } from "@/features/remark/frontmatter";
+import type { TFrontMatter } from "@/features/remark/frontmatter";
 import type { StrictOmit } from "ts-essentials";
 import type { Position } from "unist";
 
@@ -28,7 +28,7 @@ export type TTagMetaData = {
 
 export type TNoteMetaData = {
 	embeds: TEmbedMetaData[];
-	frontmatter: StrictOmit<FrontMatter, "thumbnailPath">;
+	frontmatter: StrictOmit<TFrontMatter, "thumbnailPath">;
 	headings: THeadingMetaData[];
 	links: TLinkMetaData[];
 	listItems: TListItemMetaData[];

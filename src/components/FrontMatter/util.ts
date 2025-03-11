@@ -6,14 +6,14 @@ export const getFileDate = ({
 }: Pick<VFileData, "frontmatter">):
 	| { created: Date; updated: Date }
 	| undefined => {
-	const createdString = frontmatter?.[frontMatterKeys.created.key];
-	const createdDateMaybe = createdString
-		? stringToDate(String(createdString))
-		: null;
-	const updatedString = frontmatter?.[frontMatterKeys.updated.key];
-	const updatedDateMaybe = updatedString
-		? stringToDate(String(updatedString))
-		: null;
+	const createdDateMaybe = toMaybeDate(
+		frontmatter?.[frontMatterKeys.created.key],
+	);
+	const updatedDateMaybe = toMaybeDate(
+		frontmatter?.[frontMatterKeys.updated.key],
+	);
+
+	console.log(frontmatter, createdDateMaybe, updatedDateMaybe);
 
 	if (!createdDateMaybe && !updatedDateMaybe) {
 		return undefined;
@@ -23,4 +23,17 @@ export const getFileDate = ({
 		created: (createdDateMaybe ?? updatedDateMaybe) as Date,
 		updated: (updatedDateMaybe ?? createdDateMaybe) as Date,
 	};
+};
+
+export const toMaybeDate = (
+	dateString: string | undefined,
+): Date | undefined => {
+	return dateString ? stringToDate(dateString) : undefined;
+};
+
+export const maybe = <T, V>(
+	value: T | undefined,
+	func: (value: T) => V,
+): V | undefined => {
+	return value ? func(value) : undefined;
 };
