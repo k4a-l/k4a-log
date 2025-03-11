@@ -36,6 +36,7 @@ export default async function RootLayout({
 					className={css({
 						bgColor: "neutral.100",
 						fontSize: { sm: "1rem", base: "0.8rem" },
+						"& table": { fontSize: "0.8rem" },
 					})}
 					gap={0}
 					h="auto"

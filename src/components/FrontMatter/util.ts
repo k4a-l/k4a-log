@@ -13,8 +13,6 @@ export const getFileDate = ({
 		frontmatter?.[frontMatterKeys.updated.key],
 	);
 
-	console.log(frontmatter, createdDateMaybe, updatedDateMaybe);
-
 	if (!createdDateMaybe && !updatedDateMaybe) {
 		return undefined;
 	}
