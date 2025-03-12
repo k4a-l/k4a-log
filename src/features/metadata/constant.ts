@@ -18,7 +18,9 @@ export const toNoteHref = (...str: string[]) =>
 		"/",
 		notesDirPath,
 		...str.flatMap((s) => {
-			return pathSplit(s).map((p) => encodeURIComponent(p));
+			return pathSplit(s).map((p) =>
+				encodeURIComponent(p).replace(encodeURIComponent("#"), "#"),
+			);
 		}),
 	);
 

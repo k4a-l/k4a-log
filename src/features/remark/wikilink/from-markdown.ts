@@ -95,12 +95,6 @@ const createWikiLinkData = (
 	wikiLink: WikiLinkContentMap,
 	opts: Required<WikiLinkOption>,
 ): WikiLinkData => {
-	const defaultHrefTemplate = (permalink: string) => {
-		if (permalink.startsWith("#")) return permalink;
-		return normalizePath(permalink);
-	};
-
-	const hrefTemplate = defaultHrefTemplate;
 	const pathValue = _pathValue.trim();
 
 	const isEmbed = Boolean(token.embed);
@@ -165,11 +159,11 @@ const createWikiLinkData = (
 	];
 	const isDeadLink = _link === undefined;
 
-	const linkOrId = getLinkOrId(normalizePath(link), opts.pathMap);
+	const linkOrId = getLinkOrId(link, opts.pathMap);
 
 	const hProperties: WikiLinkData["hProperties"] = {
 		className: classNames,
-		href: isDeadLink ? linkOrId : hrefTemplate(linkOrId),
+		href: isDeadLink ? linkOrId : linkOrId,
 		title: displayName,
 		assetsDirPath: opts.assetPath,
 		"is-embed": isCirclerReference ? undefined : isEmbed ? "true" : undefined,
