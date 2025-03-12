@@ -85,9 +85,7 @@ export const isTestOnlyNote = (note: TNoteIndependence): boolean => {
 };
 
 export const pathSplit = (str: string): string[] =>
-	normalizePath(str)
-		?.split("/")
-		.filter((s) => s) ?? [];
+	str?.split("/").filter((s) => s) ?? [];
 
 export const safeDecodeURIComponent = (str: string) => {
 	try {
