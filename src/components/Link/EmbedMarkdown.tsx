@@ -1,18 +1,17 @@
-"use client";
+// "use client";
 
 import { LinkIcon } from "lucide-react";
 
-import { useHonoQuery } from "@/app/search/hono";
+import { getVaultObject } from "@/features/file/io";
 import { toNoteHref } from "@/features/metadata/constant";
 import {
 	createParseProcessor,
 	createRunProcessor,
 	createStringifyProcessor,
 } from "@/features/remark/processor";
-import { processRemark } from "@/features/remark/processor/process";
+import { getFileContent } from "@/features/remark/processor/getContent";
 import { IconButton } from "@/park-ui/components/icon-button";
-import { Spinner } from "@/park-ui/components/spinner";
-import { convertPathsToLocalMD, safeDecodeURIComponent } from "@/utils/path";
+import { isSamePath, safeDecodeURIComponent } from "@/utils/path";
 import { css } from "styled-system/css";
 import { Stack, HStack } from "styled-system/jsx";
 
@@ -83,21 +82,21 @@ type Props = Pick<
 	WikiLinkData["hProperties"],
 	"alias" | "href" | "title" | "parentsLinks"
 >;
-export const EmbedLinkMarkdown: FC<Props> = (props) => {
+export const EmbedLinkMarkdown: FC<Props> = async (props) => {
 	const { parentsLinks, href, title, alias } = props;
 
-	const queryResult = useHonoQuery("note", {
-		path: encodeURIComponent(href),
-		parentsLinks: encodeURIComponent(parentsLinks),
-	});
+	await new Promise((resolve) => setTimeout(resolve, 100)); // 強制遅延
 
-	if (queryResult.isLoading) return <Spinner />;
-	if (queryResult.error) return "データが取得できませんでした";
-	if (!queryResult.data) return <EmbedLinkNotFound title={title} />;
+	const { notes, pathMap, assets } = getVaultObject();
 
-	const { pathMap, note, vaultPaths, fileContent } = queryResult.data;
+	const note = notes.find((p) => isSamePath(p.path, href));
 
 	if (!note) return <EmbedLinkNotFound title={title} />;
+
+	const vaultPaths = [...notes, ...assets].map((p) => ({
+		absPath: p.path,
+		name: p.basename,
+	}));
 
 	const paths = href.split(/\\|\//);
 
@@ -115,13 +114,11 @@ export const EmbedLinkMarkdown: FC<Props> = (props) => {
 	});
 	const stringifyProcessor = createStringifyProcessor();
 
-	const { fPath, header } = convertPathsToLocalMD(paths);
-	const data = processRemark(
-		{ fPath, header, title: alias ?? title },
+	const data = getFileContent(
+		paths,
 		remarkProcessor,
 		rehypeProcessor,
 		stringifyProcessor,
-		fileContent,
 	);
 
 	if (!data) return <EmbedLinkNotFound title={title} />;

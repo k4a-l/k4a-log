@@ -1,4 +1,5 @@
 import { FileWarningIcon } from "lucide-react";
+import dynamic from "next/dynamic";
 import { Suspense, type FC } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 
@@ -6,7 +7,14 @@ import { toNoteHref } from "@/features/metadata/constant";
 import { Spinner } from "@/park-ui/components/spinner";
 import { css } from "styled-system/css";
 
-import { EmbedLinkMarkdown, EmbedLinkMarkdownLayout } from "./EmbedMarkdown";
+const EmbedLinkMarkdown = dynamic(
+	() => import("./EmbedMarkdown").then((mod) => mod.EmbedLinkMarkdown),
+	{
+		ssr: true,
+	},
+);
+
+import { EmbedLinkMarkdownLayout } from "./EmbedMarkdown";
 import {
 	EmbedLinkImage,
 	EmbedLinkPdf,
