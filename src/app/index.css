@@ -61,7 +61,7 @@
 		ul ol {
 			li::before {
 				content: "";
-				left: -3em;
+				left: -2.8em;
 				position: absolute;
 				height: 100%;
 				border-left-width: 1px;
@@ -73,6 +73,13 @@
 		li::marker {
 			color: #888;
 			font-size: 0.8em;
+		}
+
+		ol,
+		ul {
+			:not(li) > & {
+				padding-left: 1em;
+			}
 		}
 
 		li > .paragraph-wrap {
